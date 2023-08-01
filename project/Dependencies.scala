@@ -2,57 +2,93 @@ import sbt._
 
 object Dependencies {
 
-  def circe(artifact: String): ModuleID  = "io.circe"   %% s"circe-$artifact"  % V.circe
+  def circe(artifact: String): ModuleID =
+    "io.circe" %% s"circe-$artifact" % V.circe
 
   object V {
-    val cats          = "2.9.0"
-    val catsEffect    = "3.4.11"
-    val catsRetry     = "3.1.0"
-    val circe         = "0.14.1"
-    val fs2           = "3.7.0"
-    val log4cats      = "2.5.0"
-    val refined       = "0.10.3"
+    val cats       = "2.9.0"
+    val catsEffect = "3.4.11"
+    val catsRetry  = "3.1.0"
+    val circe      = "0.14.5"
+    val fs2        = "3.7.0"
+    val log4cats   = "2.6.0"
+    val pureConfig = "0.17.4"
+    val sttp       = "3.8.12"
+    var refined    = "0.11.0"
+
+    val scalaTest      = "3.2.15"
+    val testContainers = "0.40.12"
 
     val betterMonadicFor = "0.3.1"
     val kindProjector    = "0.13.2"
     val logback          = "1.4.7"
   }
 
-  val cats = List(
-    "org.typelevel"    %% "cats-core"   % V.cats
+  val Cats = List(
+    "org.typelevel" %% "cats-core" % V.cats
   )
 
-  val catsEffect = List(
-    "org.typelevel"    %% "cats-effect" % V.catsEffect
+  val CatsEffect = List(
+    "org.typelevel" %% "cats-effect" % V.catsEffect
   )
 
-  val fs2 = List(
-    "co.fs2"           %% "fs2-core"    % V.fs2
+  val Fs2 = List(
+    "co.fs2" %% "fs2-core" % V.fs2
   )
 
-  val circeCore    = circe("core")
-  val circeGeneric = circe("generic")
-  val circeParser  = circe("parser")
-  val circeRefined = circe("refined")
+  val CirceCore    = circe("core")
+  val CirceParser  = circe("parser")
+  val CirceRefined = circe("refined")
 
-  val refinedCore = "eu.timepit" %% "refined"      % V.refined
-  val refinedCats = "eu.timepit" %% "refined-cats" % V.refined
+  val Enumeratum = List(
+    "com.beachape" %% "enumeratum"       % "1.7.3",
+    "com.beachape" %% "enumeratum-circe" % "1.7.3"
+  )
 
-  val log4cats = List("org.typelevel" %% "log4cats-slf4j" % V.log4cats)
+  val Log4cats = List(
+    "org.typelevel" %% "log4cats-slf4j" % V.log4cats
+  )
 
-  val pureconfig = List(
-    "com.github.pureconfig" %% "pureconfig-core" % "0.17.4"
+  val Refined = List(
+    "eu.timepit" %% "refined"      % V.refined,
+    "eu.timepit" %% "refined-cats" % V.refined
+  )
+
+  val Pureconfig = List(
+    "com.github.pureconfig" %% "pureconfig-core"        % V.pureConfig,
+    "com.github.pureconfig" %% "pureconfig-cats-effect" % V.pureConfig,
+    "com.github.pureconfig" %% "pureconfig-enumeratum"  % V.pureConfig,
+    "eu.timepit"            %% "refined-pureconfig"     % V.refined
+  )
+
+  val Scopt: Seq[ModuleID] = List("com.github.scopt" %% "scopt" % "4.1.0")
+
+  val FS2Throttler: Seq[ModuleID] = List(
+    "dev.kovstas" %% "fs2-throttler" % "1.0.6"
+  )
+
+  val Sttp: Seq[ModuleID] = List(
+    "com.softwaremill.sttp.client3" %% "core"                           % V.sttp,
+    "com.softwaremill.sttp.client3" %% "async-http-client-backend-cats" % V.sttp
+  )
+
+  val Fabricator: Seq[ModuleID] = List("com.github.azakordonets" %% "fabricator" % "2.1.9")
+
+  val Circe: Seq[ModuleID] = List(
+    CirceCore,
+    CirceParser,
+    CirceRefined
+  )
+
+  val ScalaTest: Seq[ModuleID]      = List("org.scalatest" %% "scalatest" % V.scalaTest % Test)
+  val CatsEffectTest: Seq[ModuleID] = List("org.typelevel" %% "cats-effect-testing-scalatest" % "1.5.0" % Test)
+
+  val TestContainers: Seq[ModuleID] = List(
+    "com.dimafeng" %% "testcontainers-scala-scalatest"  % V.testContainers % Test,
+    "com.dimafeng" %% "testcontainers-scala-kafka"      % V.testContainers % Test,
+    "com.dimafeng" %% "testcontainers-scala-postgresql" % V.testContainers % Test
   )
 
   // Runtime
-  val logback = List("ch.qos.logback" % "logback-classic" % V.logback)
-
-  object CompilerPlugin {
-    val betterMonadicFor = compilerPlugin(
-      "com.olegpy" %% "better-monadic-for" % V.betterMonadicFor
-    )
-    val kindProjector = compilerPlugin(
-      "org.typelevel" % "kind-projector" % V.kindProjector cross CrossVersion.full
-    )
-  }
+  val Logback = List("ch.qos.logback" % "logback-classic" % V.logback)
 }
