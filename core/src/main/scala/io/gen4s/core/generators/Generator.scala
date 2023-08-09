@@ -1,3 +1,7 @@
 package io.gen4s.core.generators
 
-trait Generator {}
+object Generator {}
+
+trait Generator {
+  def gen(): GeneratedValue
+}
