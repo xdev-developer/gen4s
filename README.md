@@ -1,8 +1,6 @@
 # Gen4s
 
-Data generator tool for developers and QA.
-
-[TOC]
+Data generator tool for developers and QA engineers.
 
 ## Building
 
@@ -24,7 +22,7 @@ KAFKA_BOOTSTRAP_SERVERS=dev.kafka:9095
 
 ## Configuration
 
-```json
+```properties
 input {
     schema = "<path-to>/examples/sample-schema.json"
     template = "<path-to>/examples/sample.template"
@@ -51,7 +49,7 @@ output {
 
 Console output.
 
-```json
+```properties
 output {
     writer: {
       type: "std-output"
