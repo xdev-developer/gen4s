@@ -2,9 +2,10 @@ package io.gen4s.core.generators.impl
 
 import java.time.Instant
 
-import io.gen4s.core.generators.*
+import io.circe.derivation.ConfiguredCodec
+import io.gen4s.core.generators.{*, given}
 
-final case class TimestampGenerator(variable: Variable) extends Generator {
+final case class TimestampGenerator(variable: Variable) extends Generator derives ConfiguredCodec {
 
   override def gen(): GeneratedValue = {
     GeneratedValue.fromLong(Instant.now().toEpochMilli())

@@ -1,10 +1,17 @@
 package io.gen4s.core.generators
 
+import io.circe.Decoder
+import io.circe.Encoder
+
 import enumeratum.*
 
 sealed abstract class Generators(override val entryName: String) extends EnumEntry
 
 object Generators extends Enum[Generators] {
+
+  given Encoder[Generators] = Circe.encoder(this)
+  given Decoder[Generators] = Circe.decoder(this)
+
   val values: IndexedSeq[Generators] = findValues
 
   case object TimeStamp extends Generators("timestamp")
