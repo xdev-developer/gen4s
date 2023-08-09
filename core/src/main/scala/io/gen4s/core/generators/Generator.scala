@@ -44,5 +44,6 @@ object Generator {
 }
 
 trait Generator {
+  val variable: Variable
   def gen(): GeneratedValue
 }

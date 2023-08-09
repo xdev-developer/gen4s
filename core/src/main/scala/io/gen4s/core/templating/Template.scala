@@ -1,6 +1,6 @@
 package io.gen4s.core.templating
 
-trait Renderable {
+trait Template {
   def render(): RenderedTemplate
 }
 
@@ -10,13 +10,6 @@ trait Renderable {
  * @param content
  */
 case class SourceTemplate(content: String) extends AnyVal
-
-/**
- * Produces json object
- */
-case class JsonObjectTemplate()
-
-case class TextTemplate()
 
 /**
  * Final template - after all variables resolvings and transformations

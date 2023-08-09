@@ -2,8 +2,6 @@ package io.gen4s.cli
 
 import java.io.File
 
-import com.typesafe.config.Config
-
 import cats.effect.Sync
 import io.gen4s.conf.*
 
@@ -18,7 +16,6 @@ object StageConfigLoader {
 
     override def withEnvProfile(profileConf: EnvProfileConfig): F[StageConfig] = {
       import pureconfig.*
-      import pureconfig.generic.derivation.default.*
       import pureconfig.ConfigSource
       import pureconfig.module.catseffect.syntax.*
 
