@@ -32,6 +32,17 @@ object Dependencies {
     "org.typelevel" %% "cats-effect" % V.catsEffect
   )
 
+  val ApacheCommonsText: Seq[ModuleID] = List(
+    "org.apache.commons" % "commons-text" % "1.10.0"
+  )
+
+  val ApacheCommons: Seq[ModuleID] = List(
+    "org.apache.commons" % "commons-text"  % "1.10.0",
+    "commons-codec"      % "commons-codec" % "1.15",
+    "commons-io"         % "commons-io"    % "2.11.0",
+    "org.xerial.snappy"  % "snappy-java"   % "1.1.9.1"
+  )
+
   val Fs2 = List(
     "co.fs2" %% "fs2-core" % V.fs2
   )

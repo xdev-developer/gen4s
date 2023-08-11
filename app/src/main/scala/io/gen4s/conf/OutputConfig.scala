@@ -1,16 +1,10 @@
 package io.gen4s.conf
 
-import com.typesafe.config.Config
-import com.typesafe.config.ConfigFactory
-
-import scala.util.Try
-
 import cats.implicits.*
 import io.gen4s.core.outputs.Output
 import io.gen4s.core.Domain.BootstrapServers
 import io.gen4s.core.Domain.Topic
 
-import enumeratum.EnumEntry
 import eu.timepit.refined.pureconfig.*
 import eu.timepit.refined.types.numeric.PosInt
 import eu.timepit.refined.types.string.NonEmptyString

@@ -1,7 +1,6 @@
 package io.gen4s.stage
 
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import org.typelevel.log4cats.Logger
 
 import cats.effect.kernel.Async
 import cats.implicits.*
@@ -23,7 +22,7 @@ object StageExecutor {
         } yield Async[F].unit
       }
 
-      private def main() = ???
+      def main() = ???
     }
   }
 

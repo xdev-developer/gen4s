@@ -3,7 +3,6 @@ package io.gen4s
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 import cats.effect.*
-import cats.effect.kernel.*
 import cats.effect.std.Console
 import cats.implicits.*
 import io.gen4s.cli.*
