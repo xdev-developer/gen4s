@@ -1,5 +1,7 @@
 package io.gen4s.core.templating
 
+import cats.Show
+
 trait Template {
   def render(): RenderedTemplate
 }
@@ -10,7 +12,6 @@ trait Template {
  * @param content
  */
 case class SourceTemplate(content: String) extends AnyVal
-
 
 object RenderedTemplate {
   given Show[RenderedTemplate] = Show.show[RenderedTemplate](_.asString)
