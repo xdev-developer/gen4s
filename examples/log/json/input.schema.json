@@ -1,3 +1,8 @@
 {
- "fields": []
+  "generators": [
+    {
+      "variable": "ts",
+      "type": "timestamp"
+    }
+  ]
 }

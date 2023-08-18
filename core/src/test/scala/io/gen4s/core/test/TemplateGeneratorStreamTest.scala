@@ -19,7 +19,7 @@ class TemplateGeneratorStreamTest extends AsyncFunSpec with AsyncIOSpec with Mat
   describe("Generator Stream") {
 
     it("Run simple generation stream") {
-      val sourceTemplate = SourceTemplate("timestamp: ${test}")
+      val sourceTemplate = SourceTemplate("timestamp: {{test}}")
       val tsGenerator    = TimestampGenerator(testV)
 
       val generator = TemplateGenerator.make(
