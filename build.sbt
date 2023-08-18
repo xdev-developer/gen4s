@@ -5,6 +5,8 @@ ThisBuild / version      := "0.0.1"
 
 ThisBuild / scalafmtOnCompile := true
 
+ThisBuild / scalacOptions += "-Wunused:all"
+
 resolvers ++= Resolver.sonatypeOssRepos("snapshots")
 
 lazy val core = project
@@ -13,9 +15,13 @@ lazy val core = project
     name := "gen4s-core",
     libraryDependencies ++= List.concat(
       Dependencies.Cats,
+      Dependencies.CatsEffect,
       Dependencies.Circe,
+      Dependencies.Fs2,
       Dependencies.Enumeratum,
       Dependencies.Refined,
+      Dependencies.ApacheCommonsText,
+      Dependencies.CatsEffectTest,
       Dependencies.ScalaTest
     )
   )
@@ -28,7 +34,6 @@ lazy val app = project
       Dependencies.Scopt,
       Dependencies.Refined,
       Dependencies.CatsEffect,
-      Dependencies.Fs2,
       Dependencies.Pureconfig,
       Dependencies.Log4cats,
       Dependencies.Logback,

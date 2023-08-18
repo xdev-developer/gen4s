@@ -3,7 +3,6 @@ package io.gen4s
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 import cats.effect.*
-import cats.effect.kernel.*
 import cats.effect.std.Console
 import cats.implicits.*
 import io.gen4s.cli.*
@@ -26,7 +25,7 @@ object App extends IOApp {
       _              <- logger.info(s"Execution mode: ${args.mode}")
       envVarsProfile <- loadEnvVarsProfile[F](args.profileFile)
       conf           <- StageConfigLoader.fromFile[F](args.configFile).withEnvProfile(envVarsProfile)
-      executor       <- StageExecutor.make[F]()
+      executor       <- StageExecutor.make[F](args, conf)
       _              <- Async[F].whenA(args.mode == ExecMode.Run)(executor.exec())
       _              <- Async[F].whenA(args.mode == ExecMode.Preview)(executor.preview())
 
