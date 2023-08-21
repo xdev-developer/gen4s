@@ -4,19 +4,22 @@ import io.gen4s.core.generators.GeneratedValue
 import io.gen4s.core.generators.Generator
 import io.gen4s.core.generators.Variable
 
-trait TemplateGenerator {
-  def generate(): List[Template]
+/**
+ * //FIXME: Better name?
+ */
+trait TemplateBuilder {
+  def build(): List[Template]
 }
 
-object TemplateGenerator {
+object TemplateBuilder {
 
   def make(
     sourceTemplates: List[SourceTemplate],
     generators: List[Generator],
-    globalVariables: List[Variable]): TemplateGenerator =
-    new TemplateGenerator {
+    globalVariables: List[Variable]): TemplateBuilder =
+    new TemplateBuilder {
 
-      override def generate(): List[Template] = {
+      override def build(): List[Template] = {
         val (global, local) = generators.partition(g => globalVariables.contains(g.variable))
 
         val globalValues: Map[Variable, GeneratedValue] =

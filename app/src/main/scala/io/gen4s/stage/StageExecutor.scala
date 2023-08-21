@@ -8,10 +8,9 @@ import cats.implicits.*
 import io.gen4s.cli.Args
 import io.gen4s.conf.StageConfig
 import io.gen4s.core.streams.GeneratorStream
-import io.gen4s.core.templating.RenderedTemplate
-import io.gen4s.core.templating.SourceTemplate
-import io.gen4s.core.templating.TemplateGenerator
-import io.gen4s.core.GeneratorsSchema
+import io.gen4s.core.streams.OutputStreamExecutor
+import io.gen4s.core.templating.Template
+import io.gen4s.core.templating.TemplateBuilder
 import io.gen4s.core.SchemaReader
 import io.gen4s.core.TemplateReader
 
@@ -25,30 +24,27 @@ object StageExecutor {
   def make[F[_]: Async: EffConsole](args: Args, conf: StageConfig): F[StageExecutor[F]] = Async[F].delay {
     new StageExecutor[F] {
       override def exec(): F[Unit] = {
-        // FIXME: Implement
-        generatorStream(args, conf)
-          .flatMap(_.printlns.compile.drain)
+        generatorFlow(args, conf).flatMap { flow =>
+          OutputStreamExecutor.make[F]().write(flow, conf.output.writer)
+        }
       }
 
-      override def preview(): F[Unit] = {
-        generatorStream(args, conf)
-          .flatMap(_.printlns.compile.drain)
-      }
+      override def preview(): F[Unit] = generatorFlow(args, conf).flatMap(_.map(_.render()).printlns.compile.drain)
 
-      def generatorStream(args: Args, conf: StageConfig): F[fs2.Stream[F, RenderedTemplate]] = {
+      private def generatorFlow(args: Args, conf: StageConfig): F[fs2.Stream[F, Template]] = {
         for {
-          logger      <- Slf4jLogger.create[F]
-          _           <- logger.info(s"Reading schema from file ${conf.input.schema.getAbsolutePath()}")
-          schema      <- SchemaReader.make[F]().read(conf.input.schema)
-          sources     <- TemplateReader.make[F]().read(conf.input.template, decodeNewLineAsTemplate = false)
-          templateGen <- makeGenerator(schema, sources)
-        } yield GeneratorStream.stream[F](args.numberOfSamplesToGenerate, templateGen)
+          logger <- Slf4jLogger.create[F]
+          _      <- logger.info(s"Reading schema from file ${conf.input.schema.getAbsolutePath()}")
+          schema <- SchemaReader.make[F]().read(conf.input.schema)
+          _      <- logger.info(s"Reading template from file ${conf.input.template.getAbsolutePath()}")
+          sources <- TemplateReader
+                       .make[F]()
+                       .read(conf.input.template, decodeNewLineAsTemplate = conf.input.decodeNewLineAsTemplate)
+          templateBuilder <- Async[F].delay(TemplateBuilder.make(sources, schema.generators, Nil))
+        } yield GeneratorStream.stream[F](args.numberOfSamplesToGenerate, templateBuilder)
       }
 
-      private def makeGenerator(schema: GeneratorsSchema, sources: List[SourceTemplate]) = Async[F].delay {
-        TemplateGenerator.make(sources, schema.generators, Nil)
-      }
     }
-  }
 
+  }
 }

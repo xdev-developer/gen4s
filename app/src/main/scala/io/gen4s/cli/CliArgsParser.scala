@@ -38,4 +38,8 @@ class CliArgsParser extends scopt.OptionParser[Args]("gen4s") {
   cmd("preview")
     .action((_, c) => c.copy(mode = ExecMode.Preview))
     .text("Preview data generation.")
+
+  cmd("run")
+    .action((_, c) => c.copy(mode = ExecMode.Run))
+    .text("Run data generation stream.")
 }
