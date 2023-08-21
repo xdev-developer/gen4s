@@ -9,39 +9,39 @@ import io.gen4s.core.generators.impl.TimestampGenerator
 import io.gen4s.core.generators.Variable
 import io.gen4s.core.templating.*
 
-class TemplateGeneratorTest extends AnyFunSpec with Matchers with EitherValues {
+class TemplateBuilderTest extends AnyFunSpec with Matchers with EitherValues {
 
   val testV = Variable("test")
 
-  describe("Template generator") {
+  describe("Template builder") {
 
-    it("Generate text template") {
-      val sourceTemplate = SourceTemplate(s""""hello": $${test}""")
+    it("Build text template") {
+      val sourceTemplate = SourceTemplate(s""""hello": {{test}}""")
       val tsGenerator    = TimestampGenerator(testV)
 
-      val generator = TemplateGenerator.make(
+      val builder = TemplateBuilder.make(
         sourceTemplates = List(sourceTemplate),
         generators = List(tsGenerator),
         globalVariables = List()
       )
 
-      val result = generator.generate()
+      val result = builder.build()
       result shouldBe List(
         TextTemplate(source = sourceTemplate, globalValues = Map.empty, generators = List(tsGenerator))
       )
     }
 
-    it("Generate text template with global variables") {
-      val sourceTemplate = SourceTemplate(s""""hello": $${test}""")
+    it("Build template with global variables") {
+      val sourceTemplate = SourceTemplate(s""""hello": {{test}}""")
       val tsGenerator    = TimestampGenerator(testV)
 
-      val generator = TemplateGenerator.make(
+      val builder = TemplateBuilder.make(
         sourceTemplates = List(sourceTemplate),
         generators = List(tsGenerator),
         globalVariables = List(testV)
       )
 
-      val result = generator.generate()
+      val result = builder.build()
       result should not be empty
       val head = result.head
       head shouldBe an[TextTemplate]
