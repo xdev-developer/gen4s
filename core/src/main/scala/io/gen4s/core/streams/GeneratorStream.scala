@@ -1,6 +1,5 @@
 package io.gen4s.core.streams
 
-
 import cats.Applicative
 import io.gen4s.core.templating.Template
 import io.gen4s.core.templating.TemplateBuilder
@@ -17,5 +16,6 @@ object GeneratorStream {
       .flatMap { _ =>
         fs2.Stream.emits(templateBuilder.build())
       }
+
   }
 }
