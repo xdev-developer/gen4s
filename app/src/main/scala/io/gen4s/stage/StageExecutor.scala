@@ -43,8 +43,6 @@ object StageExecutor {
           templateBuilder <- Async[F].delay(TemplateBuilder.make(sources, schema.generators, Nil))
         } yield GeneratorStream.stream[F](args.numberOfSamplesToGenerate, templateBuilder)
       }
-
     }
-
   }
 }
