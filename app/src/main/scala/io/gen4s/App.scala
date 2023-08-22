@@ -25,7 +25,7 @@ object App extends IOApp {
       _              <- logger.info(s"Execution mode: ${args.mode}")
       envVarsProfile <- loadEnvVarsProfile[F](args.profileFile)
       conf           <- StageConfigLoader.fromFile[F](args.configFile).withEnvProfile(envVarsProfile)
-      executor       <- StageExecutor.make[F]()
+      executor       <- StageExecutor.make[F](args, conf)
       _              <- Async[F].whenA(args.mode == ExecMode.Run)(executor.exec())
       _              <- Async[F].whenA(args.mode == ExecMode.Preview)(executor.preview())
 
