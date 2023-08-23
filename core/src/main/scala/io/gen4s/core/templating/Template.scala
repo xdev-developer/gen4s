@@ -24,4 +24,5 @@ object RenderedTemplate {
  */
 case class RenderedTemplate(content: String) extends AnyVal {
   def asString: String = content
+  def asByteArray      = content.getBytes()
 }

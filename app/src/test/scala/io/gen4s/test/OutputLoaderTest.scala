@@ -8,8 +8,9 @@ import cats.effect.testing.scalatest.AsyncIOSpec
 import cats.effect.IO
 import io.gen4s.conf.*
 import io.gen4s.conf.OutputConfig
-import io.gen4s.core.outputs.*
 import io.gen4s.core.Domain
+import io.gen4s.outputs.*
+import io.gen4s.outputs.StdOutput
 
 import eu.timepit.refined.types.numeric.PosInt
 import eu.timepit.refined.types.string.NonEmptyString
@@ -45,6 +46,13 @@ class OutputLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
               key = value
           }
           batch-size: 1000
+          producer-config {
+            compression-type = gzip
+            in-flight-requests =  1
+            linger-ms = 15
+            max-batch-size-bytes = 1024
+            max-request-size-bytes = 512
+          }
        }
        """.stripMargin)
         .asserting { out =>
@@ -52,7 +60,8 @@ class OutputLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
             topic = Domain.Topic("test"),
             bootstrapServers = Domain.BootstrapServers("localhost:9092"),
             headers = Map("key" -> "value"),
-            batchSize = PosInt.unsafeFrom(1000)
+            batchSize = PosInt.unsafeFrom(1000),
+            producerConfig = Some(KafkaProducerConfig(KafkaProducerConfig.CompressionTypes.gzip, 15L, 1024, 512L, 1))
           )
         }
     }

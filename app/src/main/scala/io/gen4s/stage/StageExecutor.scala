@@ -8,11 +8,11 @@ import cats.implicits.*
 import io.gen4s.cli.Args
 import io.gen4s.conf.StageConfig
 import io.gen4s.core.streams.GeneratorStream
-import io.gen4s.core.streams.OutputStreamExecutor
 import io.gen4s.core.templating.Template
 import io.gen4s.core.templating.TemplateBuilder
 import io.gen4s.core.SchemaReader
 import io.gen4s.core.TemplateReader
+import io.gen4s.outputs.OutputStreamExecutor
 
 trait StageExecutor[F[_]] {
   def exec(): F[Unit]
@@ -25,7 +25,7 @@ object StageExecutor {
     new StageExecutor[F] {
       override def exec(): F[Unit] = {
         generatorFlow(args, conf).flatMap { flow =>
-          OutputStreamExecutor.make[F]().write(flow, conf.output.writer)
+          OutputStreamExecutor.make[F]().write(args.numberOfSamplesToGenerate, flow, conf.output.writer)
         }
       }
 

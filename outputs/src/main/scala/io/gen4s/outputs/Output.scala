@@ -1,4 +1,4 @@
-package io.gen4s.core.outputs
+package io.gen4s.outputs
 
 import io.gen4s.core.Domain.*
 
@@ -14,8 +14,11 @@ case class KafkaOutput(
   topic: Topic,
   bootstrapServers: BootstrapServers,
   headers: Map[String, String] = Map.empty,
-  batchSize: PosInt = PosInt.unsafeFrom(1000))
-    extends Output
+  batchSize: PosInt = PosInt.unsafeFrom(1000),
+  producerConfig: Option[KafkaProducerConfig] = None)
+    extends Output {
+  def kafkaProducerConfig = producerConfig.getOrElse(KafkaProducerConfig.default)
+}
 
 sealed abstract class HttpMethods(override val entryName: String) extends EnumEntry
 
