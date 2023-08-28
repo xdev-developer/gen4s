@@ -26,6 +26,26 @@ lazy val core = project
     )
   )
 
+lazy val outputs = project
+  .in(file("outputs"))
+  .settings(
+    name := "gen4s-outputs",
+    libraryDependencies ++= List.concat(
+      Dependencies.Cats,
+      Dependencies.CatsEffect,
+      Dependencies.Circe,
+      Dependencies.Fs2,
+      Dependencies.Fs2Kafka,
+      Dependencies.Enumeratum,
+      Dependencies.Refined,
+      Dependencies.Logback,
+      Dependencies.CatsEffectTest,
+      Dependencies.TestContainers,
+      Dependencies.ScalaTest
+    )
+  )
+  .dependsOn(core)
+
 lazy val app = project
   .in(file("app"))
   .settings(
@@ -41,11 +61,11 @@ lazy val app = project
       Dependencies.CatsEffectTest
     )
   )
-  .dependsOn(core)
+  .dependsOn(core, outputs)
 
 lazy val root = project
   .in(file("."))
-  .aggregate(core, app)
+  .aggregate(core, outputs, app)
   .settings(
     name := "gen4s"
   )

@@ -6,18 +6,19 @@ object Dependencies {
     "io.circe" %% s"circe-$artifact" % V.circe
 
   object V {
-    val cats       = "2.9.0"
-    val catsEffect = "3.4.11"
+    val cats       = "2.10.0"
+    val catsEffect = "3.5.1"
     val catsRetry  = "3.1.0"
     val circe      = "0.14.5"
-    val fs2        = "3.7.0"
+    val fs2        = "3.8.0"
+    val fs2Kafka   = "3.0.1"
     val log4cats   = "2.6.0"
     val pureConfig = "0.17.4"
     val sttp       = "3.8.12"
     var refined    = "0.11.0"
 
     val scalaTest      = "3.2.15"
-    val testContainers = "0.40.12"
+    val testContainers = "0.40.17"
 
     val betterMonadicFor = "0.3.1"
     val kindProjector    = "0.13.2"
@@ -45,6 +46,10 @@ object Dependencies {
 
   val Fs2 = List(
     "co.fs2" %% "fs2-core" % V.fs2
+  )
+
+  val Fs2Kafka = List(
+    "com.github.fd4s" %% "fs2-kafka" % V.fs2Kafka
   )
 
   val CirceCore    = circe("core")
