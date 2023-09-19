@@ -26,6 +26,18 @@ lazy val core = project
     )
   )
 
+lazy val generators = project
+  .in(file("generators"))
+  .settings(
+    name := "gen4s-generators",
+    libraryDependencies ++= List.concat(
+      Dependencies.Cats,
+      Dependencies.ParserCombinators,
+      Dependencies.ScalaTest,
+      Dependencies.CatsEffectTest
+    )
+  )
+
 lazy val outputs = project
   .in(file("outputs"))
   .settings(
@@ -61,11 +73,11 @@ lazy val app = project
       Dependencies.CatsEffectTest
     )
   )
-  .dependsOn(core, outputs)
+  .dependsOn(core, outputs, generators)
 
 lazy val root = project
   .in(file("."))
-  .aggregate(core, outputs, app)
+  .aggregate(core, outputs, generators, app)
   .settings(
     name := "gen4s"
   )

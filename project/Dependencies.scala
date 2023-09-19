@@ -6,16 +6,17 @@ object Dependencies {
     "io.circe" %% s"circe-$artifact" % V.circe
 
   object V {
-    val cats       = "2.10.0"
-    val catsEffect = "3.5.1"
-    val catsRetry  = "3.1.0"
-    val circe      = "0.14.5"
-    val fs2        = "3.8.0"
-    val fs2Kafka   = "3.0.1"
-    val log4cats   = "2.6.0"
-    val pureConfig = "0.17.4"
-    val sttp       = "3.8.12"
-    var refined    = "0.11.0"
+    val cats              = "2.10.0"
+    val catsEffect        = "3.5.1"
+    val catsRetry         = "3.1.0"
+    val circe             = "0.14.5"
+    val fs2               = "3.8.0"
+    val fs2Kafka          = "3.0.1"
+    val log4cats          = "2.6.0"
+    val pureConfig        = "0.17.4"
+    val sttp              = "3.8.12"
+    var refined           = "0.11.0"
+    val parserCombinators = "2.3.0"
 
     val scalaTest      = "3.2.15"
     val testContainers = "0.40.17"
@@ -88,7 +89,9 @@ object Dependencies {
     "com.softwaremill.sttp.client3" %% "async-http-client-backend-cats" % V.sttp
   )
 
-  val Fabricator: Seq[ModuleID] = List("com.github.azakordonets" %% "fabricator" % "2.1.9")
+  val ParserCombinators = Seq(
+    "org.scala-lang.modules" %% "scala-parser-combinators" % V.parserCombinators
+  )
 
   val Circe: Seq[ModuleID] = List(
     CirceCore,
