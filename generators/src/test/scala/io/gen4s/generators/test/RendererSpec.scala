@@ -4,11 +4,11 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
 
 import io.gen4s.generators.dsl.Dsl
-import io.gen4s.generators.render.Renderrer
+import io.gen4s.generators.render.Renderer
 
-import Renderrer.given
+import Renderer.given
 
-class RenderrerSpec extends AnyWordSpecLike with Matchers:
+class RendererSpec extends AnyWordSpecLike with Matchers:
 
   "Renderrer" should {
 
@@ -55,5 +55,5 @@ class RenderrerSpec extends AnyWordSpecLike with Matchers:
     }
   }
 
-  private def gen[A <: Dsl](obj: A)(using render: Renderrer[A]): String =
+  private def gen[A <: Dsl](obj: A)(using render: Renderer[A]): String =
     render.generate(obj)

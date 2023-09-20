@@ -4,8 +4,8 @@ import cats.*
 import cats.syntax.all.*
 import io.gen4s.generators.dsl.Dsl
 import io.gen4s.generators.dsl.TemplateParser
-import io.gen4s.generators.render.Renderrer
-import io.gen4s.generators.render.Renderrer.given
+import io.gen4s.generators.render.Renderer
+import io.gen4s.generators.render.Renderer.given
 
 trait TemplateGenerator[F[_]]:
   def process(template: String): F[String]
@@ -20,5 +20,5 @@ object TemplateGenerator:
         randomValues <- tokens.traverse(t => gen(t))
       } yield randomValues.mkString
 
-    private def gen[A <: Dsl](obj: A)(using render: Renderrer[A]): F[String] =
+    private def gen[A <: Dsl](obj: A)(using render: Renderer[A]): F[String] =
       render.generate(obj).pure[F]
