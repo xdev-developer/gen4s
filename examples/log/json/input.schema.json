@@ -1,0 +1,5 @@
+{
+  "generators": [
+    { "variable": "ts", "type": "timestamp"}
+  ]
+}
