@@ -1,17 +1,17 @@
-package io.gen4s.core.test
+package io.gen4s.test
 
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.EitherValues
 
 import cats.implicits.*
-import io.gen4s.core.generators.impl.TimestampGenerator
 import io.gen4s.core.generators.Variable
 import io.gen4s.core.templating.*
+import io.gen4s.generators.impl.TimestampGenerator
 
 class TemplateBuilderTest extends AnyFunSpec with Matchers with EitherValues {
 
-  val testV = Variable("test")
+  private val testV = Variable("test")
 
   describe("Template builder") {
 

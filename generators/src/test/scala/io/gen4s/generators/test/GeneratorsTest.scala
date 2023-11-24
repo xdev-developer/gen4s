@@ -1,4 +1,4 @@
-package io.gen4s.core.test
+package io.gen4s.generators.test
 
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers
@@ -6,10 +6,9 @@ import org.scalatest.EitherValues
 
 import io.circe.parser.*
 import io.circe.Decoder
-import io.gen4s.core.generators.impl.TimestampGenerator
-import io.gen4s.core.generators.Generator
-import io.gen4s.core.generators.Generators
-import io.gen4s.core.generators.Variable
+import io.gen4s.core.generators.{Generator, Variable}
+import io.gen4s.generators.{Generators, given}
+import io.gen4s.generators.impl.TimestampGenerator
 
 class GeneratorsTest extends AnyFunSpec with Matchers with EitherValues {
 

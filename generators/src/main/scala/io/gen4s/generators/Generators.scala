@@ -1,7 +1,6 @@
-package io.gen4s.core.generators
+package io.gen4s.generators
 
-import io.circe.Decoder
-import io.circe.Encoder
+import io.circe.{Decoder, Encoder}
 
 import enumeratum.*
 

@@ -10,9 +10,9 @@ import io.gen4s.conf.StageConfig
 import io.gen4s.core.streams.GeneratorStream
 import io.gen4s.core.templating.Template
 import io.gen4s.core.templating.TemplateBuilder
-import io.gen4s.core.SchemaReader
-import io.gen4s.core.TemplateReader
+import io.gen4s.generators.SchemaReader
 import io.gen4s.outputs.OutputStreamExecutor
+import io.gen4s.TemplateReader
 
 import fs2.io.file.Files
 

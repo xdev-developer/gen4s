@@ -8,12 +8,12 @@ import com.dimafeng.testcontainers.KafkaContainer
 
 import cats.effect.testing.scalatest.AsyncIOSpec
 import cats.effect.IO
-import io.gen4s.core.generators.impl.TimestampGenerator
 import io.gen4s.core.generators.Variable
 import io.gen4s.core.streams.GeneratorStream
 import io.gen4s.core.templating.SourceTemplate
 import io.gen4s.core.templating.TemplateBuilder
 import io.gen4s.core.Domain.*
+import io.gen4s.generators.impl.TimestampGenerator
 import io.gen4s.outputs.KafkaOutput
 import io.gen4s.outputs.OutputStreamExecutor
 

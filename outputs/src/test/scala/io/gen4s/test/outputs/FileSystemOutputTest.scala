@@ -9,11 +9,11 @@ import scala.io.Source
 
 import cats.effect.testing.scalatest.AsyncIOSpec
 import cats.effect.IO
-import io.gen4s.core.generators.impl.TimestampGenerator
 import io.gen4s.core.generators.Variable
 import io.gen4s.core.streams.GeneratorStream
 import io.gen4s.core.templating.{SourceTemplate, TemplateBuilder}
 import io.gen4s.core.Domain.NumberOfSamplesToGenerate
+import io.gen4s.generators.impl.TimestampGenerator
 import io.gen4s.outputs.{FsOutput, OutputStreamExecutor}
 
 import eu.timepit.refined.types.string.NonEmptyString

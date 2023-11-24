@@ -16,6 +16,5 @@ object GeneratedValue {
  * @param v
  */
 final case class GeneratedValue(v: Json) extends AnyVal {
-
   def as[T](using d: Decoder[T]) = v.as[T]
 }
