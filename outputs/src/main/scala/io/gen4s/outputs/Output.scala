@@ -1,5 +1,9 @@
 package io.gen4s.outputs
 
+import java.nio.file.{Path, Paths}
+
+import org.apache.commons.io.FilenameUtils
+
 import io.gen4s.core.Domain.*
 
 import enumeratum.EnumEntry
@@ -49,4 +53,8 @@ case class HttpOutput(
   stopOnError: Boolean = true
 ) extends Output
 
-case class FsOutput(dir: NonEmptyString, filenamePattern: NonEmptyString) extends Output
+case class FsOutput(dir: NonEmptyString, filenamePattern: NonEmptyString) extends Output {
+
+  def path(): Path =
+    Paths.get(dir.value, FilenameUtils.getName(filenamePattern.value.format(System.currentTimeMillis())))
+}

@@ -48,6 +48,8 @@ lazy val outputs = project
       Dependencies.Circe,
       Dependencies.Fs2,
       Dependencies.Fs2Kafka,
+      Dependencies.Fs2Io,
+      Dependencies.ApacheCommons,
       Dependencies.Enumeratum,
       Dependencies.Refined,
       Dependencies.Logback,

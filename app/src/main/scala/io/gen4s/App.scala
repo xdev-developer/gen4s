@@ -9,6 +9,8 @@ import io.gen4s.cli.*
 import io.gen4s.conf.*
 import io.gen4s.stage.StageExecutor
 
+import fs2.io.file.Files
+
 object App extends IOApp {
 
   override def run(args: List[String]): IO[ExitCode] =
@@ -17,7 +19,7 @@ object App extends IOApp {
       case None    => IO(ExitCode.Error)
     }
 
-  private def program[F[_]: Async: Console](args: Args) =
+  private def program[F[_]: Async: Console: Files](args: Args) =
     for {
       logger         <- Slf4jLogger.create[F]
       _              <- logger.info("Running data generation stream")

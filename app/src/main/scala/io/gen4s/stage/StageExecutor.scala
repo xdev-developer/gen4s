@@ -14,6 +14,8 @@ import io.gen4s.core.SchemaReader
 import io.gen4s.core.TemplateReader
 import io.gen4s.outputs.OutputStreamExecutor
 
+import fs2.io.file.Files
+
 trait StageExecutor[F[_]] {
   def exec(): F[Unit]
   def preview(): F[Unit]
@@ -21,7 +23,7 @@ trait StageExecutor[F[_]] {
 
 object StageExecutor {
 
-  def make[F[_]: Async: EffConsole](args: Args, conf: StageConfig): F[StageExecutor[F]] = Async[F].delay {
+  def make[F[_]: Async: EffConsole: Files](args: Args, conf: StageConfig): F[StageExecutor[F]] = Async[F].delay {
     new StageExecutor[F] {
       override def exec(): F[Unit] = {
         generatorFlow(args, conf).flatMap { flow =>

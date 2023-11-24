@@ -1,4 +1,6 @@
-import sbt._
+import scala.collection.immutable
+
+import sbt.*
 
 object Dependencies {
 
@@ -26,11 +28,11 @@ object Dependencies {
     val logback          = "1.4.7"
   }
 
-  val Cats = List(
+  val Cats: Seq[ModuleID] = List(
     "org.typelevel" %% "cats-core" % V.cats
   )
 
-  val CatsEffect = List(
+  val CatsEffect: Seq[ModuleID] = List(
     "org.typelevel" %% "cats-effect" % V.catsEffect
   )
 
@@ -45,11 +47,15 @@ object Dependencies {
     "org.xerial.snappy"  % "snappy-java"   % "1.1.9.1"
   )
 
-  val Fs2 = List(
+  val Fs2: Seq[ModuleID] = List(
     "co.fs2" %% "fs2-core" % V.fs2
   )
 
-  val Fs2Kafka = List(
+  val Fs2Io: Seq[ModuleID] = List(
+    "co.fs2" %% "fs2-io" % V.fs2
+  )
+
+  val Fs2Kafka: Seq[ModuleID] = List(
     "com.github.fd4s" %% "fs2-kafka" % V.fs2Kafka
   )
 
@@ -57,21 +63,21 @@ object Dependencies {
   val CirceParser  = circe("parser")
   val CirceRefined = circe("refined")
 
-  val Enumeratum = List(
+  val Enumeratum: Seq[ModuleID] = List(
     "com.beachape" %% "enumeratum"       % "1.7.3",
     "com.beachape" %% "enumeratum-circe" % "1.7.3"
   )
 
-  val Log4cats = List(
+  val Log4cats: Seq[ModuleID] = List(
     "org.typelevel" %% "log4cats-slf4j" % V.log4cats
   )
 
-  val Refined = List(
+  val Refined: Seq[ModuleID] = List(
     "eu.timepit" %% "refined"      % V.refined,
     "eu.timepit" %% "refined-cats" % V.refined
   )
 
-  val Pureconfig = List(
+  val Pureconfig: Seq[ModuleID] = List(
     "com.github.pureconfig" %% "pureconfig-core"        % V.pureConfig,
     "com.github.pureconfig" %% "pureconfig-cats-effect" % V.pureConfig,
     "com.github.pureconfig" %% "pureconfig-enumeratum"  % V.pureConfig,
@@ -89,7 +95,7 @@ object Dependencies {
     "com.softwaremill.sttp.client3" %% "async-http-client-backend-cats" % V.sttp
   )
 
-  val ParserCombinators = Seq(
+  val ParserCombinators: Seq[ModuleID] = Seq(
     "org.scala-lang.modules" %% "scala-parser-combinators" % V.parserCombinators
   )
 
@@ -109,5 +115,5 @@ object Dependencies {
   )
 
   // Runtime
-  val Logback = List("ch.qos.logback" % "logback-classic" % V.logback)
+  val Logback: Seq[ModuleID] = List("ch.qos.logback" % "logback-classic" % V.logback)
 }
