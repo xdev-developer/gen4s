@@ -1,7 +1,9 @@
+import NativePackagerHelper._
+
 val Scala3 = "3.3.0"
 
 ThisBuild / scalaVersion := Scala3
-ThisBuild / version      := "0.0.1"
+ThisBuild / version      := "0.0.2"
 
 ThisBuild / scalafmtOnCompile := true
 
@@ -75,7 +77,12 @@ lazy val app = project
       Dependencies.Logback,
       Dependencies.ScalaTest,
       Dependencies.CatsEffectTest
-    )
+    ),
+    Universal / packageXzTarball / mappings += file("README.md") -> "README.md",
+    Universal / packageXzTarball / mappings ++= directory("examples"),
+    Universal / packageBin / mappings += file("README.md") -> "README.md",
+    Universal / packageBin / mappings ++= directory("examples"),
+    Compile / packageDoc / mappings := Seq()
   )
   .dependsOn(core, generators, outputs)
 
