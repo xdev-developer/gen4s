@@ -9,23 +9,23 @@ object Dependencies {
 
   object V {
     val cats              = "2.10.0"
-    val catsEffect        = "3.5.1"
+    val catsEffect        = "3.5.2"
     val catsRetry         = "3.1.0"
-    val circe             = "0.14.5"
-    val fs2               = "3.8.0"
-    val fs2Kafka          = "3.0.1"
+    val circe             = "0.14.6"
+    val fs2               = "3.9.3"
+    val fs2Kafka          = "3.2.0"
     val log4cats          = "2.6.0"
     val pureConfig        = "0.17.4"
-    val sttp              = "3.8.12"
+    val sttp              = "3.8.13"
     var refined           = "0.11.0"
     val parserCombinators = "2.3.0"
 
-    val scalaTest      = "3.2.15"
-    val testContainers = "0.40.17"
+    val scalaTest      = "3.2.17"
+    val testContainers = "0.41.0"
 
     val betterMonadicFor = "0.3.1"
     val kindProjector    = "0.13.2"
-    val logback          = "1.4.7"
+    val logback          = "1.4.11"
   }
 
   val Cats: Seq[ModuleID] = List(
@@ -37,14 +37,14 @@ object Dependencies {
   )
 
   val ApacheCommonsText: Seq[ModuleID] = List(
-    "org.apache.commons" % "commons-text" % "1.10.0"
+    "org.apache.commons" % "commons-text" % "1.11.0"
   )
 
   val ApacheCommons: Seq[ModuleID] = List(
     "org.apache.commons" % "commons-text"  % "1.10.0",
-    "commons-codec"      % "commons-codec" % "1.15",
-    "commons-io"         % "commons-io"    % "2.11.0",
-    "org.xerial.snappy"  % "snappy-java"   % "1.1.9.1"
+    "commons-codec"      % "commons-codec" % "1.16.0",
+    "commons-io"         % "commons-io"    % "2.15.0",
+    "org.xerial.snappy"  % "snappy-java"   % "1.1.10.5"
   )
 
   val Fs2: Seq[ModuleID] = List(
