@@ -1,10 +1,9 @@
-import NativePackagerHelper._
-import ReleaseTransformations._
+import NativePackagerHelper.*
+import ReleaseTransformations.*
 
 val Scala3 = "3.3.0"
 
 ThisBuild / scalaVersion := Scala3
-ThisBuild / version      := "0.0.2"
 
 ThisBuild / scalafmtOnCompile := true
 
