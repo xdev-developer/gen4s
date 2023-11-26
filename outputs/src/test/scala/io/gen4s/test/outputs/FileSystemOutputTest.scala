@@ -11,7 +11,7 @@ import cats.effect.testing.scalatest.AsyncIOSpec
 import cats.effect.IO
 import io.gen4s.core.generators.Variable
 import io.gen4s.core.streams.GeneratorStream
-import io.gen4s.core.templating.{SourceTemplate, TemplateBuilder}
+import io.gen4s.core.templating.{OutputTransformer, SourceTemplate, TemplateBuilder}
 import io.gen4s.core.Domain.NumberOfSamplesToGenerate
 import io.gen4s.generators.impl.TimestampGenerator
 import io.gen4s.outputs.{FsOutput, OutputStreamExecutor}
@@ -28,7 +28,8 @@ class FileSystemOutputTest extends AsyncFunSpec with AsyncIOSpec with Matchers {
       val builder = TemplateBuilder.make(
         List(template),
         List(TimestampGenerator(Variable("ts"))),
-        Nil
+        Nil,
+        Set.empty[OutputTransformer]
       )
 
       val output = FsOutput(NonEmptyString.unsafeFrom("/tmp"), NonEmptyString.unsafeFrom("fs-out-fs2.json"))

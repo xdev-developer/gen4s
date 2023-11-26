@@ -30,7 +30,9 @@ class OutputLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
   "Output loader" - {
 
     "Load std output" in {
-      load[IO]("""writer: { type: std-output }""".stripMargin)
+      load[IO]("""writer: { type: std-output }
+                 |transformers = []
+                 |""".stripMargin)
         .asserting { out =>
           out.writer shouldBe StdOutput()
         }
@@ -54,6 +56,7 @@ class OutputLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
             max-request-size-bytes = 512
           }
        }
+       transformers = []
        """.stripMargin)
         .asserting { out =>
           out.writer shouldBe KafkaOutput(
@@ -79,6 +82,7 @@ class OutputLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
           content-type: "application/json"
           stop-on-error: true
        }
+       transformers = []
        """.stripMargin)
         .asserting { out =>
           out.writer shouldBe HttpOutput(
@@ -99,6 +103,7 @@ class OutputLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
           dir: "/tmp"
           filename-pattern: "my-cool-logs-%s.txt"
        }
+       transformers = []
        """.stripMargin)
         .asserting { out =>
           out.writer shouldBe FsOutput(

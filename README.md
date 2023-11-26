@@ -114,8 +114,15 @@ output {
         dir = "/tmp"
         filename-pattern = "my-cool-logs-%s.txt"
     }
+    transformers: ["json-minify"]
 }
 ```
+
+
+
+#### Transformers
+
+**json-minify**  - transform generated JSON to _compact_ printed JSON - (removes all new lines and spaces). 
 
 
 

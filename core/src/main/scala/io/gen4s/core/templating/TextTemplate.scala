@@ -18,7 +18,8 @@ import io.gen4s.core.generators.Variable
 case class TextTemplate(
   source: SourceTemplate,
   globalValues: Map[Variable, GeneratedValue],
-  generators: List[Generator])
+  generators: List[Generator],
+  transformers: Set[OutputTransformer])
     extends Template {
 
   private val Quote          = "\""
@@ -37,7 +38,10 @@ case class TextTemplate(
         .stripSuffix(Quote)
     }
 
-    RenderedTemplate(StringSubstitutor.replace(source.content, values.asJava, VariablePrefix, VariableSuffix))
+    RenderedTemplate(
+      StringSubstitutor
+        .replace(source.content, values.asJava, VariablePrefix, VariableSuffix)
+    ).transform(transformers)
   }
 
 }

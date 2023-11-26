@@ -42,7 +42,8 @@ object StageExecutor {
           sources <- TemplateReader
                        .make[F]()
                        .read(conf.input.template, decodeNewLineAsTemplate = conf.input.decodeNewLineAsTemplate)
-          templateBuilder <- Async[F].delay(TemplateBuilder.make(sources, schema.generators, Nil))
+          templateBuilder <-
+            Async[F].delay(TemplateBuilder.make(sources, schema.generators, Nil, conf.output.transformers))
         } yield GeneratorStream.stream[F](args.numberOfSamplesToGenerate, templateBuilder)
       }
     }

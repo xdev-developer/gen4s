@@ -16,7 +16,8 @@ object TemplateBuilder {
   def make(
     sourceTemplates: List[SourceTemplate],
     generators: List[Generator],
-    globalVariables: List[Variable]): TemplateBuilder =
+    globalVariables: List[Variable],
+    transformers: Set[OutputTransformer]): TemplateBuilder =
     new TemplateBuilder {
 
       override def build(): List[Template] = {
@@ -28,7 +29,7 @@ object TemplateBuilder {
             .map(g => g.variable -> g.gen())
             .toMap
 
-        sourceTemplates.map(source => TextTemplate(source, globalValues, local))
+        sourceTemplates.map(source => TextTemplate(source, globalValues, local, transformers))
       }
 
     }
