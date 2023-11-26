@@ -25,7 +25,8 @@ class TemplateGeneratorStreamTest extends AsyncFunSpec with AsyncIOSpec with Mat
       val tc = TemplateBuilder.make(
         sourceTemplates = List(sourceTemplate),
         generators = List(tsGenerator),
-        globalVariables = List(testV)
+        globalVariables = List(testV),
+        transformers = Set.empty[OutputTransformer]
       )
 
       val stream = GeneratorStream.stream[IO](numSamples, tc)

@@ -22,12 +22,18 @@ class TemplateBuilderTest extends AnyFunSpec with Matchers with EitherValues {
       val builder = TemplateBuilder.make(
         sourceTemplates = List(sourceTemplate),
         generators = List(tsGenerator),
-        globalVariables = List()
+        globalVariables = List(),
+        transformers = Set.empty[OutputTransformer]
       )
 
       val result = builder.build()
       result shouldBe List(
-        TextTemplate(source = sourceTemplate, globalValues = Map.empty, generators = List(tsGenerator))
+        TextTemplate(
+          source = sourceTemplate,
+          globalValues = Map.empty,
+          generators = List(tsGenerator),
+          transformers = Set.empty[OutputTransformer]
+        )
       )
     }
 
@@ -38,7 +44,8 @@ class TemplateBuilderTest extends AnyFunSpec with Matchers with EitherValues {
       val builder = TemplateBuilder.make(
         sourceTemplates = List(sourceTemplate),
         generators = List(tsGenerator),
-        globalVariables = List(testV)
+        globalVariables = List(testV),
+        transformers = Set.empty[OutputTransformer]
       )
 
       val result = builder.build()

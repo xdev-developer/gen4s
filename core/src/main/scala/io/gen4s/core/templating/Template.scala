@@ -1,6 +1,7 @@
 package io.gen4s.core.templating
 
 import cats.Show
+import io.circe.{Json, ParsingFailure}
 
 trait Template {
   def render(): RenderedTemplate
@@ -24,5 +25,27 @@ object RenderedTemplate {
  */
 case class RenderedTemplate(content: String) extends AnyVal {
   def asString: String = content
-  def asByteArray      = content.getBytes()
+
+  def asByteArray: Array[Byte] = {
+    val bytes = content.getBytes
+    if (bytes.isEmpty) " ".getBytes() else bytes
+  }
+
+  def asJson: Either[ParsingFailure, Json] = {
+    import io.circe.parser.*
+    parse(asString)
+  }
+
+  /**
+   * Apply template transformers
+   *
+   * @param transformers [[OutputTransformer]] set of transformers
+   * @return transformed
+   */
+  def transform(transformers: Set[OutputTransformer]): RenderedTemplate =
+    if (transformers.nonEmpty) {
+      transformers.foldLeft(this) { case (template, transformer) =>
+        transformer.transform(template)
+      }
+    } else this
 }
