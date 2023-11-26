@@ -16,8 +16,8 @@ object Generators extends Enum[Generators] {
   case object TimeStamp extends Generators("timestamp")
   case object Date      extends Generators("date")
 
-  case object Array extends Generators("array")
-  case object Enum  extends Generators("enum")
+  case object List extends Generators("list")
+  case object Enum extends Generators("enum")
 
   case object Boolean extends Generators("boolean")
   case object Integer extends Generators("int")
