@@ -52,6 +52,7 @@ lazy val outputs = project
       Dependencies.Fs2,
       Dependencies.Fs2Kafka,
       Dependencies.Fs2Io,
+      Dependencies.Sttp,
       Dependencies.ApacheCommons,
       Dependencies.Enumeratum,
       Dependencies.Refined,

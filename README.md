@@ -73,11 +73,9 @@ output {
 - **template** - path to template file.
 
 
-### Output
+### Outputs
 
 #### Stdout output
-
-Console output.
 
 ```properties
 output {
@@ -119,6 +117,25 @@ output {
         filename-pattern = "my-cool-logs-%s.txt"
     }
     transformers: ["json-minify"]
+}
+```
+
+#### Http output
+
+```properties
+output {
+	writer: { 
+    type: http-output
+    url: "http://example.com"
+    method: POST
+    headers: {
+        key = value
+    }
+    parallelism: 3
+    content-type: "application/json"
+    stop-on-error: true
+  }
+  transformers: ["json-minify"]
 }
 ```
 
