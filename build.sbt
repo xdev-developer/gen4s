@@ -63,6 +63,7 @@ lazy val outputs = project
 
 lazy val app = project
   .in(file("app"))
+  .enablePlugins(JavaAppPackaging)
   .settings(
     name := "gen4s-app",
     libraryDependencies ++= List.concat(
