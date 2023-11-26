@@ -1,4 +1,5 @@
 import NativePackagerHelper._
+import ReleaseTransformations._
 
 val Scala3 = "3.3.0"
 
@@ -90,5 +91,17 @@ lazy val root = project
   .in(file("."))
   .aggregate(core, generators, outputs, app)
   .settings(
-    name := "gen4s"
+    name := "gen4s",
+    releaseProcess := Seq[ReleaseStep](
+      checkSnapshotDependencies, // : ReleaseStep
+      inquireVersions,           // : ReleaseStep
+      runClean,                  // : ReleaseStep
+      runTest,                   // : ReleaseStep
+      setReleaseVersion,         // : ReleaseStep
+      commitReleaseVersion,      // : ReleaseStep, performs the initial git checks
+      tagRelease,                // : ReleaseStep
+      setNextVersion,            // : ReleaseStep
+      commitNextVersion          // : ReleaseStep
+    ),
+    releaseTagName := s"release-v${if (releaseUseGlobalVersion.value) (ThisBuild / version).value else version.value}"
   )
