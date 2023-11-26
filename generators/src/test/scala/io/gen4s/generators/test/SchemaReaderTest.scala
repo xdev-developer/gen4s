@@ -1,13 +1,13 @@
-package io.gen4s.core.test
+package io.gen4s.generators.test
 
 import org.scalatest.funspec.AsyncFunSpec
 import org.scalatest.matchers.should.Matchers
 
 import cats.effect.testing.scalatest.AsyncIOSpec
 import cats.effect.IO
-import io.gen4s.core.generators.impl.TimestampGenerator
 import io.gen4s.core.generators.Variable
-import io.gen4s.core.SchemaReader
+import io.gen4s.generators.impl.TimestampGenerator
+import io.gen4s.generators.SchemaReader
 
 class SchemaReaderTest extends AsyncFunSpec with AsyncIOSpec with Matchers {
 

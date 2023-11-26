@@ -1,19 +1,19 @@
-package io.gen4s.core.test
+package io.gen4s.test
 
 import org.scalatest.funspec.AsyncFunSpec
 import org.scalatest.matchers.should.Matchers
 
 import cats.effect.testing.scalatest.AsyncIOSpec
 import cats.effect.IO
-import io.gen4s.core.generators.impl.TimestampGenerator
 import io.gen4s.core.generators.Variable
 import io.gen4s.core.streams.GeneratorStream
 import io.gen4s.core.templating.*
 import io.gen4s.core.Domain.NumberOfSamplesToGenerate
+import io.gen4s.generators.impl.TimestampGenerator
 
 class TemplateGeneratorStreamTest extends AsyncFunSpec with AsyncIOSpec with Matchers {
 
-  val testV              = Variable("test")
+  private val testV      = Variable("test")
   private val numSamples = NumberOfSamplesToGenerate(5)
 
   describe("Generator Stream") {

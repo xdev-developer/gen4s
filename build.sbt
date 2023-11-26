@@ -37,6 +37,7 @@ lazy val generators = project
       Dependencies.CatsEffectTest
     )
   )
+  .dependsOn(core)
 
 lazy val outputs = project
   .in(file("outputs"))
@@ -48,6 +49,8 @@ lazy val outputs = project
       Dependencies.Circe,
       Dependencies.Fs2,
       Dependencies.Fs2Kafka,
+      Dependencies.Fs2Io,
+      Dependencies.ApacheCommons,
       Dependencies.Enumeratum,
       Dependencies.Refined,
       Dependencies.Logback,
@@ -56,7 +59,7 @@ lazy val outputs = project
       Dependencies.ScalaTest
     )
   )
-  .dependsOn(core)
+  .dependsOn(core, generators)
 
 lazy val app = project
   .in(file("app"))
@@ -73,11 +76,11 @@ lazy val app = project
       Dependencies.CatsEffectTest
     )
   )
-  .dependsOn(core, outputs, generators)
+  .dependsOn(core, generators, outputs)
 
 lazy val root = project
   .in(file("."))
-  .aggregate(core, outputs, generators, app)
+  .aggregate(core, generators, outputs, app)
   .settings(
     name := "gen4s"
   )

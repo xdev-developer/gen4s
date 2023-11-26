@@ -1,4 +1,4 @@
-package io.gen4s.core.test
+package io.gen4s.test
 
 import java.io.File
 
@@ -7,7 +7,7 @@ import org.scalatest.matchers.should.Matchers
 
 import cats.effect.testing.scalatest.AsyncIOSpec
 import cats.effect.IO
-import io.gen4s.core.TemplateReader
+import io.gen4s.TemplateReader
 
 class TemplateReaderTest extends AsyncFunSpec with AsyncIOSpec with Matchers {
 

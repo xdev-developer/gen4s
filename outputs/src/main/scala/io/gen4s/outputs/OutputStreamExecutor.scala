@@ -8,7 +8,9 @@ import io.gen4s.core.templating.RenderedTemplate
 import io.gen4s.core.templating.Template
 import io.gen4s.core.Domain.NumberOfSamplesToGenerate
 
+import fs2.io.file.{Files, Path}
 import fs2.kafka.Acks
+import fs2.text
 
 trait OutputStreamExecutor[F[_]] {
 
@@ -30,6 +32,14 @@ trait OutputStreamExecutor[F[_]] {
   def stdOutput(flow: fs2.Stream[F, Template]): F[Unit]
 
   /**
+   * Writes generated data into file
+   * @param flow   flow
+   * @param output output config
+   * @return unit
+   */
+  def fileSystemOutput(flow: fs2.Stream[F, Template], output: FsOutput): F[Unit]
+
+  /**
    * Writes generated data into kafka topic
    *
    * @param n number of samples to generate
@@ -42,18 +52,28 @@ trait OutputStreamExecutor[F[_]] {
 
 object OutputStreamExecutor {
 
-  def make[F[_]: Async: EffConsole](): OutputStreamExecutor[F] = new OutputStreamExecutor[F] {
+  def make[F[_]: Async: EffConsole: Files](): OutputStreamExecutor[F] = new OutputStreamExecutor[F] {
 
     override def write(n: NumberOfSamplesToGenerate, flow: fs2.Stream[F, Template], output: Output): F[Unit] =
       output match {
         case _: StdOutput     => stdOutput(flow)
-        case _: FsOutput      => stdOutput(flow) // FIXME: Implement
+        case out: FsOutput    => fileSystemOutput(flow, out)
         case _: HttpOutput    => stdOutput(flow) // FIXME: Implement
         case out: KafkaOutput => kafkaOutput(n, out, flow)
       }
 
     override def stdOutput(flow: fs2.Stream[F, Template]): F[Unit] =
       flow.map(_.render()).printlns.compile.drain
+
+    override def fileSystemOutput(flow: fs2.Stream[F, Template], output: FsOutput): F[Unit] = {
+      flow
+        .map(_.render().asString)
+        .intersperse("\n")
+        .through(text.utf8.encode)
+        .through(Files[F].writeAll(Path.fromNioPath(output.path())))
+        .compile
+        .drain
+    }
 
     override def kafkaOutput(
       n: NumberOfSamplesToGenerate,

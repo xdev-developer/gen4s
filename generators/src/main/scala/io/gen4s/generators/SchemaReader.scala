@@ -1,10 +1,11 @@
-package io.gen4s.core
+package io.gen4s.generators
 
 import java.io.File
 
 import cats.effect.kernel.Sync
 import cats.implicits.*
 import io.circe.parser.decode
+import io.gen4s.core.FileUtils
 
 trait SchemaReader[F[_]] {
   def read(content: String): F[GeneratorsSchema]
