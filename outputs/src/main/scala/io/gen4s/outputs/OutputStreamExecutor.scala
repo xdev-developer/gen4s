@@ -4,6 +4,7 @@ import org.apache.kafka.clients.producer.ProducerConfig
 
 import cats.effect.kernel.Async
 import cats.effect.std.Console as EffConsole
+import cats.Applicative
 import io.gen4s.core.templating.RenderedTemplate
 import io.gen4s.core.templating.Template
 import io.gen4s.core.Domain.NumberOfSamplesToGenerate
@@ -11,6 +12,7 @@ import io.gen4s.core.Domain.NumberOfSamplesToGenerate
 import fs2.io.file.{Files, Path}
 import fs2.kafka.Acks
 import fs2.text
+import sttp.client3.asynchttpclient.cats.AsyncHttpClientCatsBackend
 
 trait OutputStreamExecutor[F[_]] {
 
@@ -48,6 +50,8 @@ trait OutputStreamExecutor[F[_]] {
    * @return unit
    */
   def kafkaOutput(n: NumberOfSamplesToGenerate, output: KafkaOutput, flow: fs2.Stream[F, Template]): F[Unit]
+
+  def httpOutput(feed: fs2.Stream[F, Template], out: HttpOutput): F[Unit]
 }
 
 object OutputStreamExecutor {
@@ -58,7 +62,7 @@ object OutputStreamExecutor {
       output match {
         case _: StdOutput     => stdOutput(flow)
         case out: FsOutput    => fileSystemOutput(flow, out)
-        case _: HttpOutput    => stdOutput(flow) // FIXME: Implement
+        case out: HttpOutput  => httpOutput(flow, out)
         case out: KafkaOutput => kafkaOutput(n, out, flow)
       }
 
@@ -113,6 +117,50 @@ object OutputStreamExecutor {
         .through(fs2.kafka.KafkaProducer.pipe(producerSettings))
         .compile
         .drain
+    }
+
+    override def httpOutput(feed: fs2.Stream[F, Template], out: HttpOutput): F[Unit] = {
+      import sttp.client3._
+      import cats.implicits._
+
+      val contentType: String = out.contentType.entryName
+      val contentTypeHeader   = sttp.model.Header("Content-Type", contentType)
+
+      val headers = out.headers.map { case (k, v) =>
+        sttp.model.Header(k, v)
+      }.toSeq :+ contentTypeHeader
+
+      val uri = uri"${out.url}"
+
+      AsyncHttpClientCatsBackend
+        .resource[F]()
+        .use { backend =>
+          feed
+            .mapAsync(out.parallelism.value) { template =>
+              val req = out.method match {
+                case HttpMethods.Post => basicRequest.post(uri)
+                case HttpMethods.Put  => basicRequest.put(uri)
+              }
+              req
+                .body(template.render().asByteArray)
+                .headers(headers: _*)
+                .send(backend)
+                .flatMap[Boolean] { response =>
+                  if (response.code.isSuccess) {
+                    Applicative[F].pure(true)
+                  } else {
+                    val errorMsg = s"${out.method} ${out.url} completed with failure, status-code ${response.code}"
+                    if (out.stopOnError) {
+                      Async[F].raiseError(new Exception(errorMsg))
+                    } else {
+                      Applicative[F].pure(true)
+                    }
+                  }
+                }
+            }
+            .compile
+            .drain
+        }
     }
 
   }
