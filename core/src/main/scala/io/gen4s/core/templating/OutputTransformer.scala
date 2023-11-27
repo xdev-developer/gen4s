@@ -18,4 +18,13 @@ object OutputTransformer extends Enum[OutputTransformer] with CirceEnum[OutputTr
         case Right(value) => template.copy(value.noSpaces)
       }
   }
+
+  case object JsonPrettify extends OutputTransformer("json-prettify") {
+
+    override def transform(template: RenderedTemplate): RenderedTemplate =
+      template.asJson match {
+        case Left(_)      => template
+        case Right(value) => template.copy(value.spaces2)
+      }
+  }
 }

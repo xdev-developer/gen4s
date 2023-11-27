@@ -63,6 +63,8 @@ output {
     writer: {
       type: "std-output"
     }
+
+    transformers: ["json-prettify"]
 }
 ```
 
@@ -84,6 +86,8 @@ output {
     writer: {
       type: "std-output"
     }
+
+    transformers: ["json-prettify"] 
 }
 ```
 
@@ -106,6 +110,7 @@ output {
             key: value
         }
     }
+    transformers: ["json-minify"] 
 }
 ```
 
@@ -118,7 +123,7 @@ output {
         dir = "/tmp"
         filename-pattern = "my-cool-logs-%s.txt"
     }
-    transformers: ["json-minify"]
+    transformers: ["json-prettify"]
 }
 ```
 
@@ -145,6 +150,7 @@ output {
 
 **json-minify**  - transform generated JSON to _compact_ printed JSON - (removes all new lines and spaces). 
 
+**json-prettify**  - transform generated JSON to _pretty_ printed JSON.
 
 
 ## Schema definition and data generators
