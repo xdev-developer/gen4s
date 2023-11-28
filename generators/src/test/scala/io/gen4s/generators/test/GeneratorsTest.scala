@@ -129,7 +129,7 @@ class GeneratorsTest extends AnyFunSpec with Matchers with EitherValues {
     }
 
     it("Env var generator") {
-      val g = EnvVarGenerator(testV, NonEmptyString.unsafeFrom("os.name"))
+      val g = EnvVarGenerator(testV, NonEmptyString.unsafeFrom("os.name"), default = None)
       val r = g.gen().as[String].value
 
       info(s"Generated result: $r")
@@ -138,6 +138,22 @@ class GeneratorsTest extends AnyFunSpec with Matchers with EitherValues {
         s""" { "variable": "${testV.name}", "type": "${Generators.EnvVar.entryName}", "name": "os.name"}""",
         g
       )
+    }
+
+    it("Env var generator - use var name when env var isn't found") {
+      val g = EnvVarGenerator(testV, NonEmptyString.unsafeFrom("DUMMY"), default = None)
+      val r = g.gen().as[String].value
+
+      info(s"Generated result: $r")
+      r shouldBe "DUMMY"
+    }
+
+    it("Env var generator - support default value") {
+      val g = EnvVarGenerator(testV, NonEmptyString.unsafeFrom("DUMMY"), default = Some("default value"))
+      val r = g.gen().as[String].value
+
+      info(s"Generated result: $r")
+      r shouldBe "default value"
     }
 
     it("String pattern generator") {
