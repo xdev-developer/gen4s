@@ -36,6 +36,8 @@ case class RenderedTemplate(content: String) extends AnyVal {
     parse(asString)
   }
 
+  def asPrettyString: String = asJson.toOption.map(_.spaces2).getOrElse(asString)
+
   /**
    * Apply template transformers
    *

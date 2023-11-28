@@ -9,5 +9,6 @@ final case class Args(
   mode: ExecMode = ExecMode.Run,
   numberOfSamplesToGenerate: NumberOfSamplesToGenerate = NumberOfSamplesToGenerate(1),
   configFile: File = new File("."),
-  profileFile: Option[File] = None
+  profileFile: Option[File] = None,
+  prettyPreview: Boolean = false
 )
