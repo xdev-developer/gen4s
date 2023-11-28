@@ -63,6 +63,8 @@ output {
     writer: {
       type: "std-output"
     }
+
+    transformers: ["json-prettify"]
 }
 ```
 
@@ -73,15 +75,19 @@ output {
 - **template** - path to template file.
 
 
-### Outputs
+### Output
 
 #### Stdout output
+
+Console output.
 
 ```properties
 output {
     writer: {
       type: "std-output"
     }
+
+    transformers: ["json-prettify"] 
 }
 ```
 
@@ -104,6 +110,7 @@ output {
             key: value
         }
     }
+    transformers: ["json-minify"] 
 }
 ```
 
@@ -116,7 +123,7 @@ output {
         dir = "/tmp"
         filename-pattern = "my-cool-logs-%s.txt"
     }
-    transformers: ["json-minify"]
+    transformers: ["json-prettify"]
 }
 ```
 
@@ -124,7 +131,7 @@ output {
 
 ```properties
 output {
-	writer: { 
+  writer: {
     type: http-output
     url: "http://example.com"
     method: POST
@@ -139,12 +146,11 @@ output {
 }
 ```
 
-
-
 #### Transformers
 
 **json-minify**  - transform generated JSON to _compact_ printed JSON - (removes all new lines and spaces). 
 
+**json-prettify**  - transform generated JSON to _pretty_ printed JSON.
 
 
 ## Schema definition and data generators
@@ -179,8 +185,6 @@ This sampler can be used like template constant (static value).
 
 **shiftSeconds** - shift timestamp to **n** or **-n** seconds. Optional.
 
-**shiftSeconds** - shift timestamp to **n** or **-n** seconds. Optional.
-
 **shiftMillis** - shift timestamp to **n** or **-n** milliseconds. Optional.
 
 
@@ -196,7 +200,7 @@ This sampler can be used like template constant (static value).
 #### Double number generator.
 
 ```json
-{ "variable": "test-double", "type": "double", "min": 10.5, "max": 15.5 }
+{ "variable": "test-double", "type": "double", "min": 10.5, "max": 15.5, "scale": 6 }
 ```
 
 
@@ -236,7 +240,7 @@ This sampler can be used like template constant (static value).
 #### Ip address generator
 
 ```json
-{ "variable": "test-ip", "type": "ip" }
+{ "variable": "test-ip", "type": "ip", "ipv6": false }
 ```
 
 
@@ -273,7 +277,7 @@ OR any env var with `G4S_` prefix, for example `G4S_QA_USERNAME`
 
 
 
-#### Date generator
+#### DateTime generator
 
 ```json
 { "variable": "test-date", "type": "date", "format": "MM/dd/yyyy", "shiftDays": -10 }
@@ -286,6 +290,8 @@ OR any env var with `G4S_` prefix, for example `G4S_QA_USERNAME`
 **shiftHours** - shift timestamp to **n** or **-n** hours. Optional.
 
 **shiftMinutes** - shift timestamp to **n** or **-n** minutes. Optional.
+
+**shiftSeconds** - shift timestamp to **n** or **-n** seconds. Optional.
 
 
 

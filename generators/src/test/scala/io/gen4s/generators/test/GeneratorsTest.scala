@@ -164,6 +164,18 @@ class GeneratorsTest extends AnyFunSpec with Matchers with EitherValues {
       )
     }
 
+    it("MAC Address generator") {
+      val g = MacAddressGenerator(testV)
+      val r = g.gen().as[String].value
+
+      info(s"Generated result: $r")
+
+      testCodec[MacAddressGenerator](
+        s""" { "variable": "${testV.name}", "type": "${Generators.Mac.entryName}"}""",
+        g
+      )
+    }
+
     def testCodec[T: Decoder](json: String, expected: T) = {
       decode[T](json).value shouldBe expected
       decode[Generator](json).value shouldBe expected

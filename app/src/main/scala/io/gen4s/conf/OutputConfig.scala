@@ -24,4 +24,5 @@ given ConfigReader[BootstrapServers] = ConfigReader.fromString { value =>
 
 given ConfigReader[KafkaProducerConfig] = ConfigReader.derived[KafkaProducerConfig]
 
-case class OutputConfig(writer: Output, transformers: Set[OutputTransformer]) derives ConfigReader
+case class OutputConfig(writer: Output, transformers: Set[OutputTransformer] = Set.empty[OutputTransformer])
+    derives ConfigReader

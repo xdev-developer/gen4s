@@ -8,7 +8,7 @@ import io.gen4s.generators.impl.*
 
 package object codec {
 
-  given Configuration = Configuration.default
+  given Configuration = Configuration.default.withDefaults
 
   export io.circe.derivation.ConfiguredCodec
 
@@ -30,6 +30,7 @@ package object codec {
     case g: StringPatternGenerator => withType(g.asJson, Generators.Pattern)
     case g: EnumGenerator          => withType(g.asJson, Generators.Enum)
     case g: ListGenerator          => withType(g.asJson, Generators.List)
+    case g: MacAddressGenerator    => withType(g.asJson, Generators.Mac)
   }
 
   given Decoder[Generator] = (cursor: HCursor) =>
@@ -55,7 +56,7 @@ package object codec {
                   case Generators.EnvVar => cursor.as[EnvVarGenerator]
 
                   case Generators.Ip  => cursor.as[IpGenerator]
-                  case Generators.Mac => ???
+                  case Generators.Mac => cursor.as[MacAddressGenerator]
                 }
     } yield result
 
