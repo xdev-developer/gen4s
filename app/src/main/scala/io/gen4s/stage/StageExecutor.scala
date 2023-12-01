@@ -31,14 +31,25 @@ object StageExecutor {
         }
       }
 
-      override def preview(): F[Unit] = generatorFlow(args, conf).flatMap(_.map(_.render()).printlns.compile.drain)
+      override def preview(): F[Unit] = {
+        generatorFlow(args, conf).flatMap { stream =>
+          stream
+            .through(prettify(args.prettyPreview))
+            .printlns
+            .compile
+            .drain
+        }
+      }
+
+      private def prettify(pretty: Boolean): fs2.Pipe[F, Template, String] =
+        in => in.map(t => if (pretty) t.render().asPrettyString else t.render().asString)
 
       private def generatorFlow(args: Args, conf: StageConfig): F[fs2.Stream[F, Template]] = {
         for {
           logger <- Slf4jLogger.create[F]
-          _      <- logger.info(s"Reading schema from file ${conf.input.schema.getAbsolutePath()}")
+          _      <- logger.info(s"Reading schema from file ${conf.input.schema.getAbsolutePath}")
           schema <- SchemaReader.make[F]().read(conf.input.schema)
-          _      <- logger.info(s"Reading template from file ${conf.input.template.getAbsolutePath()}")
+          _      <- logger.info(s"Reading template from file ${conf.input.template.getAbsolutePath}")
           sources <- TemplateReader
                        .make[F]()
                        .read(conf.input.template, decodeNewLineAsTemplate = conf.input.decodeNewLineAsTemplate)

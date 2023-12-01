@@ -24,15 +24,20 @@ object EnvVarGenerator {
   private val ALLOWED_VAR_PREFIX = "G4S_"
 }
 
-final case class EnvVarGenerator(variable: Variable, name: NonEmptyString) extends Generator derives ConfiguredCodec:
+final case class EnvVarGenerator(variable: Variable, name: NonEmptyString, default: Option[String]) extends Generator
+    derives ConfiguredCodec:
 
   override def gen(): GeneratedValue = {
     val varName = name.value
     if (allowedVars.contains(varName) || varName.startsWith(ALLOWED_VAR_PREFIX)) {
       GeneratedValue.fromString {
-        sys.env.get(varName).orElse(sys.props.get(varName)).getOrElse(varName)
+        sys.env
+          .get(varName)
+          .orElse(sys.props.get(varName))
+          .orElse(default)
+          .getOrElse(varName)
       }
     } else {
-      GeneratedValue.fromString(varName)
+      GeneratedValue.fromString(default.getOrElse(varName))
     }
   }
