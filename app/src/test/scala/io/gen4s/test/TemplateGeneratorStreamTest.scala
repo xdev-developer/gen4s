@@ -3,6 +3,7 @@ package io.gen4s.test
 import org.scalatest.funspec.AsyncFunSpec
 import org.scalatest.matchers.should.Matchers
 
+import cats.data.NonEmptyList
 import cats.effect.testing.scalatest.AsyncIOSpec
 import cats.effect.IO
 import io.gen4s.core.generators.Variable
@@ -23,7 +24,7 @@ class TemplateGeneratorStreamTest extends AsyncFunSpec with AsyncIOSpec with Mat
       val tsGenerator    = TimestampGenerator(testV)
 
       val tc = TemplateBuilder.make(
-        sourceTemplates = List(sourceTemplate),
+        sourceTemplates = NonEmptyList.one(sourceTemplate),
         generators = List(tsGenerator),
         globalVariables = List(testV),
         transformers = Set.empty[OutputTransformer]

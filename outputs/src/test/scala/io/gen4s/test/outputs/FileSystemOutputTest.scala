@@ -7,6 +7,7 @@ import org.scalatest.matchers.should.Matchers
 
 import scala.io.Source
 
+import cats.data.NonEmptyList
 import cats.effect.testing.scalatest.AsyncIOSpec
 import cats.effect.IO
 import io.gen4s.core.generators.Variable
@@ -26,7 +27,7 @@ class FileSystemOutputTest extends AsyncFunSpec with AsyncIOSpec with Matchers {
     it("Write to file") {
       val streams = OutputStreamExecutor.make[IO]()
       val builder = TemplateBuilder.make(
-        List(template),
+        NonEmptyList.one(template),
         List(TimestampGenerator(Variable("ts"))),
         Nil,
         Set.empty[OutputTransformer]

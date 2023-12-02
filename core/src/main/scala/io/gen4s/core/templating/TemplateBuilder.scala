@@ -1,5 +1,7 @@
 package io.gen4s.core.templating
 
+import cats.data.NonEmptyList
+import io.gen4s.core.{InputRecord, TemplateContext}
 import io.gen4s.core.generators.GeneratedValue
 import io.gen4s.core.generators.Generator
 import io.gen4s.core.generators.Variable
@@ -14,11 +16,11 @@ trait TemplateBuilder {
 object TemplateBuilder {
 
   def make(
-    sourceTemplates: List[SourceTemplate],
+    sourceTemplates: NonEmptyList[SourceTemplate],
     generators: List[Generator],
     globalVariables: List[Variable],
-    transformers: Set[OutputTransformer]): TemplateBuilder =
-    new TemplateBuilder {
+    transformers: Set[OutputTransformer]): TemplateBuilder = {
+    new TemplateBuilder() {
 
       override def build(): List[Template] = {
         val (global, local) = generators.partition(g => globalVariables.contains(g.variable))
@@ -29,8 +31,36 @@ object TemplateBuilder {
             .map(g => g.variable -> g.gen())
             .toMap
 
-        sourceTemplates.map(source => TextTemplate(source, globalValues, local, transformers))
+        sourceTemplates.toList.map(source => TextTemplate(source, TemplateContext(globalValues, local), transformers))
       }
-
     }
+  }
+
+  def ofRecordsStream(
+    sourceTemplates: NonEmptyList[SourceTemplate],
+    generators: List[Generator],
+    globalVariables: List[Variable],
+    recordsStream: NonEmptyList[InputRecord],
+    transformers: Set[OutputTransformer]
+  ): TemplateBuilder = {
+    new TemplateBuilder() {
+
+      override def build(): List[Template] = {
+        val (global, local) = generators.partition(g => globalVariables.contains(g.variable))
+
+        val globalValues: Map[Variable, GeneratedValue] =
+          generators
+            .filter(s => globalVariables.contains(s.variable))
+            .map(g => g.variable -> g.gen())
+            .toMap
+
+        (for {
+          r      <- recordsStream
+          source <- sourceTemplates
+        } yield TextTemplate(source, TemplateContext(globalValues ++ r.fields, local), transformers)).toList
+
+      }
+    }
+  }
+
 }

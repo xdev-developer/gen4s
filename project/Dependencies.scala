@@ -19,6 +19,7 @@ object Dependencies {
     val sttp              = "3.8.13"
     var refined           = "0.11.0"
     val parserCombinators = "2.3.0"
+    val csv               = "1.3.10"
 
     val scalaTest      = "3.2.17"
     val testContainers = "0.41.0"
@@ -45,6 +46,10 @@ object Dependencies {
     "commons-codec"      % "commons-codec" % "1.16.0",
     "commons-io"         % "commons-io"    % "2.15.0",
     "org.xerial.snappy"  % "snappy-java"   % "1.1.10.5"
+  )
+
+  val ScalaCsv: Seq[ModuleID] = List(
+    "com.github.tototoshi" %% "scala-csv" % V.csv
   )
 
   val Fs2: Seq[ModuleID] = List(

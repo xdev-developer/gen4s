@@ -6,6 +6,7 @@ import org.scalatest.matchers.should.Matchers
 import com.dimafeng.testcontainers.scalatest.TestContainersForAll
 import com.dimafeng.testcontainers.KafkaContainer
 
+import cats.data.NonEmptyList
 import cats.effect.testing.scalatest.AsyncIOSpec
 import cats.effect.IO
 import io.gen4s.core.generators.Variable
@@ -38,7 +39,7 @@ class KafkaOutputStreamTest
       withContainers { kafka =>
         val streams = OutputStreamExecutor.make[IO]()
         val builder = TemplateBuilder.make(
-          List(template),
+          NonEmptyList.one(template),
           List(TimestampGenerator(Variable("ts"))),
           Nil,
           Set.empty[OutputTransformer]
@@ -63,7 +64,7 @@ class KafkaOutputStreamTest
       withContainers { kafka =>
         val streams = OutputStreamExecutor.make[IO]()
         val builder = TemplateBuilder.make(
-          List(template),
+          NonEmptyList.one(template),
           List(TimestampGenerator(Variable("ts"))),
           Nil,
           Set.empty[OutputTransformer]

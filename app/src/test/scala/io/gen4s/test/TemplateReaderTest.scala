@@ -13,23 +13,23 @@ class TemplateReaderTest extends AsyncFunSpec with AsyncIOSpec with Matchers {
 
   describe("Template reader") {
 
-    it("Read json teamplate") {
+    it("Read json template") {
       TemplateReader
         .make[IO]()
-        .read(new File("./core/src/test/resources/single.json"), decodeNewLineAsTemplate = false)
+        .read(new File("./app/src/test/resources/single.json"), decodeNewLineAsTemplate = false)
         .asserting { list =>
-          list should not be empty
+          list.toList should not be empty
           list.head.content shouldBe "{\"hello\":\"world\"}\n"
         }
     }
 
-    it("Read muliple teamplates") {
+    it("Read multiple templates") {
       TemplateReader
         .make[IO]()
-        .read(new File("./core/src/test/resources/multi.template"), decodeNewLineAsTemplate = true)
+        .read(new File("./app/src/test/resources/multi.template"), decodeNewLineAsTemplate = true)
         .asserting { list =>
-          list should not be empty
-          list.map(_.content) shouldBe List(
+          list.toList should not be empty
+          list.toList.map(_.content) shouldBe List(
             """{"name": "first"}""",
             """{"name": "second"}""",
             """{"name": "third"}"""
