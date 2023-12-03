@@ -76,6 +76,7 @@ lazy val app = project
       Dependencies.Pureconfig,
       Dependencies.Log4cats,
       Dependencies.Logback,
+      Dependencies.ScalaCsv,
       Dependencies.ScalaTest,
       Dependencies.CatsEffectTest
     ),

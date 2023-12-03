@@ -2,17 +2,19 @@ package io.gen4s.stage
 
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
+import cats.data.NonEmptyList
 import cats.effect.kernel.Async
 import cats.effect.std.Console as EffConsole
 import cats.implicits.*
+import io.gen4s.{RecordsReader, TemplateReader}
 import io.gen4s.cli.Args
 import io.gen4s.conf.StageConfig
 import io.gen4s.core.streams.GeneratorStream
 import io.gen4s.core.templating.Template
 import io.gen4s.core.templating.TemplateBuilder
+import io.gen4s.core.InputRecord
 import io.gen4s.generators.SchemaReader
 import io.gen4s.outputs.OutputStreamExecutor
-import io.gen4s.TemplateReader
 
 import fs2.io.file.Files
 
@@ -53,8 +55,24 @@ object StageExecutor {
           sources <- TemplateReader
                        .make[F]()
                        .read(conf.input.template, decodeNewLineAsTemplate = conf.input.decodeNewLineAsTemplate)
-          templateBuilder <-
-            Async[F].delay(TemplateBuilder.make(sources, schema.generators, Nil, conf.output.transformers))
+          recordsStream <-
+            conf.input.csvRecords
+              .map(f => RecordsReader.make[F]().read(f))
+              .getOrElse(Async[F].pure(List.empty[InputRecord]))
+
+          templateBuilder <- Async[F].delay {
+                               if (recordsStream.isEmpty) {
+                                 TemplateBuilder.make(sources, schema.generators, Nil, conf.output.transformers)
+                               } else {
+                                 TemplateBuilder.ofRecordsStream(
+                                   sources,
+                                   schema.generators,
+                                   Nil,
+                                   NonEmptyList.fromListUnsafe(recordsStream),
+                                   conf.output.transformers
+                                 )
+                               }
+                             }
         } yield GeneratorStream.stream[F](args.numberOfSamplesToGenerate, templateBuilder)
       }
     }

@@ -5,21 +5,16 @@ import org.apache.commons.text.StringSubstitutor
 import scala.jdk.CollectionConverters.*
 
 import io.gen4s.core.generators.GeneratedValue
-import io.gen4s.core.generators.Generator
 import io.gen4s.core.generators.Variable
+import io.gen4s.core.TemplateContext
 
 /**
  * Text template
  *
  * @param source source raw template
- * @param globalValues list of global values
- * @param generators list of generators
+ * @param context template context
  */
-case class TextTemplate(
-  source: SourceTemplate,
-  globalValues: Map[Variable, GeneratedValue],
-  generators: List[Generator],
-  transformers: Set[OutputTransformer])
+case class TextTemplate(source: SourceTemplate, context: TemplateContext, transformers: Set[OutputTransformer])
     extends Template {
 
   private val Quote          = "\""
@@ -28,11 +23,11 @@ case class TextTemplate(
 
   override def render(): RenderedTemplate = {
     val localValues: Map[Variable, GeneratedValue] =
-      generators
+      context.generators
         .map(g => g.variable -> g.gen())
         .toMap
 
-    val values = (globalValues ++ localValues).map { case (v, c) =>
+    val values = (context.globalValues ++ localValues).map { case (v, c) =>
       v.name -> c.v.noSpaces
         .stripPrefix(Quote)
         .stripSuffix(Quote)

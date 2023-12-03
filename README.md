@@ -74,6 +74,14 @@ output {
 
 - **template** - path to template file.
 
+- **decode-new-line-as-template** - treat each line in template file as standalone template.
+
+- **csv-records** - csv records input file.
+
+#### CSV Records streaming
+
+Using csv-records streaming you can generate templates using info from csv file with combination of random generators, see `examples/csv-input`.
+
 
 ### Output
 

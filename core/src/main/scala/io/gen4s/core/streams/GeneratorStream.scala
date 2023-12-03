@@ -1,5 +1,7 @@
 package io.gen4s.core.streams
 
+import scala.util.Random
+
 import cats.Applicative
 import io.gen4s.core.templating.Template
 import io.gen4s.core.templating.TemplateBuilder
@@ -11,11 +13,11 @@ object GeneratorStream {
     n: NumberOfSamplesToGenerate,
     templateBuilder: TemplateBuilder): fs2.Stream[F, Template] = {
 
+    val templates = templateBuilder.build()
     fs2.Stream
       .range(0, n.value)
       .flatMap { _ =>
-        fs2.Stream.emits(templateBuilder.build())
+        fs2.Stream.emit(templates(Random.nextInt(templates.size)))
       }
-
   }
 }

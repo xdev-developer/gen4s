@@ -3,6 +3,7 @@ package io.gen4s.test.outputs
 import org.scalatest.funspec.AsyncFunSpec
 import org.scalatest.matchers.should.Matchers
 
+import cats.data.NonEmptyList
 import cats.effect.testing.scalatest.AsyncIOSpec
 import cats.effect.IO
 import io.gen4s.core.generators.Variable
@@ -21,7 +22,7 @@ class HttpOutputTest extends AsyncFunSpec with AsyncIOSpec with Matchers {
     it("Send POST request") {
       val streams = OutputStreamExecutor.make[IO]()
       val builder = TemplateBuilder.make(
-        List(template),
+        NonEmptyList.one(template),
         List(TimestampGenerator(Variable("ts"))),
         Nil,
         Set.empty[OutputTransformer]
@@ -41,7 +42,7 @@ class HttpOutputTest extends AsyncFunSpec with AsyncIOSpec with Matchers {
     it("Send PUT request") {
       val streams = OutputStreamExecutor.make[IO]()
       val builder = TemplateBuilder.make(
-        List(template),
+        NonEmptyList.one(template),
         List(TimestampGenerator(Variable("ts"))),
         Nil,
         Set.empty[OutputTransformer]
@@ -61,7 +62,7 @@ class HttpOutputTest extends AsyncFunSpec with AsyncIOSpec with Matchers {
     it("Stop on failure") {
       val streams = OutputStreamExecutor.make[IO]()
       val builder = TemplateBuilder.make(
-        List(template),
+        NonEmptyList.one(template),
         List(TimestampGenerator(Variable("ts"))),
         Nil,
         Set.empty[OutputTransformer]
