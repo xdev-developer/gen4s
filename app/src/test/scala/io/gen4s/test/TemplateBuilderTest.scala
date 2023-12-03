@@ -7,9 +7,9 @@ import org.scalatest.EitherValues
 import cats.data.NonEmptyList
 import cats.implicits.*
 import io.circe.Json
-import io.gen4s.core.{InputRecord, TemplateContext}
 import io.gen4s.core.generators.Variable
 import io.gen4s.core.templating.*
+import io.gen4s.core.InputRecord
 import io.gen4s.generators.impl.{StaticValueGenerator, TimestampGenerator}
 
 class TemplateBuilderTest extends AnyFunSpec with Matchers with EitherValues {

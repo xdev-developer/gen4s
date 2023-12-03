@@ -6,11 +6,12 @@ import cats.data.NonEmptyList
 import cats.effect.kernel.Async
 import cats.effect.std.Console as EffConsole
 import cats.implicits.*
-import io.gen4s.{RecordsReader, TemplateReader}
+import cats.Applicative
+import io.gen4s.{RecordsReader, TemplateReader, TemplateValidationError}
 import io.gen4s.cli.Args
 import io.gen4s.conf.StageConfig
 import io.gen4s.core.streams.GeneratorStream
-import io.gen4s.core.templating.Template
+import io.gen4s.core.templating.{OutputValidator, Template}
 import io.gen4s.core.templating.TemplateBuilder
 import io.gen4s.core.InputRecord
 import io.gen4s.generators.SchemaReader
@@ -46,6 +47,23 @@ object StageExecutor {
       private def prettify(pretty: Boolean): fs2.Pipe[F, Template, String] =
         in => in.map(t => if (pretty) t.render().asPrettyString else t.render().asString)
 
+      private def validate(builder: TemplateBuilder, validators: Set[OutputValidator]): F[Unit] = {
+        val templates = builder.build().map(_.render())
+        val errors = validators
+          .flatMap {
+            case OutputValidator.MissingVars => templates.map(OutputValidator.MissingVars.validate)
+            case OutputValidator.JSON        => templates.map(OutputValidator.JSON.validate)
+          }
+          .filter(_.isInvalid)
+
+        if (errors.nonEmpty) {
+          TemplateValidationError(errors.map(e => e.show).toList)
+            .raiseError[F, Unit]
+        } else {
+          Applicative[F].unit
+        }
+      }
+
       private def generatorFlow(args: Args, conf: StageConfig): F[fs2.Stream[F, Template]] = {
         for {
           logger <- Slf4jLogger.create[F]
@@ -73,6 +91,7 @@ object StageExecutor {
                                  )
                                }
                              }
+          _ <- validate(templateBuilder, conf.output.validators)
         } yield GeneratorStream.stream[F](args.numberOfSamplesToGenerate, templateBuilder)
       }
     }
