@@ -1,10 +1,10 @@
 package io.gen4s.core.templating
 
 import cats.data.NonEmptyList
-import io.gen4s.core.{InputRecord, TemplateContext}
 import io.gen4s.core.generators.GeneratedValue
 import io.gen4s.core.generators.Generator
 import io.gen4s.core.generators.Variable
+import io.gen4s.core.InputRecord
 
 /**
  * //FIXME: Better name?

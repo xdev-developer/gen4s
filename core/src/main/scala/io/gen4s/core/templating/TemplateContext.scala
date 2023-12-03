@@ -1,4 +1,4 @@
-package io.gen4s.core
+package io.gen4s.core.templating
 
 import io.gen4s.core.generators.{GeneratedValue, Generator, Variable}
 

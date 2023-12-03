@@ -1,7 +1,7 @@
 package io.gen4s.conf
 
 import cats.implicits.*
-import io.gen4s.core.templating.OutputTransformer
+import io.gen4s.core.templating.{OutputTransformer, OutputValidator}
 import io.gen4s.core.Domain.BootstrapServers
 import io.gen4s.core.Domain.Topic
 import io.gen4s.outputs.KafkaProducerConfig
@@ -24,5 +24,8 @@ given ConfigReader[BootstrapServers] = ConfigReader.fromString { value =>
 
 given ConfigReader[KafkaProducerConfig] = ConfigReader.derived[KafkaProducerConfig]
 
-case class OutputConfig(writer: Output, transformers: Set[OutputTransformer] = Set.empty[OutputTransformer])
+case class OutputConfig(
+  writer: Output,
+  transformers: Set[OutputTransformer] = Set.empty[OutputTransformer],
+  validators: Set[OutputValidator] = Set.empty[OutputValidator])
     derives ConfigReader

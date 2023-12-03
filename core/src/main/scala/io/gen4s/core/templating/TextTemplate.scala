@@ -6,7 +6,6 @@ import scala.jdk.CollectionConverters.*
 
 import io.gen4s.core.generators.GeneratedValue
 import io.gen4s.core.generators.Variable
-import io.gen4s.core.TemplateContext
 
 /**
  * Text template
