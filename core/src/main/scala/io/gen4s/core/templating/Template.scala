@@ -1,5 +1,6 @@
 package io.gen4s.core.templating
 
+import cats.implicits.*
 import cats.Show
 import io.circe.{Json, ParsingFailure}
 
@@ -10,7 +11,7 @@ trait Template {
 /**
  * Raw / initial template
  *
- * @param content
+ * @param content source content
  */
 case class SourceTemplate(content: String) extends AnyVal
 
@@ -21,7 +22,7 @@ object RenderedTemplate {
 /**
  * Final template - after all variables resolvings and transformations
  *
- * @param content
+ * @param content rendered template content
  */
 case class RenderedTemplate(content: String) extends AnyVal {
   def asString: String = content
@@ -37,6 +38,25 @@ case class RenderedTemplate(content: String) extends AnyVal {
   }
 
   def asPrettyString: String = asJson.toOption.map(_.spaces2).getOrElse(asString)
+
+  def asKeyValue: Either[ParsingFailure, (RenderedTemplate, RenderedTemplate)] = {
+
+    def extractField(key: String, obj: Json): Either[ParsingFailure, Json] = {
+      obj.hcursor
+        .downField(key)
+        .as[Json]
+        .leftMap(ex => ParsingFailure(s"Unable extract $key from $obj", ex))
+    }
+
+    for {
+      json  <- asJson
+      key   <- extractField("key", json)
+      value <- extractField("value", json)
+    } yield (
+      RenderedTemplate(TextTemplate.stripQuotes(key.noSpaces)),
+      RenderedTemplate(TextTemplate.stripQuotes(value.noSpaces))
+    )
+  }
 
   /**
    * Apply template transformers

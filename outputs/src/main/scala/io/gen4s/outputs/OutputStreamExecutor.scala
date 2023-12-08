@@ -4,14 +4,15 @@ import org.apache.kafka.clients.producer.ProducerConfig
 
 import cats.effect.kernel.Async
 import cats.effect.std.Console as EffConsole
+import cats.implicits.*
 import cats.Applicative
 import io.gen4s.core.templating.RenderedTemplate
 import io.gen4s.core.templating.Template
 import io.gen4s.core.Domain.NumberOfSamplesToGenerate
 
+import fs2.{text, Chunk}
 import fs2.io.file.{Files, Path}
 import fs2.kafka.Acks
-import fs2.text
 import sttp.client3.asynchttpclient.cats.AsyncHttpClientCatsBackend
 
 trait OutputStreamExecutor[F[_]] {
@@ -84,7 +85,7 @@ object OutputStreamExecutor {
       output: KafkaOutput,
       flow: fs2.Stream[F, Template]): F[Unit] = {
       val producerSettings = fs2.kafka
-        .ProducerSettings[F, Option[String], Array[Byte]]
+        .ProducerSettings[F, Option[Array[Byte]], Array[Byte]]
         .withBootstrapServers(output.bootstrapServers.value)
         .withClientId("gen4s")
         .withAcks(Acks.All)
@@ -108,10 +109,29 @@ object OutputStreamExecutor {
       flow
         .chunkN(groupSize)
         .map { batch =>
-          fs2.kafka.ProducerRecords.apply(batch.map { value =>
-            fs2.kafka
-              .ProducerRecord(output.topic.value, None, value.render().asByteArray)
-              .withHeaders(headers)
+          fs2.kafka.ProducerRecords.apply(batch.flatMap { value =>
+            if (output.decodeInputAsKeyValue) {
+              value.render().asKeyValue match {
+                case Right((key, v)) =>
+                  Chunk {
+                    fs2.kafka
+                      .ProducerRecord(output.topic.value, key.asByteArray.some, v.asByteArray)
+                      .withHeaders(headers)
+                  }
+
+                case Left(ex) =>
+                  EffConsole[F].printStackTrace(ex)
+                  Chunk.empty[fs2.kafka.ProducerRecord[Option[Array[Byte]], Array[Byte]]]
+
+              }
+
+            } else {
+              Chunk {
+                fs2.kafka
+                  .ProducerRecord(output.topic.value, none[Array[Byte]], value.render().asByteArray)
+                  .withHeaders(headers)
+              }
+            }
           })
         }
         .through(fs2.kafka.KafkaProducer.pipe(producerSettings))

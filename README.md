@@ -103,7 +103,7 @@ output {
 
 ```properties
 output {
-    writer: {
+    writer {
         type = kafka-output
 
         topic = ${?KAFKA_TOPIC}
@@ -114,11 +114,21 @@ output {
 
         batch-size = 1000
                 
-        headers: {
-            key: value
+        headers {
+            key = value
+        }
+
+        decode-input-as-key-value = true
+        
+        producer-config {
+          compression-type = gzip
+          in-flight-requests =  1
+          linger-ms = 15
+          max-batch-size-bytes = 1024
+          max-request-size-bytes = 512
         }
     }
-    transformers: ["json-minify"] 
+    transformers = ["json-minify"] 
 }
 ```
 
@@ -126,12 +136,12 @@ output {
 
 ```properties
 output {
-    writer: {
+    writer {
         type = fs-output
         dir = "/tmp"
         filename-pattern = "my-cool-logs-%s.txt"
     }
-    transformers: ["json-prettify"]
+    transformers = ["json-prettify"]
 }
 ```
 
@@ -139,18 +149,18 @@ output {
 
 ```properties
 output {
-  writer: {
-    type: http-output
-    url: "http://example.com"
-    method: POST
-    headers: {
+  writer {
+    type = http-output
+    url = "http://example.com"
+    method = POST
+    headers {
         key = value
     }
-    parallelism: 3
-    content-type: "application/json"
-    stop-on-error: true
+    parallelism = 3
+    content-type = "application/json"
+    stop-on-error = true
   }
-  transformers: ["json-minify"]
+  transformers = ["json-minify"]
 }
 ```
 

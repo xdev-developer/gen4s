@@ -9,7 +9,7 @@ import scala.concurrent.duration.*
 
 import fs2.kafka.*
 
-case class Message(value: String, headers: Option[Headers] = None)
+case class Message(key: Option[String], value: String, headers: Option[Headers] = None)
 
 trait KafkaConsumers {
 
@@ -29,7 +29,7 @@ trait KafkaConsumers {
       .subscribeTo(topic.value)
       .records
       .take(count)
-      .map(r => Message(r.record.value, Option(r.record.headers)))
+      .map(r => Message(r.record.key, r.record.value, Option(r.record.headers)))
       .interruptAfter(60.seconds)
       .compile
       .toList
