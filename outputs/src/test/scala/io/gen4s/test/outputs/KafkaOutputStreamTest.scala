@@ -2,6 +2,7 @@ package io.gen4s.test.outputs
 
 import org.scalatest.funspec.AsyncFunSpec
 import org.scalatest.matchers.should.Matchers
+import org.scalatest.OptionValues
 
 import com.dimafeng.testcontainers.scalatest.TestContainersForAll
 import com.dimafeng.testcontainers.KafkaContainer
@@ -22,7 +23,8 @@ class KafkaOutputStreamTest
     with AsyncIOSpec
     with TestContainersForAll
     with Matchers
-    with KafkaConsumers {
+    with KafkaConsumers
+    with OptionValues {
 
   override type Containers = KafkaContainer
 
@@ -80,6 +82,34 @@ class KafkaOutputStreamTest
         } yield r).asserting { list =>
           list should not be empty
           list.size shouldBe n.value
+          list.head.value should include("timestamp")
+          list.head.headers shouldBe Symbol("defined")
+        }
+      }
+    }
+
+    it("Decode input as key-value message") {
+      val kvTemplate = SourceTemplate("""{ "key": "my-key", "value": { "timestamp": {{ts}} } }""")
+      withContainers { kafka =>
+        val streams = OutputStreamExecutor.make[IO]()
+        val builder = TemplateBuilder.make(
+          NonEmptyList.one(kvTemplate),
+          List(TimestampGenerator(Variable("ts"))),
+          Nil,
+          Set.empty[OutputTransformer]
+        )
+
+        val output =
+          KafkaOutput(Topic("test-topic-kv"), BootstrapServers(kafka.bootstrapServers), decodeInputAsKeyValue = true)
+
+        val n = NumberOfSamplesToGenerate(10)
+
+        (for {
+          _ <- streams.write(n, GeneratorStream.stream[IO](n, builder), output)
+          r <- consumeAllAsMessages[IO](output.topic, output.bootstrapServers, count = n.value.toLong)
+        } yield r).asserting { list =>
+          list should not be empty
+          list.head.key.value shouldBe "my-key"
           list.head.value should include("timestamp")
           list.head.headers shouldBe Symbol("defined")
         }

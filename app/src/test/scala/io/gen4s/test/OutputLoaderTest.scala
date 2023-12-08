@@ -39,16 +39,18 @@ class OutputLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
         }
     }
 
-    "Load kakfa output" in {
+    "Load kafka output" in {
       load[IO]("""
         writer: { 
-          type: kafka-output
-          topic: test
-          bootstrap-servers: "localhost:9092"
-          headers: {
+          type = kafka-output
+          topic = test
+          bootstrap-servers = "localhost:9092"
+          headers {
               key = value
           }
-          batch-size: 1000
+          batch-size = 1000
+          decode-input-as-key-value = true
+          
           producer-config {
             compression-type = gzip
             in-flight-requests =  1
@@ -66,6 +68,7 @@ class OutputLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
             bootstrapServers = Domain.BootstrapServers("localhost:9092"),
             headers = Map("key" -> "value"),
             batchSize = PosInt.unsafeFrom(1000),
+            decodeInputAsKeyValue = true,
             producerConfig = Some(KafkaProducerConfig(KafkaProducerConfig.CompressionTypes.gzip, 15L, 1024, 512L, 1))
           )
         }

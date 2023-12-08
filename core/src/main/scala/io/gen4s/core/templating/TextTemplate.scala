@@ -6,6 +6,18 @@ import scala.jdk.CollectionConverters.*
 
 import io.gen4s.core.generators.GeneratedValue
 import io.gen4s.core.generators.Variable
+import io.gen4s.core.templating.TextTemplate.stripQuotes
+
+object TextTemplate {
+  private val Quote          = "\""
+  private val VariablePrefix = "{{"
+  private val VariableSuffix = "}}"
+
+  def stripQuotes(in: String): String = {
+    in.stripPrefix(Quote)
+      .stripSuffix(Quote)
+  }
+}
 
 /**
  * Text template
@@ -16,10 +28,6 @@ import io.gen4s.core.generators.Variable
 case class TextTemplate(source: SourceTemplate, context: TemplateContext, transformers: Set[OutputTransformer])
     extends Template {
 
-  private val Quote          = "\""
-  private val VariablePrefix = "{{"
-  private val VariableSuffix = "}}"
-
   override def render(): RenderedTemplate = {
     val localValues: Map[Variable, GeneratedValue] =
       context.generators
@@ -27,14 +35,12 @@ case class TextTemplate(source: SourceTemplate, context: TemplateContext, transf
         .toMap
 
     val values = (context.globalValues ++ localValues).map { case (v, c) =>
-      v.name -> c.v.noSpaces
-        .stripPrefix(Quote)
-        .stripSuffix(Quote)
+      v.name -> stripQuotes(c.v.noSpaces)
     }
 
     RenderedTemplate(
       StringSubstitutor
-        .replace(source.content, values.asJava, VariablePrefix, VariableSuffix)
+        .replace(source.content, values.asJava, TextTemplate.VariablePrefix, TextTemplate.VariableSuffix)
     ).transform(transformers)
   }
 

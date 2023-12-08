@@ -17,11 +17,13 @@ case class StdOutput() extends Output
 case class KafkaOutput(
   topic: Topic,
   bootstrapServers: BootstrapServers,
+  decodeInputAsKeyValue: Boolean = false,
   headers: Map[String, String] = Map.empty,
   batchSize: PosInt = PosInt.unsafeFrom(1000),
   producerConfig: Option[KafkaProducerConfig] = None)
     extends Output {
-  def kafkaProducerConfig = producerConfig.getOrElse(KafkaProducerConfig.default)
+
+  def kafkaProducerConfig: KafkaProducerConfig = producerConfig.getOrElse(KafkaProducerConfig.default)
 }
 
 sealed abstract class HttpMethods(override val entryName: String) extends EnumEntry
