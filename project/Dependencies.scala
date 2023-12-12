@@ -61,7 +61,8 @@ object Dependencies {
   )
 
   val Fs2Kafka: Seq[ModuleID] = List(
-    "com.github.fd4s" %% "fs2-kafka" % V.fs2Kafka
+    "com.github.fd4s" %% "fs2-kafka"        % V.fs2Kafka,
+    "com.github.fd4s" %% "fs2-kafka-vulcan" % V.fs2Kafka
   )
 
   val CirceCore    = circe("core")
@@ -110,13 +111,18 @@ object Dependencies {
     CirceRefined
   )
 
+  val AvroConverter: Seq[ModuleID] = List(
+    "tech.allegro.schema.json2avro" % "converter" % "0.2.15"
+  )
+
   val ScalaTest: Seq[ModuleID]      = List("org.scalatest" %% "scalatest" % V.scalaTest % Test)
   val CatsEffectTest: Seq[ModuleID] = List("org.typelevel" %% "cats-effect-testing-scalatest" % "1.5.0" % Test)
 
   val TestContainers: Seq[ModuleID] = List(
-    "com.dimafeng" %% "testcontainers-scala-scalatest"  % V.testContainers % Test,
-    "com.dimafeng" %% "testcontainers-scala-kafka"      % V.testContainers % Test,
-    "com.dimafeng" %% "testcontainers-scala-postgresql" % V.testContainers % Test
+    "com.dimafeng"            %% "testcontainers-scala-scalatest"  % V.testContainers % Test,
+    "com.dimafeng"            %% "testcontainers-scala-kafka"      % V.testContainers % Test,
+    "com.dimafeng"            %% "testcontainers-scala-postgresql" % V.testContainers % Test,
+    "io.github.embeddedkafka" %% "embedded-kafka-schema-registry"  % "7.5.2"          % Test
   )
 
   // Runtime

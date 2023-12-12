@@ -1,0 +1,9 @@
+{
+  "type":"record",
+  "name":"PersonKey",
+  "namespace":"io.gen4s",
+  "fields":[
+    {"name":"id","type":"int"},
+    {"name":"orgId","type":"int"}
+  ]
+}

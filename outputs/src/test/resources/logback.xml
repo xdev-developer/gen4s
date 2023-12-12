@@ -7,7 +7,12 @@
         </encoder>
     </appender>
 
-    <logger name="org.apache.kafka.clients" level="WARN"/>
+
+    <logger name="state.change" level="WARN" />
+    <logger name="org.apache.zookeeper" level="WARN"/>
+    <logger name="io.confluent" level="WARN"/>
+    <logger name="kafka" level="WARN"/>
+    <logger name="org.apache.kafka" level="WARN"/>
     <logger name="org.apache.kafka.common.metrics" level="WARN"/>
     <logger name="org.apache.kafka.common.utils.AppInfoParser" level="WARN"/>
 

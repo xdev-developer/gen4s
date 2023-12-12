@@ -1,0 +1,9 @@
+{
+  "type":"record",
+  "name":"Person",
+  "namespace":"io.gen4s",
+  "fields":[
+    {"name":"username","type":"string"},
+    {"name":"age","type":["null","int"], "default":  null}
+  ]
+}

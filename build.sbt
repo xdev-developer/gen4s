@@ -9,7 +9,9 @@ ThisBuild / scalafmtOnCompile := true
 
 ThisBuild / scalacOptions += "-Wunused:all"
 
-resolvers ++= Resolver.sonatypeOssRepos("snapshots")
+ThisBuild / resolvers ++= Resolver.sonatypeOssRepos("snapshots")
+ThisBuild / resolvers += "confluent" at "https://packages.confluent.io/maven/"
+ThisBuild / resolvers += "jitpack" at "https://jitpack.io"
 
 lazy val core = project
   .in(file("core"))
@@ -44,7 +46,8 @@ lazy val generators = project
 lazy val outputs = project
   .in(file("outputs"))
   .settings(
-    name := "gen4s-outputs",
+    name         := "gen4s-outputs",
+    scalaVersion := Scala3,
     libraryDependencies ++= List.concat(
       Dependencies.Cats,
       Dependencies.CatsEffect,
@@ -57,6 +60,7 @@ lazy val outputs = project
       Dependencies.Enumeratum,
       Dependencies.Refined,
       Dependencies.Logback,
+      Dependencies.AvroConverter,
       Dependencies.CatsEffectTest,
       Dependencies.TestContainers,
       Dependencies.ScalaTest

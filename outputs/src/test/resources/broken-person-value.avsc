@@ -1,0 +1,5 @@
+{
+  "type":"record",
+  "name":"PersonKey",
+  "namespace":"io.gen4s"
+}

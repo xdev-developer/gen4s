@@ -2,6 +2,8 @@
 
 Data generator tool for developers and QA engineers.
 
+[TOC]
+
 ## Building
 
 Building standalone application:
@@ -96,6 +98,7 @@ output {
     }
 
     transformers: ["json-prettify"] 
+    validators = ["json", "missing-vars"]
 }
 ```
 
@@ -129,8 +132,71 @@ output {
         }
     }
     transformers = ["json-minify"] 
+    validators = ["json", "missing-vars"]
 }
 ```
+
+- **decode-input-as-key-value**: true/false -  decode input template as key/value json
+
+  ```json
+  {
+  	"key": ...
+    "value": {...}
+  }
+  ```
+
+#### Kafka AVRO output
+
+```properties
+output {
+    writer {
+        type = kafka-avro-output
+
+        topic = ${?KAFKA_TOPIC}
+        topic = "logs-avro"
+
+        bootstrap-servers = ${?KAFKA_BOOTSTRAP_SERVERS}
+        bootstrap-servers = "localhost:9095"
+
+        batch-size = 1000
+                
+        headers {
+            key = value
+        }
+
+        decode-input-as-key-value = true
+        
+        producer-config {
+          compression-type = gzip
+          in-flight-requests =  1
+          linger-ms = 15
+          max-batch-size-bytes = 1024
+          max-request-size-bytes = 512
+        }
+
+        avro-config {
+          schema-registry-url = "http://localhost:8081"
+          key-schema = "/path/to/file/key.avsc"
+          value-schema = "/path/to/file/key.avsc"
+          auto-register-schemas = false
+          registry-client-max-cache-size = 1000
+        }
+    }
+    transformers = ["json-minify"]
+    validators = ["json", "missing-vars"]
+}
+```
+
+- **key-schema** - path to key schema, Optional. 
+- **value-schema** - path to value schema, Optional. 
+- **auto-register-schemas** - register schemas in schema-registry.
+
+How schema resolver works:
+
+- Read from file.
+- When file isn't provided, gen4s lookup schema subject from schema registry (topic_name-key or topic_name-value).
+
+
 
 #### File System output
 
@@ -142,8 +208,11 @@ output {
         filename-pattern = "my-cool-logs-%s.txt"
     }
     transformers = ["json-prettify"]
+    validators = ["json", "missing-vars"]
 }
 ```
+
+
 
 #### Http output
 
@@ -161,8 +230,11 @@ output {
     stop-on-error = true
   }
   transformers = ["json-minify"]
+  validators = ["json", "missing-vars"]
 }
 ```
+
+
 
 #### Transformers
 
@@ -171,11 +243,8 @@ output {
 **json-prettify**  - transform generated JSON to _pretty_ printed JSON.
 
 
+
 ## Schema definition and data generators
-
-Big thanks to https://github.com/azakordonets/fabricator  random data generator project!
-
-
 
 ### Static value generator
 
@@ -207,7 +276,7 @@ This sampler can be used like template constant (static value).
 
 
 
-#### Int number generator.
+### Int number generator.
 
 ```json
 { "variable": "my-int", "type": "int", "min": 10, "max": 1000 }
@@ -215,7 +284,7 @@ This sampler can be used like template constant (static value).
 
 
 
-#### Double number generator.
+### Double number generator.
 
 ```json
 { "variable": "test-double", "type": "double", "min": 10.5, "max": 15.5, "scale": 6 }
@@ -223,7 +292,7 @@ This sampler can be used like template constant (static value).
 
 
 
-#### Boolean generator.
+### Boolean generator.
 
 ```json
 { "variable": "test-bool", "type": "boolean"}
@@ -231,7 +300,7 @@ This sampler can be used like template constant (static value).
 
 
 
-#### String generator.
+### String generator.
 
 ```json
 { "variable": "test-string", "type": "string", "len": 10}
@@ -239,7 +308,7 @@ This sampler can be used like template constant (static value).
 
 
 
-#### String pattern generator.
+### String pattern generator.
 
 ```json
 { "variable": "test-string-pattern", "type": "pattern", "pattern": "hello-???-###"} // hello-abc-123
@@ -247,7 +316,7 @@ This sampler can be used like template constant (static value).
 
 
 
-#### Java UUID field generator.
+### Java UUID field generator.
 
 ```json
 { "variable": "test-uuid", "type": "uuid" }
@@ -255,7 +324,7 @@ This sampler can be used like template constant (static value).
 
 
 
-#### Ip address generator
+### Ip address generator
 
 ```json
 { "variable": "test-ip", "type": "ip", "ipv6": false }
@@ -263,7 +332,7 @@ This sampler can be used like template constant (static value).
 
 
 
-#### Enumeration generator.
+### Enumeration generator.
 
 ```json
 { "variable": "test-enum", "type": "enum", "oneOf": ["hello", "world"] }
@@ -271,7 +340,7 @@ This sampler can be used like template constant (static value).
 
 
 
-#### Env var generator.
+### Env var generator.
 
 ```json
 { "variable": "test-var", "type": "env-var", "name": "ORG_ID" }
@@ -295,7 +364,7 @@ OR any env var with `G4S_` prefix, for example `G4S_QA_USERNAME`
 
 
 
-#### DateTime generator
+### DateTime generator
 
 ```json
 { "variable": "test-date", "type": "date", "format": "MM/dd/yyyy", "shiftDays": -10 }
@@ -313,7 +382,7 @@ OR any env var with `G4S_` prefix, for example `G4S_QA_USERNAME`
 
 
 
-#### List generator.
+### List generator.
 
 ```json
 { "variable": "test-array", "type": "list", "len": 3, "generator": { "variable": "_", "type": "ip" } }
