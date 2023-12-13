@@ -1,0 +1,7 @@
+{
+  "generators": [
+    { "variable": "name", "type": "pattern", "pattern":  "user-???-###"},
+    { "variable": "id", "type": "int", "min": 10, "max": 1000 },
+    { "variable": "age", "type": "int", "min": 1, "max": 60 }
+  ]
+}

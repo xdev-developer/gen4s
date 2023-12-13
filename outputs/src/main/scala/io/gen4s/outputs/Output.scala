@@ -1,5 +1,6 @@
 package io.gen4s.outputs
 
+import java.io.File
 import java.nio.file.{Path, Paths}
 
 import org.apache.commons.io.FilenameUtils
@@ -17,6 +18,27 @@ case class StdOutput() extends Output
 case class KafkaOutput(
   topic: Topic,
   bootstrapServers: BootstrapServers,
+  decodeInputAsKeyValue: Boolean = false,
+  headers: Map[String, String] = Map.empty,
+  batchSize: PosInt = PosInt.unsafeFrom(1000),
+  producerConfig: Option[KafkaProducerConfig] = None)
+    extends Output {
+
+  def kafkaProducerConfig: KafkaProducerConfig = producerConfig.getOrElse(KafkaProducerConfig.default)
+}
+
+case class AvroConfig(
+  schemaRegistryUrl: String,
+  keySchema: Option[File] = None,
+  valueSchema: Option[File] = None,
+  autoRegisterSchemas: Boolean = false,
+  registryClientMaxCacheSize: Int = 1000
+)
+
+case class KafkaAvroOutput(
+  topic: Topic,
+  bootstrapServers: BootstrapServers,
+  avroConfig: AvroConfig,
   decodeInputAsKeyValue: Boolean = false,
   headers: Map[String, String] = Map.empty,
   batchSize: PosInt = PosInt.unsafeFrom(1000),
