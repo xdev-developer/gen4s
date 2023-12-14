@@ -39,9 +39,9 @@ class TemplateGeneratorStreamTest extends AsyncFunSpec with AsyncIOSpec with Mat
         .asserting { elements =>
           elements.size shouldBe numSamples.value
 
-          elements.foreach(c => info("Generated content: " + c.content))
+          elements.foreach(c => info("Generated content: " + c.asString))
 
-          elements.head.content should fullyMatch regex "timestamp: ([0-9])+"
+          elements.head.asString should fullyMatch regex "timestamp: ([0-9])+"
         }
 
     }

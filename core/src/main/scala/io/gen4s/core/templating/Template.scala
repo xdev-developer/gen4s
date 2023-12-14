@@ -8,66 +8,77 @@ trait Template {
   def render(): RenderedTemplate
 }
 
+object SourceTemplate {
+  def apply(value: String): SourceTemplate          = value
+  extension (v: SourceTemplate) def content: String = v
+}
+
 /**
  * Raw / initial template
  *
  * @param content source content
  */
-case class SourceTemplate(content: String) extends AnyVal
-
-object RenderedTemplate {
-  given Show[RenderedTemplate] = Show.show[RenderedTemplate](_.asString)
-}
+opaque type SourceTemplate = String
 
 /**
  * Final template - after all variables resolvings and transformations
  *
  * @param content rendered template content
  */
-case class RenderedTemplate(content: String) extends AnyVal {
-  def asString: String = content
+opaque type RenderedTemplate = String
 
-  def asByteArray: Array[Byte] = {
-    val bytes = content.getBytes
-    if (bytes.isEmpty) " ".getBytes() else bytes
-  }
+object RenderedTemplate {
 
-  def asJson: Either[ParsingFailure, Json] = {
-    import io.circe.parser.*
-    parse(asString)
-  }
+  given Show[RenderedTemplate] = Show.show[RenderedTemplate](_.asString)
 
-  def asPrettyString: String = asJson.toOption.map(_.spaces2).getOrElse(asString)
+  def apply(content: String): RenderedTemplate = content
 
-  def asKeyValue: Either[ParsingFailure, (RenderedTemplate, RenderedTemplate)] = {
+  extension (rt: RenderedTemplate) {
 
-    def extractField(key: String, obj: Json): Either[ParsingFailure, Json] = {
-      obj.hcursor
-        .downField(key)
-        .as[Json]
-        .leftMap(ex => ParsingFailure(s"Unable extract $key from $obj", ex))
+    def asString: String = rt
+
+    def asByteArray: Array[Byte] = {
+      val bytes = rt.getBytes
+      if (bytes.isEmpty) " ".getBytes() else bytes
     }
 
-    for {
-      json  <- asJson
-      key   <- extractField("key", json)
-      value <- extractField("value", json)
-    } yield (
-      RenderedTemplate(TextTemplate.stripQuotes(key.noSpaces)),
-      RenderedTemplate(TextTemplate.stripQuotes(value.noSpaces))
-    )
-  }
+    def asJson: Either[ParsingFailure, Json] = {
+      import io.circe.parser.*
+      parse(asString)
+    }
 
-  /**
-   * Apply template transformers
-   *
-   * @param transformers [[OutputTransformer]] set of transformers
-   * @return transformed
-   */
-  def transform(transformers: Set[OutputTransformer]): RenderedTemplate =
-    if (transformers.nonEmpty) {
-      transformers.foldLeft(this) { case (template, transformer) =>
-        transformer.transform(template)
+    def asPrettyString: String = asJson.toOption.map(_.spaces2).getOrElse(asString)
+
+    def asKeyValue: Either[ParsingFailure, (RenderedTemplate, RenderedTemplate)] = {
+
+      def extractField(key: String, obj: Json): Either[ParsingFailure, Json] = {
+        obj.hcursor
+          .downField(key)
+          .as[Json]
+          .leftMap(ex => ParsingFailure(s"Unable extract $key from $obj", ex))
       }
-    } else this
+
+      for {
+        json  <- asJson
+        key   <- extractField("key", json)
+        value <- extractField("value", json)
+      } yield (
+        RenderedTemplate(TextTemplate.stripQuotes(key.noSpaces)),
+        RenderedTemplate(TextTemplate.stripQuotes(value.noSpaces))
+      )
+    }
+
+    /**
+     * Apply template transformers
+     *
+     * @param transformers [[OutputTransformer]] set of transformers
+     * @return transformed
+     */
+    def transform(transformers: Set[OutputTransformer]): RenderedTemplate =
+      if (transformers.nonEmpty) {
+        transformers.foldLeft(rt) { case (template, transformer) =>
+          transformer.transform(template)
+        }
+      } else rt
+  }
 }

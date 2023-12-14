@@ -4,9 +4,12 @@ import com.typesafe.config.{Config, ConfigFactory}
 
 package object conf {
 
-  case class EnvProfileConfig(value: Config) extends AnyVal
+  opaque type EnvProfileConfig = Config
 
   object EnvProfileConfig {
+    def apply(config: Config): EnvProfileConfig       = config
+    extension (p: EnvProfileConfig) def value: Config = p
+
     def empty: EnvProfileConfig = EnvProfileConfig(ConfigFactory.empty())
   }
 
