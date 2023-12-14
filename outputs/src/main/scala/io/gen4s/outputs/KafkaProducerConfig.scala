@@ -13,7 +13,7 @@ object KafkaProducerConfig {
 
   def default: KafkaProducerConfig =
     KafkaProducerConfig(
-      compressionType = CompressionTypes.snappy,
+      compressionType = CompressionTypes.none,
       lingerMs = 100,
       maxBatchSizeBytes = 16384 * 4,
       maxRequestSizeBytes = 1048576L,
