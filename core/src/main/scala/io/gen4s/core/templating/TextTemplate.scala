@@ -35,7 +35,7 @@ case class TextTemplate(source: SourceTemplate, context: TemplateContext, transf
         .toMap
 
     val values = (context.globalValues ++ localValues).map { case (v, c) =>
-      v.name -> stripQuotes(c.v.noSpaces)
+      v.toString -> stripQuotes(c.v.noSpaces)
     }
 
     RenderedTemplate(

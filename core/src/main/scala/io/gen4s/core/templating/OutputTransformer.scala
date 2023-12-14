@@ -15,7 +15,7 @@ object OutputTransformer extends Enum[OutputTransformer] with CirceEnum[OutputTr
     override def transform(template: RenderedTemplate): RenderedTemplate =
       template.asJson match {
         case Left(_)      => template
-        case Right(value) => template.copy(value.noSpaces)
+        case Right(value) => RenderedTemplate(value.noSpaces)
       }
   }
 
@@ -24,7 +24,7 @@ object OutputTransformer extends Enum[OutputTransformer] with CirceEnum[OutputTr
     override def transform(template: RenderedTemplate): RenderedTemplate =
       template.asJson match {
         case Left(_)      => template
-        case Right(value) => template.copy(value.spaces2)
+        case Right(value) => RenderedTemplate(value.spaces2)
       }
   }
 }
