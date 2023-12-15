@@ -9,7 +9,8 @@ Data generator tool for developers and QA engineers.
 Building standalone application:
 
 ```shell
-sbt -J-Xss6M 'universal:packageXzTarball'
+sbt 'universal:packageXzTarball' OR
+sbt 'universal:packageBin'
 ```
 
 ## Running
