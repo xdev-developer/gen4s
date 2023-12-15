@@ -9,8 +9,23 @@ Data generator tool for developers and QA engineers.
 Building standalone application:
 
 ```shell
-sbt -J-Xss6M 'universal:packageXzTarball'
+sbt 'universal:packageXzTarball' OR
+sbt 'universal:packageBin'
 ```
+
+Building docker image
+
+```shell
+sbt 'universal:packageXzTarball'
+cd app
+docker build -t xdev.developer/gen4s:<version> .
+```
+
+Test docker image
+```shell
+docker run xdev.developer/gen4s:<version> bin/gen4s -c examples/playground/config.conf -s 5
+```
+
 
 ## Running
 
@@ -124,8 +139,8 @@ output {
         decode-input-as-key-value = true
         
         producer-config {
-          compression-type = gzip
-          in-flight-requests =  1
+          compression-type = none # snappy, gzip, lz4
+          in-flight-requests =  5
           linger-ms = 15
           max-batch-size-bytes = 1024
           max-request-size-bytes = 512

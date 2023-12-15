@@ -84,11 +84,12 @@ lazy val app = project
       Dependencies.ScalaTest,
       Dependencies.CatsEffectTest
     ),
+    Universal / maintainer                                       := "xdev.developer@gmail.com,pavel.tsipinio@gmail.com",
+    executableScriptName                                         := "gen4s",
     Universal / packageXzTarball / mappings += file("README.md") -> "README.md",
     Universal / packageXzTarball / mappings ++= directory("examples"),
-    Universal / packageBin / mappings += file("README.md") -> "README.md",
-    Universal / packageBin / mappings ++= directory("examples"),
-    Compile / packageDoc / mappings := Seq()
+    Universal / packageBin / mappings := (Universal / packageXzTarball / mappings).value,
+    Compile / packageDoc / mappings   := Seq()
   )
   .dependsOn(core, generators, outputs)
 
