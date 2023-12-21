@@ -68,6 +68,21 @@ lazy val outputs = project
   )
   .dependsOn(core, generators)
 
+lazy val benchmarks = project
+  .in(file("benchmarks"))
+  .dependsOn(generators % "test->test")
+  .enablePlugins(JmhPlugin)
+  .settings(
+    name                      := "gen4s-benchmarks",
+    scalaVersion              := Scala3,
+    Jmh / sourceDirectory     := (Test / sourceDirectory).value,
+    Jmh / classDirectory      := (Test / classDirectory).value,
+    Jmh / dependencyClasspath := (Test / dependencyClasspath).value,
+    // rewire tasks, so that 'bench/Jmh/run' automatically invokes 'bench/Jmh/compile' (otherwise a clean 'bench/Jmh/run' would fail)
+    Jmh / compile := (Jmh / compile).dependsOn(Test / compile).value,
+    Jmh / run     := (Jmh / run).dependsOn(Jmh / compile).evaluated
+  )
+
 lazy val app = project
   .in(file("app"))
   .enablePlugins(JavaAppPackaging)
@@ -95,7 +110,7 @@ lazy val app = project
 
 lazy val root = project
   .in(file("."))
-  .aggregate(core, generators, outputs, app)
+  .aggregate(core, generators, outputs, benchmarks, app)
   .settings(
     name := "gen4s",
     releaseProcess := Seq[ReleaseStep](
