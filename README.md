@@ -26,6 +26,12 @@ Test docker image
 docker run xdev.developer/gen4s:<version> bin/gen4s -c examples/playground/config.conf -s 5
 ```
 
+## Testing
+
+Benchmarking
+```shell
+sbt clean "project benchmarks;jmh:run -i 3 -wi 3 -f3 -t1"
+```
 
 ## Running
 
