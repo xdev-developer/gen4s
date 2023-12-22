@@ -4,36 +4,9 @@ Data generator tool for developers and QA engineers.
 
 [TOC]
 
-## Building
-
-Building standalone application:
-
-```shell
-sbt 'universal:packageXzTarball' OR
-sbt 'universal:packageBin'
-```
-
-Building docker image
-
-```shell
-sbt 'universal:packageXzTarball'
-cd app
-docker build -t xdev.developer/gen4s:<version> .
-```
-
-Test docker image
-```shell
-docker run xdev.developer/gen4s:<version> bin/gen4s -c examples/playground/config.conf -s 5
-```
-
-## Testing
-
-Benchmarking
-```shell
-sbt clean "project benchmarks;jmh:run -i 3 -wi 3 -f3 -t1"
-```
-
 ## Running
+
+Download latest release from https://github.com/xdev-developer/gen4s/releases.
 
 ```shell
 Gen4s
@@ -85,6 +58,37 @@ ORG_ID=12345
 
 ```shell
 ./bin/gen4s scenario -c ./examples/scenario/scenario.conf -p ./profiles/dev.profile
+```
+
+
+
+## Building from source
+
+Building standalone application:
+
+```shell
+sbt 'universal:packageXzTarball' OR
+sbt 'universal:packageBin'
+```
+
+Building docker image
+
+```shell
+sbt 'universal:packageXzTarball'
+cd app
+docker build -t xdev.developer/gen4s:<version> .
+```
+
+Test docker image
+```shell
+docker run xdev.developer/gen4s:<version> bin/gen4s -c examples/playground/config.conf -s 5
+```
+
+## Testing
+
+Benchmarking
+```shell
+sbt clean "project benchmarks;jmh:run -i 3 -wi 3 -f3 -t1"
 ```
 
 
