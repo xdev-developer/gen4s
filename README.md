@@ -36,16 +36,24 @@ sbt clean "project benchmarks;jmh:run -i 3 -wi 3 -f3 -t1"
 ## Running
 
 ```shell
-Gen4s version
-Usage: gen4s [preview|run] [options]
+Gen4s
+Usage: gen4s [preview|run|scenario] [options]
 
-  -s, --samples <number>  Samples to generate, default 1
-  -c, --config <file>     Configuration file. Default ./config.conf
-  -p, --profile <file>    Environment variables profile.
-Command: preview
+  -c, --config <file>      Configuration file. Default ./config.conf
+  -p, --profile <file>     Environment variables profile.
+
+Command: preview [options]
 Preview data generation.
-Command: run
+  --pretty                 pretty print
+  -s, --samples <number>   Samples to generate, default 1
+
+Command: run [options]
 Run data generation stream.
+  -s, --samples <number>   Samples to generate, default 1
+
+Command: scenario
+Run scenario
+  --help                   prints usage info
 ```
 
 ```shell
@@ -70,6 +78,16 @@ ORG_ID=12345
 ```shell
 ./bin/gen4s -c ./examples/playground/config.conf -s 5 -p ./profiles/dev.profile
 ```
+
+
+
+### Runninng scenario
+
+```shell
+./bin/gen4s scenario -c ./examples/scenario/scenario.conf -p ./profiles/dev.profile
+```
+
+
 
 
 
@@ -262,6 +280,19 @@ output {
 **json-minify**  - transform generated JSON to _compact_ printed JSON - (removes all new lines and spaces). 
 
 **json-prettify**  - transform generated JSON to _pretty_ printed JSON.
+
+
+
+### Scenario configuration
+
+Using scenario you can run multiple stages, configure `delay` between stages and number of samples to generate.
+
+```properties
+stages: [
+    { name: "Playground", samples: 5, config-file: "./examples/playground/config.conf", delay: 5 seconds},
+    { name: "CSV Input",  samples: 3, config-file: "./examples/csv-input/config.conf"}
+]
+```
 
 
 

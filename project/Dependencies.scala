@@ -87,6 +87,7 @@ object Dependencies {
     "com.github.pureconfig" %% "pureconfig-core"        % V.pureConfig,
     "com.github.pureconfig" %% "pureconfig-cats-effect" % V.pureConfig,
     "com.github.pureconfig" %% "pureconfig-enumeratum"  % V.pureConfig,
+    "com.github.pureconfig" %% "pureconfig-cats"        % V.pureConfig,
     "eu.timepit"            %% "refined-pureconfig"     % V.refined
   )
 
