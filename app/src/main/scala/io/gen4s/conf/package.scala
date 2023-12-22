@@ -2,6 +2,10 @@ package io.gen4s
 
 import com.typesafe.config.{Config, ConfigFactory}
 
+import io.gen4s.core.Domain.NumberOfSamplesToGenerate
+
+import pureconfig.ConfigReader
+
 package object conf {
 
   opaque type EnvProfileConfig = Config
@@ -12,5 +16,7 @@ package object conf {
 
     def empty: EnvProfileConfig = EnvProfileConfig(ConfigFactory.empty())
   }
+
+  given ConfigReader[NumberOfSamplesToGenerate] = ConfigReader[Int].map(n => NumberOfSamplesToGenerate(n))
 
 }

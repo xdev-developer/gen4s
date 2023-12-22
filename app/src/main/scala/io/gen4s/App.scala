@@ -1,5 +1,6 @@
 package io.gen4s
 
+import org.typelevel.log4cats.{Logger, SelfAwareStructuredLogger}
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 import cats.effect.*
@@ -7,12 +8,15 @@ import cats.effect.std.Console
 import cats.implicits.*
 import io.gen4s.cli.*
 import io.gen4s.conf.*
+import io.gen4s.scenario.ScenarioExecutor
 import io.gen4s.stage.StageExecutor
 
 import fs2.io.file.Files
 import pureconfig.error.ConfigReaderException
 
 object App extends IOApp {
+
+  implicit def unsafeLogger[F[_]: Sync]: SelfAwareStructuredLogger[F] = Slf4jLogger.getLogger[F]
 
   override def run(args: List[String]): IO[ExitCode] =
     new CliArgsParser().parse(args, Args()) match {
@@ -39,14 +43,29 @@ object App extends IOApp {
       logger         <- Slf4jLogger.create[F]
       _              <- logger.info("Running data generation stream")
       _              <- logger.info(s"Configuration file: ${args.configFile.getAbsolutePath}")
-      _              <- logger.info(s"Execution mode: ${args.mode}")
+      _              <- logger.info(s"${args.mode.entryName}")
       envVarsProfile <- loadEnvVarsProfile[F](args.profileFile)
-      conf           <- StageConfigLoader.fromFile[F](args.configFile).withEnvProfile(envVarsProfile)
-      executor       <- StageExecutor.make[F](args, conf)
-      _              <- Async[F].whenA(args.mode == ExecMode.Run)(executor.exec())
-      _              <- Async[F].whenA(args.mode == ExecMode.Preview)(executor.preview())
-
+      _              <- Async[F].whenA(args.mode == ExecMode.Run)(runStage(args, envVarsProfile))
+      _              <- Async[F].whenA(args.mode == ExecMode.Preview)(runStage(args, envVarsProfile))
+      _              <- Async[F].whenA(args.mode == ExecMode.RunScenario)(runScenario(args, envVarsProfile))
     } yield ExitCode.Success
+
+  private def runStage[F[_]: Async: Console: Files: Logger](args: Args, envVarsProfile: EnvProfileConfig) = {
+    for {
+      conf     <- StageConfigLoader.fromFile[F](args.configFile).withEnvProfile(envVarsProfile)
+      executor <- StageExecutor.make[F]("Stage", args, conf)
+      _        <- Async[F].whenA(args.mode == ExecMode.Run)(executor.exec())
+      _        <- Async[F].whenA(args.mode == ExecMode.Preview)(executor.preview())
+    } yield ()
+  }
+
+  private def runScenario[F[_]: Async: Console: Files](args: Args, envVarsProfile: EnvProfileConfig) = {
+    for {
+      conf     <- ScenarioConfigLoader.fromFile[F](args.configFile).withEnvProfile(envVarsProfile)
+      executor <- ScenarioExecutor.make[F](args, conf, envVarsProfile)
+      _        <- Async[F].whenA(args.mode == ExecMode.RunScenario)(executor.exec())
+    } yield ()
+  }
 
   private def loadEnvVarsProfile[F[_]: Sync](in: Option[java.io.File]): F[EnvProfileConfig] = in match {
     case Some(f) =>
