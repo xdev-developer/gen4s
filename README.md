@@ -6,7 +6,7 @@ Data generator tool for developers and QA engineers.
 
 ## Running
 
-Download latest release from https://github.com/xdev-developer/gen4s/releases.
+Download latest release from [Releases page](https://github.com/xdev-developer/gen4s/releases), unzip archive and execute `./bin/gen4s`
 
 ```shell
 Gen4s
