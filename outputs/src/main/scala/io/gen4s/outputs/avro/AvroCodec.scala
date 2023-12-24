@@ -8,26 +8,48 @@ import cats.implicits.*
 
 import tech.allegro.schema.json2avro.converter.JsonAvroConverter
 import vulcan.{Avro, AvroError, Codec}
+import vulcan.Codec.Aux
 
 object AvroCodec {
 
-  private val empty = Array.emptyByteArray.asRight[AvroError]
-
   @nowarn
-  def codec(recordSchema: Schema) = {
+  def keyCodec(recordSchema: Schema): Aux[Avro.Record, AvroDynamicKey] = {
     val converter = new JsonAvroConverter()
 
-    def encoder(p: Array[Byte]): Either[AvroError, Avro.Record] = {
+    def encoder(p: AvroDynamicKey): Either[AvroError, Avro.Record] = {
       Either
         .catchNonFatal {
-          converter.convertToGenericDataRecord(p, recordSchema)
+          converter.convertToGenericDataRecord(p.bytes, recordSchema)
         }
-        .leftMap(ex => AvroError.apply(s"Avro encoder error: ${ex.getMessage}"))
+        .leftMap(ex => AvroError.apply(s"Avro key encoder error: ${ex.getMessage}"))
     }
 
-    def decoder(p: Any, schema: Schema): Either[AvroError, Array[Byte]] = empty
+    def decoder(p: Any, schema: Schema): Either[AvroError, AvroDynamicKey] =
+      AvroDynamicKey(Array.emptyByteArray).asRight[AvroError]
 
-    Codec.instance[Avro.Record, Array[Byte]](
+    Codec.instance[Avro.Record, AvroDynamicKey](
+      schema = recordSchema.asRight[AvroError],
+      encode = encoder,
+      decode = decoder
+    )
+  }
+
+  @nowarn
+  def valueCodec(recordSchema: Schema): Aux[Avro.Record, AvroDynamicValue] = {
+    val converter = new JsonAvroConverter()
+
+    def encoder(p: AvroDynamicValue): Either[AvroError, Avro.Record] = {
+      Either
+        .catchNonFatal {
+          converter.convertToGenericDataRecord(p.bytes, recordSchema)
+        }
+        .leftMap(ex => AvroError.apply(s"Avro value encoder error: ${ex.getMessage}"))
+    }
+
+    def decoder(p: Any, schema: Schema): Either[AvroError, AvroDynamicValue] =
+      AvroDynamicValue(Array.emptyByteArray).asRight[AvroError]
+
+    Codec.instance[Avro.Record, AvroDynamicValue](
       schema = recordSchema.asRight[AvroError],
       encode = encoder,
       decode = decoder
