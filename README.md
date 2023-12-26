@@ -1,8 +1,15 @@
-# Gen4s
+# Gen4s - data generator tool for developers and QA engineers.
 
-Data generator tool for developers and QA engineers.
+Using this tool you can:
 
-[TOC]
+- Publish 'fresh' and up to date data to your system.
+- Keep your test data in file system or repository and share it with your co-workers.
+- Switch between different profiles - dev, local, qa etc.
+- Run generation scenario - publish some data, wait, publish another portion of data. (Event time processing).
+- Load test your system - publishing 1-5M messages for test your system load.
+- Semi-generate your data - you can generate `csv` file from your DB and use it as part of data generation schema.
+
+
 
 ## Running
 
@@ -140,7 +147,7 @@ output {
       type: "std-output"
     }
 
-    transformers: ["json-prettify"] 
+    transformers = ["json-prettify"] 
     validators = ["json", "missing-vars"]
 }
 ```
@@ -179,12 +186,18 @@ output {
 }
 ```
 
-- **decode-input-as-key-value**: true/false -  decode input template as key/value json
+- **decode-input-as-key-value**: true/false -  decode input template as key/value json.
 
+  key will be produced as 'kafka message key' and value as 'kafka message value'.
+  
   ```json
   {
-  	"key": ...
-    "value": {...}
+  	"key": 1
+    "value": {
+        "id": 1,
+  			"timestamp": {{ts}} 
+        "event": "Logged in"
+  	}
   }
   ```
 
@@ -220,7 +233,7 @@ output {
         avro-config {
           schema-registry-url = "http://localhost:8081"
           key-schema = "/path/to/file/key.avsc"
-          value-schema = "/path/to/file/key.avsc"
+          value-schema = "/path/to/file/value.avsc"
           auto-register-schemas = false
           registry-client-max-cache-size = 1000
         }

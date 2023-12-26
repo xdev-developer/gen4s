@@ -169,8 +169,8 @@ class KafkaAvroOutputStreamTest
           NonEmptyList.one(template),
           List(
             StringPatternGenerator(Variable("name"), NonEmptyString.unsafeFrom("username_###")),
-            IntNumberGenerator(Variable("age"), max = 50.some),
-            IntNumberGenerator(Variable("id"), max = 50.some)
+            IntNumberGenerator(Variable("age"), min = 1.some, max = 50.some),
+            IntNumberGenerator(Variable("id"), min = 1.some, max = 50.some)
           ),
           Nil,
           Set.empty[OutputTransformer]
@@ -232,8 +232,8 @@ class KafkaAvroOutputStreamTest
           NonEmptyList.one(template),
           List(
             StringPatternGenerator(Variable("name"), NonEmptyString.unsafeFrom("username_###")),
-            IntNumberGenerator(Variable("age"), max = 50.some),
-            IntNumberGenerator(Variable("id"), max = 50.some)
+            IntNumberGenerator(Variable("age"), min = 1.some, max = 50.some),
+            IntNumberGenerator(Variable("id"), min = 1.some, max = 50.some)
           ),
           Nil,
           Set.empty[OutputTransformer]
@@ -294,8 +294,8 @@ class KafkaAvroOutputStreamTest
           NonEmptyList.one(template),
           List(
             StringPatternGenerator(Variable("name"), NonEmptyString.unsafeFrom("username_###")),
-            IntNumberGenerator(Variable("age"), max = 50.some),
-            IntNumberGenerator(Variable("id"), max = 50.some)
+            IntNumberGenerator(Variable("age"), min = 1.some, max = 50.some),
+            IntNumberGenerator(Variable("id"), min = 1.some, max = 50.some)
           ),
           Nil,
           Set.empty[OutputTransformer]
@@ -345,7 +345,7 @@ class KafkaAvroOutputStreamTest
           NonEmptyList.one(template),
           List(
             StringPatternGenerator(Variable("name"), NonEmptyString.unsafeFrom("username_###")),
-            IntNumberGenerator(Variable("age"), max = 50.some)
+            IntNumberGenerator(Variable("age"), min = 1.some, max = 50.some)
           ),
           Nil,
           Set.empty[OutputTransformer]
@@ -388,7 +388,7 @@ class KafkaAvroOutputStreamTest
           NonEmptyList.one(template),
           List(
             StringPatternGenerator(Variable("name"), NonEmptyString.unsafeFrom("username_###")),
-            IntNumberGenerator(Variable("age"), max = 50.some)
+            IntNumberGenerator(Variable("age"), min = 1.some, max = 50.some)
           ),
           Nil,
           Set.empty[OutputTransformer]
