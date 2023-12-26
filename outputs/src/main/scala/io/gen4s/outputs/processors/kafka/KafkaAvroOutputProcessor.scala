@@ -10,7 +10,7 @@ import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient
 import io.gen4s.core.templating.Template
 import io.gen4s.core.Domain
 import io.gen4s.core.Domain.NumberOfSamplesToGenerate
-import io.gen4s.outputs.avro.{AvroCodec, SchemaLoader}
+import io.gen4s.outputs.avro.{AvroCodec, AvroDynamicKey, AvroDynamicValue, SchemaLoader}
 import io.gen4s.outputs.processors.OutputProcessor
 import io.gen4s.outputs.KafkaAvroOutput
 
@@ -49,21 +49,31 @@ class KafkaAvroOutputProcessor[F[_]: Async] extends OutputProcessor[F, KafkaAvro
 
         val avroSettings = AvroSettings(registryClientSettings).withAutoRegisterSchemas(avroConfig.autoRegisterSchemas)
 
-        implicit val keySerializer: Resource[F, KeySerializer[F, Key]] = keySchema match {
+        // Key serializer
+        implicit val keySerializer: Resource[F, KeySerializer[F, AvroDynamicKey]] = keySchema match {
           case Right(value) =>
-            implicit val keyCodec: Aux[Avro.Record, Key] = AvroCodec.codec(value)
-            avroSerializer[Key].forKey[F](avroSettings)
+            implicit val keyCodec: Aux[Avro.Record, AvroDynamicKey] = AvroCodec.keyCodec(value)
+            avroSerializer[AvroDynamicKey].forKey[F](avroSettings)
 
-          case Left(ex) => Resource.pure(Serializer[F, Key])
+          case Left(ex) =>
+            given Serializer[F, AvroDynamicKey] = Serializer.instance[F, AvroDynamicKey] { (_, _, key) =>
+              Applicative[F].pure(key.bytes)
+            }
+
+            Resource.pure(Serializer[F, AvroDynamicKey])
         }
 
-        implicit val valueCodec: Aux[Avro.Record, Value] = AvroCodec.codec(schema)
+        // Value serializer
+        implicit val valueCodec: Aux[Avro.Record, AvroDynamicValue] = AvroCodec.valueCodec(schema)
 
-        implicit val valueSerializer: Resource[F, ValueSerializer[F, Value]] =
-          avroSerializer[Value].forValue(avroSettings)
+        implicit val valueSerializer: Resource[F, ValueSerializer[F, AvroDynamicValue]] =
+          avroSerializer[AvroDynamicValue].forValue(avroSettings)
 
         val producerSettings =
-          mkProducerSettingsResource[F, Key, Value](output.bootstrapServers, output.kafkaProducerConfig)
+          mkProducerSettingsResource[F, AvroDynamicKey, AvroDynamicValue](
+            output.bootstrapServers,
+            output.kafkaProducerConfig
+          )
 
         val groupSize = if (output.batchSize.value > n.value) output.batchSize.value else n.value
         val headers   = KafkaOutputProcessor.toKafkaHeaders(output.headers)
@@ -78,7 +88,11 @@ class KafkaAvroOutputProcessor[F[_]: Async] extends OutputProcessor[F, KafkaAvro
                     case Right((key, v)) =>
                       Applicative[F].pure(
                         fs2.kafka
-                          .ProducerRecord(output.topic.value, key.asByteArray, v.asByteArray)
+                          .ProducerRecord(
+                            output.topic.value,
+                            AvroDynamicKey(key.asByteArray),
+                            AvroDynamicValue(v.asByteArray)
+                          )
                           .withHeaders(headers)
                       )
 
@@ -89,7 +103,11 @@ class KafkaAvroOutputProcessor[F[_]: Async] extends OutputProcessor[F, KafkaAvro
                 } else {
                   Applicative[F].pure(
                     fs2.kafka
-                      .ProducerRecord(output.topic.value, null, value.render().asByteArray)
+                      .ProducerRecord(
+                        output.topic.value,
+                        AvroDynamicKey(null),
+                        AvroDynamicValue(value.render().asByteArray)
+                      )
                       .withHeaders(headers)
                   )
                 }
