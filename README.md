@@ -60,13 +60,11 @@ ORG_ID=12345
 ```
 
 
-
 ### Runninng scenario
 
 ```shell
 ./bin/gen4s scenario -c ./examples/scenario/scenario.conf -p ./profiles/dev.profile
 ```
-
 
 
 ## Building from source
@@ -88,7 +86,7 @@ docker build -t xdev.developer/gen4s:<version> .
 
 Test docker image
 ```shell
-docker run xdev.developer/gen4s:<version> bin/gen4s run -c examples/playground/config.conf -s 5
+docker run xdev.developer/gen4s:<version> bin/gen4s preview --pretty -c examples/playground/config.conf -s 5
 ```
 
 ## Testing
