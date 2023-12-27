@@ -188,12 +188,8 @@ output {
   
   ```json
   {
-  	"key": 1
-    "value": {
-        "id": 1,
-  			"timestamp": {{ts}} 
-        "event": "Logged in"
-  	}
+    "key": 1,
+    "value": { "id": 1, "timestamp": {{ts}}, "event": "Logged in" }
   }
   ```
 
