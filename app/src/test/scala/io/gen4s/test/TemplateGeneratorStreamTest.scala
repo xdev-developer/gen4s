@@ -10,23 +10,26 @@ import io.gen4s.core.generators.Variable
 import io.gen4s.core.streams.GeneratorStream
 import io.gen4s.core.templating.*
 import io.gen4s.core.Domain.NumberOfSamplesToGenerate
-import io.gen4s.generators.impl.TimestampGenerator
+import io.gen4s.generators.impl.{StringPatternGenerator, TimestampGenerator}
+
+import eu.timepit.refined.types.string.NonEmptyString
 
 class TemplateGeneratorStreamTest extends AsyncFunSpec with AsyncIOSpec with Matchers {
 
-  private val testV      = Variable("test")
+  private val timestampV = Variable("ts")
+  private val nameV      = Variable("name")
   private val numSamples = NumberOfSamplesToGenerate(5)
 
   describe("Generator Stream") {
 
     it("Run simple generation stream") {
-      val sourceTemplate = SourceTemplate("timestamp: {{test}}")
-      val tsGenerator    = TimestampGenerator(testV)
+      val sourceTemplate = SourceTemplate("timestamp: {{ts}}")
+      val tsGenerator    = TimestampGenerator(timestampV)
 
       val tc = TemplateBuilder.make(
         sourceTemplates = NonEmptyList.one(sourceTemplate),
         generators = List(tsGenerator),
-        globalVariables = List(testV),
+        globalVariables = Set.empty[Variable],
         transformers = Set.empty[OutputTransformer]
       )
 
@@ -42,6 +45,31 @@ class TemplateGeneratorStreamTest extends AsyncFunSpec with AsyncIOSpec with Mat
           elements.foreach(c => info("Generated content: " + c.asString))
 
           elements.head.asString should fullyMatch regex "timestamp: ([0-9])+"
+        }
+
+    }
+
+    it("Support global variables") {
+      val sourceTemplate    = SourceTemplate("username: {{name}}")
+      val usernameGenerator = StringPatternGenerator(nameV, pattern = NonEmptyString.unsafeFrom("user-###"))
+
+      val tc = TemplateBuilder.make(
+        sourceTemplates = NonEmptyList.one(sourceTemplate),
+        generators = List(usernameGenerator),
+        globalVariables = Set(nameV),
+        transformers = Set.empty[OutputTransformer]
+      )
+
+      val stream = GeneratorStream.stream[IO](numSamples, tc)
+
+      stream
+        .map(_.render())
+        .compile
+        .toList
+        .asserting { elements =>
+          elements.foreach(c => info("Generated content: " + c.asString))
+          elements.head.asString should fullyMatch regex "username: user-([0-9])+"
+          elements.head.asString shouldBe elements.last.asString
         }
 
     }

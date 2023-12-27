@@ -18,7 +18,7 @@ object TemplateBuilder {
   def make(
     sourceTemplates: NonEmptyList[SourceTemplate],
     generators: List[Generator],
-    globalVariables: List[Variable],
+    globalVariables: Set[Variable],
     transformers: Set[OutputTransformer]): TemplateBuilder = {
     new TemplateBuilder() {
 
@@ -39,7 +39,7 @@ object TemplateBuilder {
   def ofRecordsStream(
     sourceTemplates: NonEmptyList[SourceTemplate],
     generators: List[Generator],
-    globalVariables: List[Variable],
+    globalVariables: Set[Variable],
     recordsStream: NonEmptyList[InputRecord],
     transformers: Set[OutputTransformer]
   ): TemplateBuilder = {

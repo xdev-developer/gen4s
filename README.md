@@ -37,7 +37,7 @@ Run scenario
 ```
 
 ```shell
-./bin/gen4s -c ./examples/playground/config.conf -s 5 -p ./profiles/dev.profile
+./bin/gen4s run -c ./examples/playground/config.conf -s 5 -p ./profiles/dev.profile
 ```
 
 
@@ -56,7 +56,7 @@ ORG_ID=12345
 ```
 
 ```shell
-./bin/gen4s -c ./examples/playground/config.conf -s 5 -p ./profiles/dev.profile
+./bin/gen4s run -c ./examples/playground/config.conf -s 5 -p ./profiles/dev.profile
 ```
 
 
@@ -88,7 +88,7 @@ docker build -t xdev.developer/gen4s:<version> .
 
 Test docker image
 ```shell
-docker run xdev.developer/gen4s:<version> bin/gen4s -c examples/playground/config.conf -s 5
+docker run xdev.developer/gen4s:<version> bin/gen4s run -c examples/playground/config.conf -s 5
 ```
 
 ## Testing
@@ -97,10 +97,6 @@ Benchmarking
 ```shell
 sbt clean "project benchmarks;jmh:run -i 3 -wi 3 -f3 -t1"
 ```
-
-
-
-
 
 ## Configuration
 
@@ -129,6 +125,8 @@ output {
 - **decode-new-line-as-template** - treat each line in template file as standalone template.
 
 - **csv-records** - csv records input file.
+
+- **global-variables** - list of global variables. Global variable will be generated once per run.
 
 #### CSV Records streaming
 

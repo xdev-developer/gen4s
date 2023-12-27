@@ -24,7 +24,7 @@ class HttpOutputTest extends AsyncFunSpec with AsyncIOSpec with Matchers {
       val builder = TemplateBuilder.make(
         NonEmptyList.one(template),
         List(TimestampGenerator(Variable("ts"))),
-        Nil,
+        Set.empty[Variable],
         Set.empty[OutputTransformer]
       )
 
@@ -44,7 +44,7 @@ class HttpOutputTest extends AsyncFunSpec with AsyncIOSpec with Matchers {
       val builder = TemplateBuilder.make(
         NonEmptyList.one(template),
         List(TimestampGenerator(Variable("ts"))),
-        Nil,
+        Set.empty[Variable],
         Set.empty[OutputTransformer]
       )
 
@@ -64,7 +64,7 @@ class HttpOutputTest extends AsyncFunSpec with AsyncIOSpec with Matchers {
       val builder = TemplateBuilder.make(
         NonEmptyList.one(template),
         List(TimestampGenerator(Variable("ts"))),
-        Nil,
+        Set.empty[Variable],
         Set.empty[OutputTransformer]
       )
 
