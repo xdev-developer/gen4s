@@ -72,7 +72,7 @@ class KafkaAvroOutputStreamTest
             StringPatternGenerator(Variable("name"), NonEmptyString.unsafeFrom("username_###")),
             IntNumberGenerator(Variable("age"), max = 50.some)
           ),
-          Nil,
+          Set.empty[Variable],
           Set.empty[OutputTransformer]
         )
 
@@ -120,7 +120,7 @@ class KafkaAvroOutputStreamTest
             StringPatternGenerator(Variable("name"), NonEmptyString.unsafeFrom("username_###")),
             IntNumberGenerator(Variable("age"), max = 50.some)
           ),
-          Nil,
+          Set.empty[Variable],
           Set.empty[OutputTransformer]
         )
 
@@ -172,7 +172,7 @@ class KafkaAvroOutputStreamTest
             IntNumberGenerator(Variable("age"), min = 1.some, max = 50.some),
             IntNumberGenerator(Variable("id"), min = 1.some, max = 50.some)
           ),
-          Nil,
+          Set.empty[Variable],
           Set.empty[OutputTransformer]
         )
 
@@ -235,7 +235,7 @@ class KafkaAvroOutputStreamTest
             IntNumberGenerator(Variable("age"), min = 1.some, max = 50.some),
             IntNumberGenerator(Variable("id"), min = 1.some, max = 50.some)
           ),
-          Nil,
+          Set.empty[Variable],
           Set.empty[OutputTransformer]
         )
 
@@ -297,7 +297,7 @@ class KafkaAvroOutputStreamTest
             IntNumberGenerator(Variable("age"), min = 1.some, max = 50.some),
             IntNumberGenerator(Variable("id"), min = 1.some, max = 50.some)
           ),
-          Nil,
+          Set.empty[Variable],
           Set.empty[OutputTransformer]
         )
 
@@ -347,7 +347,7 @@ class KafkaAvroOutputStreamTest
             StringPatternGenerator(Variable("name"), NonEmptyString.unsafeFrom("username_###")),
             IntNumberGenerator(Variable("age"), min = 1.some, max = 50.some)
           ),
-          Nil,
+          Set.empty[Variable],
           Set.empty[OutputTransformer]
         )
 
@@ -390,7 +390,7 @@ class KafkaAvroOutputStreamTest
             StringPatternGenerator(Variable("name"), NonEmptyString.unsafeFrom("username_###")),
             IntNumberGenerator(Variable("age"), min = 1.some, max = 50.some)
           ),
-          Nil,
+          Set.empty[Variable],
           Set.empty[OutputTransformer]
         )
 

@@ -43,7 +43,7 @@ class KafkaOutputStreamTest
         val builder = TemplateBuilder.make(
           NonEmptyList.one(template),
           List(TimestampGenerator(Variable("ts"))),
-          Nil,
+          Set.empty[Variable],
           Set.empty[OutputTransformer]
         )
 
@@ -68,7 +68,7 @@ class KafkaOutputStreamTest
         val builder = TemplateBuilder.make(
           NonEmptyList.one(template),
           List(TimestampGenerator(Variable("ts"))),
-          Nil,
+          Set.empty[Variable],
           Set.empty[OutputTransformer]
         )
 
@@ -95,7 +95,7 @@ class KafkaOutputStreamTest
         val builder = TemplateBuilder.make(
           NonEmptyList.one(kvTemplate),
           List(TimestampGenerator(Variable("ts"))),
-          Nil,
+          Set.empty[Variable],
           Set.empty[OutputTransformer]
         )
 

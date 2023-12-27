@@ -26,7 +26,7 @@ class TemplateBuilderTest extends AnyFunSpec with Matchers with EitherValues {
       val builder = TemplateBuilder.make(
         sourceTemplates = NonEmptyList.one(sourceTemplate),
         generators = List(tsGenerator),
-        globalVariables = List(),
+        globalVariables = Set.empty[Variable],
         transformers = Set.empty[OutputTransformer]
       )
 
@@ -47,7 +47,7 @@ class TemplateBuilderTest extends AnyFunSpec with Matchers with EitherValues {
       val builder = TemplateBuilder.make(
         sourceTemplates = NonEmptyList.one(sourceTemplate),
         generators = List(tsGenerator),
-        globalVariables = List(testV),
+        globalVariables = Set(testV),
         transformers = Set.empty[OutputTransformer]
       )
 
@@ -68,7 +68,7 @@ class TemplateBuilderTest extends AnyFunSpec with Matchers with EitherValues {
       val builder = TemplateBuilder.ofRecordsStream(
         sourceTemplates = NonEmptyList.one(sourceTemplate),
         generators = List(tsGenerator),
-        globalVariables = List(testV),
+        globalVariables = Set(testV),
         recordsStream = NonEmptyList
           .one(InputRecord.of(nameV, StaticValueGenerator(nameV, Json.fromString("Den")).gen())),
         transformers = Set.empty[OutputTransformer]

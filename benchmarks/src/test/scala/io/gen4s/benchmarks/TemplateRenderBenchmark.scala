@@ -21,7 +21,7 @@ object TemplateRenderBenchmark {
       .make(
         sourceTemplates = NonEmptyList.one(SourceTemplate("""{ "timestamp": {{ts}} }""")),
         generators = List(timestampGenerator),
-        globalVariables = List.empty[Variable],
+        globalVariables = Set.empty[Variable],
         transformers = Set.empty[OutputTransformer]
       )
       .build()

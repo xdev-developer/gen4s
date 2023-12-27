@@ -84,12 +84,17 @@ object StageExecutor {
 
             templateBuilder <- Async[F].delay {
                                  if (recordsStream.isEmpty) {
-                                   TemplateBuilder.make(sources, schema.generators, Nil, conf.output.transformers)
+                                   TemplateBuilder.make(
+                                     sources,
+                                     schema.generators,
+                                     conf.input.globalVars,
+                                     conf.output.transformers
+                                   )
                                  } else {
                                    TemplateBuilder.ofRecordsStream(
                                      sources,
                                      schema.generators,
-                                     Nil,
+                                     conf.input.globalVars,
                                      NonEmptyList.fromListUnsafe(recordsStream),
                                      conf.output.transformers
                                    )
