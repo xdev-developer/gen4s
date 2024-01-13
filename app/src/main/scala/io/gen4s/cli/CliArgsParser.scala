@@ -38,8 +38,8 @@ class CliArgsParser extends scopt.OptionParser[Args]("gen4s") {
         .text("Samples to generate, default 1")
         .valueName("<number>")
         .validate(x =>
-          if (x > 0) success
-          else failure("Option --samples must be > 0")
+          if (x > 0 && x <= 1000_000) success
+          else failure("Option --samples must be > 0 < 1M")
         )
     )
 
