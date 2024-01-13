@@ -35,3 +35,4 @@ jobs:
       with:
         artifacts: "app/target/universal/gen4s-app-*.zip"
         token: ${{ secrets.GITHUB_TOKEN }}
+        generateReleaseNotes: true
