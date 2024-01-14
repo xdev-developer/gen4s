@@ -7,7 +7,7 @@ import java.time.temporal.ChronoUnit
 import java.time.LocalDateTime
 
 import io.circe.derivation.ConfiguredCodec
-import io.gen4s.core.generators.{*, given}
+import io.gen4s.core.generators.*
 import io.gen4s.generators.codec.given
 
 final case class DatetimeGenerator(

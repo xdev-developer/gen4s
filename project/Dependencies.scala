@@ -20,6 +20,7 @@ object Dependencies {
     var refined           = "0.11.0"
     val parserCombinators = "2.3.0"
     val csv               = "1.3.10"
+    val monocle           = "3.2.0"
 
     val scalaTest      = "3.2.17"
     val testContainers = "0.41.0"
@@ -114,6 +115,10 @@ object Dependencies {
 
   val AvroConverter: Seq[ModuleID] = List(
     "tech.allegro.schema.json2avro" % "converter" % "0.2.15"
+  )
+
+  val Monocle: Seq[ModuleID] = List(
+    "dev.optics" %% "monocle-core" % V.monocle
   )
 
   val ScalaTest: Seq[ModuleID]      = List("org.scalatest" %% "scalatest" % V.scalaTest % Test)

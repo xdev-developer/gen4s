@@ -24,6 +24,7 @@ lazy val core = project
       Dependencies.Fs2,
       Dependencies.Enumeratum,
       Dependencies.Refined,
+      Dependencies.Monocle,
       Dependencies.ApacheCommonsText,
       Dependencies.CatsEffectTest,
       Dependencies.ScalaTest

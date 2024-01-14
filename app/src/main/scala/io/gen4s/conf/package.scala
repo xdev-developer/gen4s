@@ -12,10 +12,9 @@ package object conf {
   opaque type EnvProfileConfig = Config
 
   object EnvProfileConfig {
-    def apply(config: Config): EnvProfileConfig       = config
-    extension (p: EnvProfileConfig) def value: Config = p
-
-    def empty: EnvProfileConfig = EnvProfileConfig(ConfigFactory.empty())
+    inline def apply(config: Config): EnvProfileConfig       = config
+    extension (p: EnvProfileConfig) inline def value: Config = p
+    def empty: EnvProfileConfig                              = EnvProfileConfig(ConfigFactory.empty())
   }
 
   given ConfigReader[NumberOfSamplesToGenerate] = ConfigReader[Int].map(n => NumberOfSamplesToGenerate(n))

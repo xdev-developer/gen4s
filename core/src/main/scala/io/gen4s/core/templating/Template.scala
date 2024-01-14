@@ -1,44 +1,32 @@
 package io.gen4s.core.templating
 
 import cats.implicits.*
-import cats.Show
 import io.circe.{Json, ParsingFailure}
+import io.gen4s.core.Newtype
 
 trait Template {
   def render(): RenderedTemplate
 }
 
-object SourceTemplate {
-  def apply(value: String): SourceTemplate          = value
-  extension (v: SourceTemplate) def content: String = v
-}
-
 /**
  * Raw / initial template
- *
- * @param content source content
  */
-opaque type SourceTemplate = String
+type SourceTemplate = SourceTemplate.Type
+object SourceTemplate extends Newtype[String]
 
 /**
  * Final template - after all variables resolvings and transformations
- *
- * @param content rendered template content
  */
-opaque type RenderedTemplate = String
+type RenderedTemplate = RenderedTemplate.Type
 
-object RenderedTemplate {
-
-  given Show[RenderedTemplate] = Show.show[RenderedTemplate](_.asString)
-
-  def apply(content: String): RenderedTemplate = content
+object RenderedTemplate extends Newtype[String] {
 
   extension (rt: RenderedTemplate) {
 
-    def asString: String = rt
+    def asString: String = rt.value
 
     def asByteArray: Array[Byte] = {
-      val bytes = rt.getBytes
+      val bytes = rt.value.getBytes
       if (bytes.isEmpty) " ".getBytes() else bytes
     }
 

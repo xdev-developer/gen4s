@@ -7,7 +7,7 @@ import java.time.Instant
 import java.util.concurrent.TimeUnit
 
 import io.circe.derivation.ConfiguredCodec
-import io.gen4s.core.generators.{*, given}
+import io.gen4s.core.generators.*
 import io.gen4s.generators.codec.given
 
 import enumeratum.{CirceEnum, EnumEntry}

@@ -17,9 +17,9 @@ object TemplateReader {
 
   private def templateContentFilter[F[_]: FunctorFilter](f: F[SourceTemplate]): F[SourceTemplate] = {
     import cats.syntax.functorFilter.*
-    f.filter(_.content.trim.nonEmpty)
-      .filterNot(_.content.trim.startsWith("#"))
-      .filterNot(_.content.trim.startsWith("//"))
+    f.filter(_.value.trim.nonEmpty)
+      .filterNot(_.value.trim.startsWith("#"))
+      .filterNot(_.value.trim.startsWith("//"))
   }
 
   def make[F[_]: Sync](): TemplateReader[F] = new TemplateReader[F] {
