@@ -75,11 +75,12 @@ class KafkaAvroOutputProcessor[F[_]: Async] extends OutputProcessor[F, KafkaAvro
             output.kafkaProducerConfig
           )
 
-        val groupSize = if (output.batchSize.value > n.value) output.batchSize.value else n.value
+        val groupSize = if (output.batchSize.value < n.value) output.batchSize.value else n.value
         val headers   = KafkaOutputProcessor.toKafkaHeaders(output.headers)
 
         flow
           .chunkN(groupSize)
+          .through(progressBar(n))
           .evalMap { batch =>
             batch
               .map { value =>

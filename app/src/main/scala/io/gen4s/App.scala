@@ -72,7 +72,7 @@ object App extends IOApp {
       val loader = EnvironmentVariablesProfileLoader.make[F]()
       for {
         p <- loader.fromFile(f)
-        _ <- loader.applyProfile(p)
+        _ <- loader.unsafeApplyProfile(p)
       } yield p.source
 
     case None => Sync[F].pure(EnvProfileConfig.empty)

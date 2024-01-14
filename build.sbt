@@ -62,6 +62,7 @@ lazy val outputs = project
       Dependencies.Refined,
       Dependencies.Logback,
       Dependencies.AvroConverter,
+      Dependencies.ProgressBar,
       Dependencies.CatsEffectTest,
       Dependencies.TestContainers,
       Dependencies.ScalaTest

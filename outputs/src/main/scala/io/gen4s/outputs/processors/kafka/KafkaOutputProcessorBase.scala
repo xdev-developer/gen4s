@@ -2,17 +2,19 @@ package io.gen4s.outputs.processors.kafka
 
 import org.apache.kafka.clients.producer.ProducerConfig
 
-import cats.effect.kernel.Async
+import cats.effect.kernel.{Async, Sync}
 import cats.effect.Resource
 import cats.implicits.*
 import cats.Applicative
 import io.circe.ParsingFailure
 import io.gen4s.core.templating.Template
+import io.gen4s.core.Domain
 import io.gen4s.core.Domain.{BootstrapServers, Topic}
 import io.gen4s.outputs.KafkaProducerConfig
 
 import fs2.kafka.{Acks, Headers, KeySerializer, ProducerRecords, ProducerSettings, ValueSerializer}
 import fs2.Chunk
+import me.tongfei.progressbar.ProgressBar
 
 trait KafkaOutputProcessorBase {
 
@@ -83,5 +85,14 @@ trait KafkaOutputProcessorBase {
       )
 
   }
+
+  protected def progressBar[F[_]: Sync, V](n: Domain.NumberOfSamplesToGenerate): fs2.Pipe[F, Chunk[V], Chunk[V]] =
+    src =>
+      val pb = Sync[F].delay(new ProgressBar("Processing", n.value))
+      fs2.Stream
+        .bracket(pb)(p => Sync[F].delay(p.close()))
+        .flatMap { pb =>
+          src.evalMap(l => Sync[F].delay(pb.stepBy(l.size.toLong)).as(l))
+        }
 
 }
