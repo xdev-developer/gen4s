@@ -30,14 +30,12 @@ class KafkaAvroOutputStreamTest
     with EmbeddedKafka
     with OptionValues {
 
-  private implicit val config: EmbeddedKafkaConfig =
+  private val randomPorts: EmbeddedKafkaConfig =
     EmbeddedKafkaConfig(
-      kafkaPort = 9092,
-      zooKeeperPort = 7001,
-      schemaRegistryPort = 8081
+      kafkaPort = 0,
+      zooKeeperPort = 0,
+      schemaRegistryPort = 0
     )
-
-  private val kafka = BootstrapServers(s"localhost:${config.kafkaPort}")
 
   private val n = NumberOfSamplesToGenerate(1)
 
@@ -61,7 +59,8 @@ class KafkaAvroOutputStreamTest
   describe("Kafka Avro output stream") {
 
     it("Send AVRO records to kafka topic (auto schema register enabled)") {
-      withRunningKafka {
+      withRunningKafkaOnFoundPort(randomPorts) { config =>
+        val kafka    = BootstrapServers(s"localhost:${config.kafkaPort}")
         val template = SourceTemplate("""{ "username": "{{name}}", "age": {{age}} }""")
 
         val streams = OutputStreamExecutor.make[IO]()
@@ -106,7 +105,8 @@ class KafkaAvroOutputStreamTest
     }
 
     it("Send AVRO key/value records to kafka topic (auto schema register enabled)") {
-      withRunningKafka {
+      withRunningKafkaOnFoundPort(randomPorts) { config =>
+        val kafka = BootstrapServers(s"localhost:${config.kafkaPort}")
         val template = SourceTemplate(""" {
                                         |   "key": {"id": 1, "orgId": 2},
                                         |   "value": { "username": "{{name}}", "age": {{age}} }
@@ -157,7 +157,8 @@ class KafkaAvroOutputStreamTest
     }
 
     it("Send AVRO key/value records to kafka topic (read schema from schema registry)") {
-      withRunningKafka {
+      withRunningKafkaOnFoundPort(randomPorts) { config =>
+        val kafka = BootstrapServers(s"localhost:${config.kafkaPort}")
         val template = SourceTemplate(""" {
                                         |   "key": {"id": {{id}}, "orgId": 2},
                                         |   "value": { "username": "{{name}}", "age": {{age}} }
@@ -220,7 +221,8 @@ class KafkaAvroOutputStreamTest
     }
 
     it("Send AVRO key/value records to kafka topic (encode with schema from schema registry)") {
-      withRunningKafka {
+      withRunningKafkaOnFoundPort(randomPorts) { config =>
+        val kafka = BootstrapServers(s"localhost:${config.kafkaPort}")
         val template = SourceTemplate(""" {
                                         |   "key": {"id": {{id}}, "orgId": 2},
                                         |   "value": { "username": "{{name}}", "age": {{age}} }
@@ -282,7 +284,8 @@ class KafkaAvroOutputStreamTest
     }
 
     it("Send AVRO key/value records to kafka topic (simple key)") {
-      withRunningKafka {
+      withRunningKafkaOnFoundPort(randomPorts) { config =>
+        val kafka = BootstrapServers(s"localhost:${config.kafkaPort}")
         val template = SourceTemplate(""" {
                                         |   "key": "key_{{id}}",
                                         |   "value": { "username": "{{name}}", "age": {{age}} }
@@ -336,7 +339,8 @@ class KafkaAvroOutputStreamTest
     }
 
     it("Fail with unknown schema (auto schema register enabled)") {
-      withRunningKafka {
+      withRunningKafkaOnFoundPort(randomPorts) { config =>
+        val kafka    = BootstrapServers(s"localhost:${config.kafkaPort}")
         val template = SourceTemplate("""{ "username": "{{name}}", "age": {{age}} }""")
 
         val streams = OutputStreamExecutor.make[IO]()
@@ -379,7 +383,8 @@ class KafkaAvroOutputStreamTest
     }
 
     it("Fail with broken schema (auto schema register enabled)") {
-      withRunningKafka {
+      withRunningKafkaOnFoundPort(randomPorts) { config =>
+        val kafka    = BootstrapServers(s"localhost:${config.kafkaPort}")
         val template = SourceTemplate("""{ "username": "{{name}}", "age": {{age}} }""")
 
         val streams = OutputStreamExecutor.make[IO]()

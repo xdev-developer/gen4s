@@ -5,7 +5,7 @@ package impl
 import scala.util.Random
 
 import io.circe.derivation.ConfiguredCodec
-import io.gen4s.core.generators.{*, given}
+import io.gen4s.core.generators.*
 import io.gen4s.generators.codec.given
 
 final case class IntNumberGenerator(variable: Variable, min: Option[Int] = None, max: Option[Int] = None)

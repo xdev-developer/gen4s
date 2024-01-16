@@ -4,7 +4,7 @@ import scala.util.Random
 
 import io.circe.derivation.ConfiguredCodec
 import io.circe.refined.*
-import io.gen4s.core.generators.{*, given}
+import io.gen4s.core.generators.*
 import io.gen4s.generators.codec.given
 
 import eu.timepit.refined.types.string.NonEmptyString

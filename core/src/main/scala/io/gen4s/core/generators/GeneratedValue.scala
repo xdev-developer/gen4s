@@ -21,7 +21,7 @@ object GeneratedValue {
   def fromSeq(v: Seq[Json]): GeneratedValue      = GeneratedValue(Json.arr(v: _*))
 
   extension (gv: GeneratedValue) {
-    def as[T](using d: Decoder[T]): Result[T] = v.as[T]
-    def v: Json                               = gv
+    inline def as[T](using d: Decoder[T]): Result[T] = v.as[T]
+    inline def v: Json                               = gv
   }
 }

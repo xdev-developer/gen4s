@@ -40,7 +40,7 @@ case class TextTemplate(source: SourceTemplate, context: TemplateContext, transf
 
     RenderedTemplate(
       StringSubstitutor
-        .replace(source.content, values.asJava, TextTemplate.VariablePrefix, TextTemplate.VariableSuffix)
+        .replace(source.value, values.asJava, TextTemplate.VariablePrefix, TextTemplate.VariableSuffix)
     ).transform(transformers)
   }
 

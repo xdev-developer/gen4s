@@ -19,7 +19,7 @@ class TemplateReaderTest extends AsyncFunSpec with AsyncIOSpec with Matchers {
         .read(new File("./app/src/test/resources/single.json"), decodeNewLineAsTemplate = false)
         .asserting { list =>
           list.toList should not be empty
-          list.head.content shouldBe "{\"hello\":\"world\"}\n"
+          list.head.value shouldBe "{\"hello\":\"world\"}\n"
         }
     }
 
@@ -29,7 +29,7 @@ class TemplateReaderTest extends AsyncFunSpec with AsyncIOSpec with Matchers {
         .read(new File("./app/src/test/resources/multi.template"), decodeNewLineAsTemplate = true)
         .asserting { list =>
           list.toList should not be empty
-          list.toList.map(_.content) shouldBe List(
+          list.toList.map(_.value) shouldBe List(
             """{"name": "first"}""",
             """{"name": "second"}""",
             """{"name": "third"}"""

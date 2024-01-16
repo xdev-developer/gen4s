@@ -27,7 +27,7 @@ class GeneratorsTest extends AnyFunSpec with Matchers with EitherValues {
       info(s"Generated result $r")
 
       testCodec[TimestampGenerator](
-        s""" { "variable": "${testV.name}", "type": "${Generators.TimeStamp.entryName}"}""",
+        s""" { "variable": "${testV.value}", "type": "${Generators.TimeStamp.entryName}"}""",
         g
       )
     }
@@ -39,7 +39,7 @@ class GeneratorsTest extends AnyFunSpec with Matchers with EitherValues {
       info(s"Generated result $r")
 
       testCodec[BooleanGenerator](
-        s""" { "variable": "${testV.name}", "type": "${Generators.Boolean.entryName}"}""",
+        s""" { "variable": "${testV.value}", "type": "${Generators.Boolean.entryName}"}""",
         g
       )
     }
@@ -51,7 +51,7 @@ class GeneratorsTest extends AnyFunSpec with Matchers with EitherValues {
       info(s"Generated result $r")
 
       testCodec[IntNumberGenerator](
-        s""" { "variable": "${testV.name}", "type": "${Generators.Integer.entryName}"}""",
+        s""" { "variable": "${testV.value}", "type": "${Generators.Integer.entryName}"}""",
         g
       )
     }
@@ -63,7 +63,7 @@ class GeneratorsTest extends AnyFunSpec with Matchers with EitherValues {
       info(s"Generated result: $r")
 
       testCodec[DoubleNumberGenerator](
-        s""" { "variable": "${testV.name}", "type": "${Generators.Double.entryName}"}""",
+        s""" { "variable": "${testV.value}", "type": "${Generators.Double.entryName}"}""",
         g
       )
     }
@@ -75,7 +75,7 @@ class GeneratorsTest extends AnyFunSpec with Matchers with EitherValues {
       info(s"Generated result: $r")
 
       testCodec[DatetimeGenerator](
-        s""" { "variable": "${testV.name}", "type": "${Generators.Date.entryName}"}""",
+        s""" { "variable": "${testV.value}", "type": "${Generators.Date.entryName}"}""",
         g
       )
     }
@@ -87,7 +87,7 @@ class GeneratorsTest extends AnyFunSpec with Matchers with EitherValues {
       info(s"Generated result: $r")
 
       testCodec[StringGenerator](
-        s""" { "variable": "${testV.name}", "type": "${Generators.String.entryName}"}""",
+        s""" { "variable": "${testV.value}", "type": "${Generators.String.entryName}"}""",
         g
       )
     }
@@ -99,7 +99,7 @@ class GeneratorsTest extends AnyFunSpec with Matchers with EitherValues {
       info(s"Generated result: $r")
 
       testCodec[UuidGenerator](
-        s""" { "variable": "${testV.name}", "type": "${Generators.UUID.entryName}"}""",
+        s""" { "variable": "${testV.value}", "type": "${Generators.UUID.entryName}"}""",
         g
       )
     }
@@ -111,7 +111,7 @@ class GeneratorsTest extends AnyFunSpec with Matchers with EitherValues {
       info(s"Generated result: $r")
 
       testCodec[StaticValueGenerator](
-        s""" { "variable": "${testV.name}", "type": "${Generators.Static.entryName}", "value": "hello"}""",
+        s""" { "variable": "${testV.value}", "type": "${Generators.Static.entryName}", "value": "hello"}""",
         g
       )
     }
@@ -123,19 +123,19 @@ class GeneratorsTest extends AnyFunSpec with Matchers with EitherValues {
       info(s"Generated result: $r")
 
       testCodec[IpGenerator](
-        s""" { "variable": "${testV.name}", "type": "${Generators.Ip.entryName}"}""",
+        s""" { "variable": "${testV.value}", "type": "${Generators.Ip.entryName}"}""",
         g
       )
     }
 
     it("Env var generator") {
-      val g = EnvVarGenerator(testV, NonEmptyString.unsafeFrom("os.name"), default = None)
+      val g = EnvVarGenerator(testV, NonEmptyString.unsafeFrom("os.value"), default = None)
       val r = g.gen().as[String].value
 
       info(s"Generated result: $r")
 
       testCodec[EnvVarGenerator](
-        s""" { "variable": "${testV.name}", "type": "${Generators.EnvVar.entryName}", "name": "os.name"}""",
+        s""" { "variable": "${testV.value}", "type": "${Generators.EnvVar.entryName}", "name": "os.value"}""",
         g
       )
     }
@@ -163,7 +163,7 @@ class GeneratorsTest extends AnyFunSpec with Matchers with EitherValues {
       info(s"Generated result: $r")
 
       testCodec[StringPatternGenerator](
-        s""" { "variable": "${testV.name}", "type": "${Generators.Pattern.entryName}", "pattern": "hello-???-###"}""",
+        s""" { "variable": "${testV.value}", "type": "${Generators.Pattern.entryName}", "pattern": "hello-???-###"}""",
         g
       )
     }
@@ -175,7 +175,7 @@ class GeneratorsTest extends AnyFunSpec with Matchers with EitherValues {
       info(s"Generated result: $r")
 
       testCodec[EnumGenerator](
-        s""" { "variable": "${testV.name}", "type": "${Generators.Enum.entryName}", "oneOf": ["foo"]}""",
+        s""" { "variable": "${testV.value}", "type": "${Generators.Enum.entryName}", "oneOf": ["foo"]}""",
         g
       )
     }
@@ -187,7 +187,7 @@ class GeneratorsTest extends AnyFunSpec with Matchers with EitherValues {
       info(s"Generated result: $r")
 
       testCodec[MacAddressGenerator](
-        s""" { "variable": "${testV.name}", "type": "${Generators.Mac.entryName}"}""",
+        s""" { "variable": "${testV.value}", "type": "${Generators.Mac.entryName}"}""",
         g
       )
     }
