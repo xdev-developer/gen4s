@@ -12,7 +12,7 @@ import pureconfig.ConfigSource
 
 trait EnvironmentVariablesProfileLoader[F[_]] {
   def fromFile(file: File): F[EnvVarsProfile]
-  def applyProfile(p: EnvVarsProfile): F[Unit]
+  def unsafeApplyProfile(p: EnvVarsProfile): F[Unit]
 }
 
 final case class EnvVarsProfile(source: EnvProfileConfig, vars: Map[String, String])
@@ -29,7 +29,7 @@ object EnvironmentVariablesProfileLoader {
         map <- Either.catchNonFatal(ConfigSource.fromConfig(c).loadOrThrow[Map[String, String]])
       } yield EnvVarsProfile(EnvProfileConfig(c), map)).liftTo[F]
 
-    override def applyProfile(p: EnvVarsProfile): F[Unit] =
+    override def unsafeApplyProfile(p: EnvVarsProfile): F[Unit] =
       p.vars
         .foreach { case (k, v) => System.setProperty(k, v) }
         .pure[F]

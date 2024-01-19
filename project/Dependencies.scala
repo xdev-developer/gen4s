@@ -121,6 +121,10 @@ object Dependencies {
     "dev.optics" %% "monocle-core" % V.monocle
   )
 
+  val ProgressBar: Seq[ModuleID] = List(
+    "me.tongfei" % "progressbar" % "0.10.0"
+  )
+
   val ScalaTest: Seq[ModuleID]      = List("org.scalatest" %% "scalatest" % V.scalaTest % Test)
   val CatsEffectTest: Seq[ModuleID] = List("org.typelevel" %% "cats-effect-testing-scalatest" % "1.5.0" % Test)
 

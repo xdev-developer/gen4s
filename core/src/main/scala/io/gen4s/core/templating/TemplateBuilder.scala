@@ -7,7 +7,7 @@ import io.gen4s.core.generators.Variable
 import io.gen4s.core.InputRecord
 
 /**
- * //FIXME: Better name?
+ * FIXME: Better name?
  */
 trait TemplateBuilder {
   def build(): List[Template]

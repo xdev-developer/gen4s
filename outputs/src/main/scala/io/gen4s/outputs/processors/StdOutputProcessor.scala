@@ -12,7 +12,10 @@ class StdOutputProcessor[F[_]: Sync: EffConsole] extends OutputProcessor[F, StdO
     n: Domain.NumberOfSamplesToGenerate,
     flow: fs2.Stream[F, Template],
     output: StdOutput): F[Unit] = {
-    flow.map(_.render()).printlns.compile.drain
-
+    flow
+      .map(_.render())
+      .printlns
+      .compile
+      .drain
   }
 }

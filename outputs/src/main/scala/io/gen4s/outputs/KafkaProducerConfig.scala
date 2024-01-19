@@ -9,6 +9,7 @@ object KafkaProducerConfig {
     case object none   extends CompressionTypes("none")
     case object gzip   extends CompressionTypes("gzip")
     case object lz4    extends CompressionTypes("lz4")
+    case object zstd   extends CompressionTypes("zstd")
   }
 
   def default: KafkaProducerConfig =

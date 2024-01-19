@@ -19,6 +19,7 @@ object TemplateReader {
     import cats.syntax.functorFilter.*
     f.filter(_.value.trim.nonEmpty)
       .filterNot(_.value.trim.startsWith("#"))
+      .filterNot(_.value.trim.startsWith("-- "))
       .filterNot(_.value.trim.startsWith("//"))
   }
 

@@ -1,6 +1,7 @@
 package io.gen4s.outputs.processors.kafka
 
 import cats.effect.kernel.Async
+import cats.implicits.*
 import io.gen4s.core.templating.Template
 import io.gen4s.core.Domain
 import io.gen4s.core.Domain.NumberOfSamplesToGenerate
@@ -29,15 +30,15 @@ class KafkaOutputProcessor[F[_]: Async] extends OutputProcessor[F, KafkaOutput] 
     val producerSettings =
       mkProducerSettings[F, Option[Key], Value](output.bootstrapServers, output.kafkaProducerConfig)
 
-    val groupSize = if (output.batchSize.value > n.value) output.batchSize.value else n.value
+    val groupSize = if (output.batchSize.value < n.value) output.batchSize.value else n.value
     val headers   = KafkaOutputProcessor.toKafkaHeaders(output.headers)
 
     flow
       .chunkN(groupSize)
+      .through(progressBar(n))
       .evalMap(b => processBatch[F](b, output.topic, headers, output.decodeInputAsKeyValue))
       .through(fs2.kafka.KafkaProducer.pipe(producerSettings))
       .compile
       .drain
   }
-
 }
