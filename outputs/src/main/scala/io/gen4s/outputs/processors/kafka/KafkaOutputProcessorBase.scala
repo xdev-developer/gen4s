@@ -14,7 +14,7 @@ import io.gen4s.outputs.KafkaProducerConfig
 
 import fs2.kafka.{Acks, Headers, KeySerializer, ProducerRecords, ProducerSettings, ValueSerializer}
 import fs2.Chunk
-import me.tongfei.progressbar.ProgressBar
+import me.tongfei.progressbar.{ProgressBarBuilder, ProgressBarStyle}
 
 trait KafkaOutputProcessorBase {
 
@@ -86,9 +86,20 @@ trait KafkaOutputProcessorBase {
 
   }
 
-  protected def progressBar[F[_]: Sync, V](n: Domain.NumberOfSamplesToGenerate): fs2.Pipe[F, Chunk[V], Chunk[V]] =
+  protected def progressInfo[F[_]: Sync, V](n: Domain.NumberOfSamplesToGenerate): fs2.Pipe[F, Chunk[V], Chunk[V]] =
+    if (n.value >= 10_000) progressBar(n) else identity()
+
+  private def identity[F[_]: Sync, V](): fs2.Pipe[F, Chunk[V], Chunk[V]] = src => src
+
+  private def progressBar[F[_]: Sync, V](n: Domain.NumberOfSamplesToGenerate): fs2.Pipe[F, Chunk[V], Chunk[V]] =
     src =>
-      val pb = Sync[F].delay(new ProgressBar("Processing", n.value))
+      val pb = Sync[F].delay {
+        ProgressBarBuilder()
+          .setTaskName("Sending records")
+          .setInitialMax(n.value)
+          .setStyle(ProgressBarStyle.COLORFUL_UNICODE_BAR)
+          .build()
+      }
       fs2.Stream
         .bracket(pb)(p => Sync[F].delay(p.close()))
         .flatMap { pb =>

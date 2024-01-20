@@ -159,7 +159,7 @@ output {
         topic = "logs"
 
         bootstrap-servers = ${?KAFKA_BOOTSTRAP_SERVERS}
-        bootstrap-servers = "localhost:9095"
+        bootstrap-servers = "localhost:9092"
 
         batch-size = 1000
                 
@@ -204,7 +204,7 @@ output {
         topic = "logs-avro"
 
         bootstrap-servers = ${?KAFKA_BOOTSTRAP_SERVERS}
-        bootstrap-servers = "localhost:9095"
+        bootstrap-servers = "localhost:9092"
 
         batch-size = 1000
                 
@@ -223,7 +223,9 @@ output {
         }
 
         avro-config {
+          schema-registry-url = ${?SCHEMA_REGISTRY_URL}
           schema-registry-url = "http://localhost:8081"
+
           key-schema = "/path/to/file/key.avsc"
           value-schema = "/path/to/file/value.avsc"
           auto-register-schemas = false

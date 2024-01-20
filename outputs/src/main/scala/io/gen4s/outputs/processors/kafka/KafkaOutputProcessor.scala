@@ -35,7 +35,7 @@ class KafkaOutputProcessor[F[_]: Async] extends OutputProcessor[F, KafkaOutput] 
 
     flow
       .chunkN(groupSize)
-      .through(progressBar(n))
+      .through(progressInfo(n))
       .evalMap(b => processBatch[F](b, output.topic, headers, output.decodeInputAsKeyValue))
       .through(fs2.kafka.KafkaProducer.pipe(producerSettings))
       .compile

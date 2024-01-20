@@ -11,9 +11,13 @@ import enumeratum.EnumEntry
 import eu.timepit.refined.types.numeric.PosInt
 import eu.timepit.refined.types.string.NonEmptyString
 
-sealed trait Output
+sealed trait Output {
+  def description(): String
+}
 
-case class StdOutput() extends Output
+case class StdOutput() extends Output {
+  override def description(): String = "std-output"
+}
 
 case class KafkaOutput(
   topic: Topic,
@@ -25,6 +29,8 @@ case class KafkaOutput(
     extends Output {
 
   def kafkaProducerConfig: KafkaProducerConfig = producerConfig.getOrElse(KafkaProducerConfig.default)
+
+  override def description(): String = s"Kafka output: topic: $topic, bootstrap-servers: $bootstrapServers"
 }
 
 case class AvroConfig(
@@ -46,6 +52,8 @@ case class KafkaAvroOutput(
     extends Output {
 
   def kafkaProducerConfig: KafkaProducerConfig = producerConfig.getOrElse(KafkaProducerConfig.default)
+
+  override def description(): String = s"Kafka avro output: topic: $topic, bootstrap-servers: $bootstrapServers"
 }
 
 sealed abstract class HttpMethods(override val entryName: String) extends EnumEntry
@@ -75,10 +83,14 @@ case class HttpOutput(
   headers: Map[String, String] = Map.empty,
   contentType: HttpContentTypes = HttpContentTypes.TextPlain,
   stopOnError: Boolean = true
-) extends Output
+) extends Output {
+  override def description(): String = s"Http output: url: $url, method: $method"
+}
 
 case class FsOutput(dir: NonEmptyString, filenamePattern: NonEmptyString) extends Output {
 
   def path(): Path =
     Paths.get(dir.value, FilenameUtils.getName(filenamePattern.value.format(System.currentTimeMillis())))
+
+  override def description(): String = s"File System output: path: ${path()}"
 }

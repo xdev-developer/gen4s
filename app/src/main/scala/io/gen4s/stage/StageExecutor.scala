@@ -8,7 +8,7 @@ import cats.effect.kernel.Async
 import cats.effect.std.Console as EffConsole
 import cats.implicits.*
 import cats.Applicative
-import io.gen4s.{RecordsReader, TemplateReader, TemplateValidationError}
+import io.gen4s.{greenOut, RecordsReader, TemplateReader, TemplateValidationError}
 import io.gen4s.cli.Args
 import io.gen4s.conf.StageConfig
 import io.gen4s.core.streams.GeneratorStream
@@ -33,18 +33,20 @@ object StageExecutor {
         override def exec(): F[Unit] = {
           for {
             logger <- Slf4jLogger.create[F]
-            _      <- Logger[F].info(s"Running [$name] stage.")
+            _      <- Logger[F].info(s"Running ${greenOut(name)} stage.")
             flow   <- generatorFlow(args, conf)
             _      <- OutputStreamExecutor.make[F]().write(args.numberOfSamplesToGenerate, flow, conf.output.writer)
+            _      <- Logger[F].info(s"${greenOut(name)} execution finished.")
           } yield ()
         }
 
         override def preview(): F[Unit] = {
           for {
             logger <- Slf4jLogger.create[F]
-            _      <- Logger[F].info(s"Running [$name] stage.")
+            _      <- Logger[F].info(s"Running [${greenOut(name)}] stage.")
             flow   <- generatorFlow(args, conf)
             _      <- flow.through(prettify(args.prettyPreview)).printlns.compile.drain
+            _      <- Logger[F].info(s"${greenOut(name)} execution finished.")
           } yield ()
         }
 

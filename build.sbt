@@ -61,6 +61,7 @@ lazy val outputs = project
       Dependencies.Enumeratum,
       Dependencies.Refined,
       Dependencies.Logback,
+      Dependencies.Log4cats,
       Dependencies.AvroConverter,
       Dependencies.ProgressBar,
       Dependencies.CatsEffectTest,
