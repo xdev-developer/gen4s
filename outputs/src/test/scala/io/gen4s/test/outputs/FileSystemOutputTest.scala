@@ -4,12 +4,14 @@ import java.io.File
 
 import org.scalatest.funspec.AsyncFunSpec
 import org.scalatest.matchers.should.Matchers
+import org.typelevel.log4cats.slf4j.Slf4jLogger
+import org.typelevel.log4cats.Logger
 
 import scala.io.Source
 
 import cats.data.NonEmptyList
+import cats.effect.{IO, Sync}
 import cats.effect.testing.scalatest.AsyncIOSpec
-import cats.effect.IO
 import io.gen4s.core.generators.Variable
 import io.gen4s.core.streams.GeneratorStream
 import io.gen4s.core.templating.{OutputTransformer, SourceTemplate, TemplateBuilder}
@@ -22,6 +24,8 @@ import eu.timepit.refined.types.string.NonEmptyString
 class FileSystemOutputTest extends AsyncFunSpec with AsyncIOSpec with Matchers {
 
   private val template = SourceTemplate("{ timestamp: {{ts}} }")
+
+  implicit def logger[F[_]: Sync]: Logger[F] = Slf4jLogger.getLogger[F]
 
   describe("FileSystem Output") {
     it("Write to file") {

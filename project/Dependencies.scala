@@ -114,7 +114,7 @@ object Dependencies {
   )
 
   val AvroConverter: Seq[ModuleID] = List(
-    "tech.allegro.schema.json2avro" % "converter" % "0.2.15"
+    "io.github.agolovenko" % "avro-tools-json_2.13" % "0.8.0"
   )
 
   val Monocle: Seq[ModuleID] = List(
@@ -136,5 +136,8 @@ object Dependencies {
   )
 
   // Runtime
-  val Logback: Seq[ModuleID] = List("ch.qos.logback" % "logback-classic" % V.logback)
+  val Logback: Seq[ModuleID] = List(
+    "ch.qos.logback" % "logback-classic"  % V.logback,
+    "org.slf4j"      % "log4j-over-slf4j" % "2.0.11"
+  )
 }

@@ -5,8 +5,10 @@ import org.apache.avro.Schema
 import scala.annotation.nowarn
 
 import cats.implicits.*
+import io.github.agolovenko.avro.json.JsonParser
+import io.github.agolovenko.avro.StringParsers.*
 
-import tech.allegro.schema.json2avro.converter.JsonAvroConverter
+import play.api.libs.json.Json
 import vulcan.{Avro, AvroError, Codec}
 import vulcan.Codec.Aux
 
@@ -14,17 +16,15 @@ object AvroCodec {
 
   @nowarn
   def keyCodec(recordSchema: Schema): Aux[Avro.Record, AvroDynamicKey] = {
-    val converter = new JsonAvroConverter()
+    val converter = new JsonParser(recordSchema, primitiveParsers orElse base64Parsers)
 
     def encoder(p: AvroDynamicKey): Either[AvroError, Avro.Record] = {
       Either
-        .catchNonFatal {
-          converter.convertToGenericDataRecord(p.bytes, recordSchema)
-        }
+        .catchNonFatal(converter.apply(Json.parse(Option(p).getOrElse(AvroDynamicKey.empty).bytes)))
         .leftMap(ex => AvroError.apply(s"Avro key encoder error: ${ex.getMessage}"))
     }
 
-    def decoder(p: Any, schema: Schema): Either[AvroError, AvroDynamicKey] =
+    def decoder(rec: Any, schema: Schema): Either[AvroError, AvroDynamicKey] =
       AvroDynamicKey(Array.emptyByteArray).asRight[AvroError]
 
     Codec.instance[Avro.Record, AvroDynamicKey](
@@ -36,17 +36,15 @@ object AvroCodec {
 
   @nowarn
   def valueCodec(recordSchema: Schema): Aux[Avro.Record, AvroDynamicValue] = {
-    val converter = new JsonAvroConverter()
+    val converter = new JsonParser(recordSchema, primitiveParsers orElse base64Parsers)
 
-    def encoder(p: AvroDynamicValue): Either[AvroError, Avro.Record] = {
+    def encoder(v: AvroDynamicValue): Either[AvroError, Avro.Record] = {
       Either
-        .catchNonFatal {
-          converter.convertToGenericDataRecord(p.bytes, recordSchema)
-        }
+        .catchNonFatal(converter.apply(Json.parse(v.bytes)))
         .leftMap(ex => AvroError.apply(s"Avro value encoder error: ${ex.getMessage}"))
     }
 
-    def decoder(p: Any, schema: Schema): Either[AvroError, AvroDynamicValue] =
+    def decoder(rec: Any, schema: Schema): Either[AvroError, AvroDynamicValue] =
       AvroDynamicValue(Array.emptyByteArray).asRight[AvroError]
 
     Codec.instance[Avro.Record, AvroDynamicValue](

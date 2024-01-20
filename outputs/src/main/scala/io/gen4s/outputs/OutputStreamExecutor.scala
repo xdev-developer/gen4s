@@ -1,7 +1,10 @@
 package io.gen4s.outputs
 
+import org.typelevel.log4cats.Logger
+
 import cats.effect.kernel.Async
 import cats.effect.std.Console as EffConsole
+import cats.implicits.*
 import io.gen4s.core.templating.Template
 import io.gen4s.core.Domain.NumberOfSamplesToGenerate
 import io.gen4s.outputs.processors.*
@@ -25,7 +28,7 @@ trait OutputStreamExecutor[F[_]] {
 
 object OutputStreamExecutor {
 
-  def make[F[_]: Async: EffConsole: Files](): OutputStreamExecutor[F] = new OutputStreamExecutor[F] {
+  def make[F[_]: Async: EffConsole: Files: Logger](): OutputStreamExecutor[F] = new OutputStreamExecutor[F] {
 
     private val stdProcessor        = new StdOutputProcessor[F]()
     private val fsProcessor         = new FileSystemOutputProcessor[F]()
@@ -35,11 +38,21 @@ object OutputStreamExecutor {
 
     override def write(n: NumberOfSamplesToGenerate, flow: fs2.Stream[F, Template], output: Output): F[Unit] =
       output match {
-        case out: StdOutput       => stdProcessor.process(n, flow, out)
-        case out: FsOutput        => fsProcessor.process(n, flow, out)
-        case out: HttpOutput      => httpOutputProcessor.process(n, flow, out)
-        case out: KafkaOutput     => kafkaProcessor.process(n, flow, out)
-        case out: KafkaAvroOutput => kafkaAvroProcessor.process(n, flow, out)
+        case out: StdOutput => Logger[F].info("Writing data to std-output") *> stdProcessor.process(n, flow, out)
+        case out: FsOutput  => Logger[F].info(s"Writing data file ${out.path()}") *> fsProcessor.process(n, flow, out)
+        case out: HttpOutput =>
+          Logger[F].info(s"Writing data to HTTP endpoint ${out.url}") *>
+            httpOutputProcessor.process(n, flow, out)
+
+        case out: KafkaOutput =>
+          Logger[F].info(s"Writing data to kafka brokers: ${out.bootstrapServers}, topic ${out.topic}") *>
+            kafkaProcessor.process(n, flow, out)
+
+        case out: KafkaAvroOutput =>
+          Logger[F].info(
+            s"Writing data to kafka brokers: ${out.bootstrapServers}, topic <${out.topic}>, registry: ${out.avroConfig.schemaRegistryUrl}"
+          ) *>
+            kafkaAvroProcessor.process(n, flow, out)
       }
   }
 }

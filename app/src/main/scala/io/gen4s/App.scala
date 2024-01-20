@@ -52,10 +52,14 @@ object App extends IOApp {
 
   private def runStage[F[_]: Async: Console: Files: Logger](args: Args, envVarsProfile: EnvProfileConfig) = {
     for {
-      conf     <- StageConfigLoader.fromFile[F](args.configFile).withEnvProfile(envVarsProfile)
-      executor <- StageExecutor.make[F]("Stage", args, conf)
-      _        <- Async[F].whenA(args.mode == ExecMode.Run)(executor.exec())
-      _        <- Async[F].whenA(args.mode == ExecMode.Preview)(executor.preview())
+      conf <- StageConfigLoader.fromFile[F](args.configFile).withEnvProfile(envVarsProfile)
+      executor <- StageExecutor.make[F](
+                    s"Stage [${conf.output.writer.description()}]",
+                    args,
+                    conf
+                  )
+      _ <- Async[F].whenA(args.mode == ExecMode.Run)(executor.exec())
+      _ <- Async[F].whenA(args.mode == ExecMode.Preview)(executor.preview())
     } yield ()
   }
 
@@ -77,6 +81,4 @@ object App extends IOApp {
 
     case None => Sync[F].pure(EnvProfileConfig.empty)
   }
-
-  private def redOut(msg: String): String = s"${scala.Console.RED}- $msg${scala.Console.RESET}"
 }
