@@ -1,5 +1,7 @@
 package io.gen4s.outputs.avro
 
+import java.time.format.DateTimeFormatter
+
 import org.apache.avro.Schema
 
 import scala.annotation.nowarn
@@ -14,9 +16,15 @@ import vulcan.Codec.Aux
 
 object AvroCodec {
 
+  private val parsers =
+    primitiveParsers orElse base64Parsers orElse zonedDateTimeParsers(DateTimeFormatter.ISO_ZONED_DATE_TIME)
+
   @nowarn
   def keyCodec(recordSchema: Schema): Aux[Avro.Record, AvroDynamicKey] = {
-    val converter = new JsonParser(recordSchema, primitiveParsers orElse base64Parsers)
+    val converter = new JsonParser(
+      recordSchema,
+      parsers
+    )
 
     def encoder(p: AvroDynamicKey): Either[AvroError, Avro.Record] = {
       Either
@@ -36,7 +44,10 @@ object AvroCodec {
 
   @nowarn
   def valueCodec(recordSchema: Schema): Aux[Avro.Record, AvroDynamicValue] = {
-    val converter = new JsonParser(recordSchema, primitiveParsers orElse base64Parsers)
+    val converter = new JsonParser(
+      recordSchema,
+      parsers
+    )
 
     def encoder(v: AvroDynamicValue): Either[AvroError, Avro.Record] = {
       Either
