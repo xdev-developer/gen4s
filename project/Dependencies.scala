@@ -1,5 +1,3 @@
-import scala.collection.immutable
-
 import sbt.*
 
 object Dependencies {
@@ -9,15 +7,15 @@ object Dependencies {
 
   object V {
     val cats              = "2.10.0"
-    val catsEffect        = "3.5.2"
+    val catsEffect        = "3.5.3"
     val catsRetry         = "3.1.0"
     val circe             = "0.14.6"
-    val fs2               = "3.9.3"
+    val fs2               = "3.9.4"
     val fs2Kafka          = "3.2.0"
     val log4cats          = "2.6.0"
-    val pureConfig        = "0.17.4"
-    val sttp              = "3.8.13"
-    var refined           = "0.11.0"
+    val pureConfig        = "0.17.5"
+    val sttp              = "3.9.2"
+    var refined           = "0.11.1"
     val parserCombinators = "2.3.0"
     val csv               = "1.3.10"
     val monocle           = "3.2.0"
@@ -27,7 +25,7 @@ object Dependencies {
 
     val betterMonadicFor = "0.3.1"
     val kindProjector    = "0.13.2"
-    val logback          = "1.4.11"
+    val logback          = "1.4.14"
   }
 
   val Cats: Seq[ModuleID] = List(
@@ -43,9 +41,9 @@ object Dependencies {
   )
 
   val ApacheCommons: Seq[ModuleID] = List(
-    "org.apache.commons" % "commons-text"  % "1.10.0",
+    "org.apache.commons" % "commons-text"  % "1.11.0",
     "commons-codec"      % "commons-codec" % "1.16.0",
-    "commons-io"         % "commons-io"    % "2.15.0",
+    "commons-io"         % "commons-io"    % "2.15.1",
     "org.xerial.snappy"  % "snappy-java"   % "1.1.10.5"
   )
 
@@ -132,7 +130,7 @@ object Dependencies {
     "com.dimafeng"            %% "testcontainers-scala-scalatest"  % V.testContainers % Test,
     "com.dimafeng"            %% "testcontainers-scala-kafka"      % V.testContainers % Test,
     "com.dimafeng"            %% "testcontainers-scala-postgresql" % V.testContainers % Test,
-    "io.github.embeddedkafka" %% "embedded-kafka-schema-registry"  % "7.5.2"          % Test
+    "io.github.embeddedkafka" %% "embedded-kafka-schema-registry"  % "7.5.3"          % Test
   )
 
   // Runtime
