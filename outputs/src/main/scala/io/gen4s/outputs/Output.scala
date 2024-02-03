@@ -19,7 +19,7 @@ case class StdOutput() extends Output {
   override def description(): String = "std-output"
 }
 
-case class KafkaOutput(
+final case class KafkaOutput(
   topic: Topic,
   bootstrapServers: BootstrapServers,
   decodeInputAsKeyValue: Boolean = false,
@@ -33,7 +33,7 @@ case class KafkaOutput(
   override def description(): String = s"Kafka output: topic: $topic, bootstrap-servers: $bootstrapServers"
 }
 
-case class AvroConfig(
+final case class AvroConfig(
   schemaRegistryUrl: String,
   keySchema: Option[File] = None,
   valueSchema: Option[File] = None,
@@ -41,7 +41,7 @@ case class AvroConfig(
   registryClientMaxCacheSize: Int = 1000
 )
 
-case class KafkaAvroOutput(
+final case class KafkaAvroOutput(
   topic: Topic,
   bootstrapServers: BootstrapServers,
   avroConfig: AvroConfig,
@@ -54,6 +54,33 @@ case class KafkaAvroOutput(
   def kafkaProducerConfig: KafkaProducerConfig = producerConfig.getOrElse(KafkaProducerConfig.default)
 
   override def description(): String = s"Kafka avro output: topic: $topic, bootstrap-servers: $bootstrapServers"
+}
+
+final case class ProtobufDescriptorConfig(
+  file: File,
+  messageType: String
+)
+
+final case class ProtobufConfig(
+  schemaRegistryUrl: String,
+  valueDescriptor: ProtobufDescriptorConfig,
+  autoRegisterSchemas: Boolean = false,
+  registryClientMaxCacheSize: Int = 1000
+)
+
+final case class KafkaProtobufOutput(
+  topic: Topic,
+  bootstrapServers: BootstrapServers,
+  protoConfig: ProtobufConfig,
+  decodeInputAsKeyValue: Boolean = false,
+  headers: Map[String, String] = Map.empty,
+  batchSize: PosInt = PosInt.unsafeFrom(1000),
+  producerConfig: Option[KafkaProducerConfig] = None)
+    extends Output {
+
+  def kafkaProducerConfig: KafkaProducerConfig = producerConfig.getOrElse(KafkaProducerConfig.default)
+
+  override def description(): String = s"Kafka proto-buff output: topic: $topic, bootstrap-servers: $bootstrapServers"
 }
 
 sealed abstract class HttpMethods(override val entryName: String) extends EnumEntry
@@ -76,7 +103,7 @@ object HttpContentTypes extends enumeratum.Enum[HttpContentTypes] {
   case object TextXml         extends HttpContentTypes("text/xml")
 }
 
-case class HttpOutput(
+final case class HttpOutput(
   url: String,
   method: HttpMethods,
   parallelism: PosInt = PosInt.unsafeFrom(1),
@@ -87,7 +114,7 @@ case class HttpOutput(
   override def description(): String = s"Http output: url: $url, method: $method"
 }
 
-case class FsOutput(dir: NonEmptyString, filenamePattern: NonEmptyString) extends Output {
+final case class FsOutput(dir: NonEmptyString, filenamePattern: NonEmptyString) extends Output {
 
   def path(): Path =
     Paths.get(dir.value, FilenameUtils.getName(filenamePattern.value.format(System.currentTimeMillis())))

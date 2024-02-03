@@ -232,7 +232,7 @@ output {
           registry-client-max-cache-size = 1000
         }
     }
-    transformers = ["json-minify"]
+    transformers = []
     validators = ["json", "missing-vars"]
 }
 ```
@@ -245,6 +245,64 @@ How schema resolver works:
 
 - Read from file.
 - When file isn't provided, gen4s lookup schema subject from schema registry (topic_name-key or topic_name-value).
+
+
+
+#### Kafka Protobuf output
+
+```properties
+output {
+    writer {
+        type = kafka-protobuf-output
+
+        topic = ${?KAFKA_TOPIC}
+        topic = "persons-proto"
+
+        bootstrap-servers = ${?KAFKA_BOOTSTRAP_SERVERS}
+        bootstrap-servers = "localhost:9092"
+
+        batch-size = 1000
+
+        headers {
+            key = value
+        }
+
+        decode-input-as-key-value = true
+
+        proto-config {
+        	schema-registry-url = ${?SCHEMA_REGISTRY_URL}
+          schema-registry-url = "http://localhost:8081"
+          value-descriptor {
+            file = "./examples/kafka-protobuf/person-value.desc"
+            message-type = "Person"
+          }
+          auto-register-schemas = true
+          registry-client-max-cache-size = 1000
+        }
+    }
+
+    transformers = []
+    validators = ["json", "missing-vars"]
+}
+```
+
+- **value-descriptor** - path to protobuf descriptor and message type. 
+- **auto-register-schemas** - register schemas in schema-registry.
+
+#### Create protobuf descriptor from proto file
+
+Descriptor file can be created using `protoc` command:
+```shell
+protoc --include_imports --descriptor_set_out=person-value.desc person-value.proto
+```
+
+or using `scalapbc`
+
+```shell
+scalapbc --include_imports --descriptor_set_out=person-value.desc person-value.proto
+```
+
+
 
 
 
