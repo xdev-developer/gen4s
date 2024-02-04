@@ -2,13 +2,18 @@ package io.gen4s.test.outputs
 
 import java.util.UUID
 
+import scala.reflect.ClassTag
+
 import cats.effect.kernel.{Async, Resource}
+import io.confluent.kafka.schemaregistry.protobuf.ProtobufSchemaProvider
 import io.gen4s.core.Domain.*
+import io.gen4s.outputs.protobuf.{protobufDeserializer, ProtobufSettings}
 
 import scala.concurrent.duration.*
 
 import _root_.vulcan.Codec
 import fs2.kafka.*
+import fs2.kafka.vulcan.CachedSchemaRegistryClient
 
 case class Message(key: Option[String], value: String, headers: Option[Headers] = None)
 
@@ -116,6 +121,44 @@ trait KafkaConsumers {
       .records
       .take(count)
       .map(r => (r.record.key, r.record.value))
+      .interruptAfter(60.seconds)
+      .compile
+      .toList
+  }
+
+  def consumeProtoMessages[F[_]: Async, T <: com.google.protobuf.Message: ClassTag](
+    topic: Topic,
+    bootstrapServer: BootstrapServers,
+    registryUrl: String,
+    count: Long = 100L): F[List[T]] = {
+
+    import scala.jdk.CollectionConverters.*
+
+    val client = new CachedSchemaRegistryClient(
+      registryUrl,
+      1000,
+      List(new ProtobufSchemaProvider()).asJava,
+      null
+    )
+
+    val protoSettings = ProtobufSettings[F, T](client)
+
+    implicit val entityDeserializer: Resource[F, ValueDeserializer[F, T]] =
+      protobufDeserializer[T].forValue(protoSettings)
+
+    val consumerSettings = ConsumerSettings(
+      keyDeserializer = Deserializer[F, Option[String]],
+      valueDeserializer = entityDeserializer
+    ).withAutoOffsetReset(AutoOffsetReset.Earliest)
+      .withBootstrapServers(bootstrapServer.value)
+      .withGroupId(UUID.randomUUID().toString)
+
+    KafkaConsumer
+      .stream(consumerSettings)
+      .subscribeTo(topic.value)
+      .records
+      .take(count)
+      .map(r => r.record.value)
       .interruptAfter(60.seconds)
       .compile
       .toList

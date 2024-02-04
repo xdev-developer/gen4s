@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+option java_package = "io.gen4s.protos";
+
+message Person {
+  string username = 1;
+  int32 age = 2;
+}

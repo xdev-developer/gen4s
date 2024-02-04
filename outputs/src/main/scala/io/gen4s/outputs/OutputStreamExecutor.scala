@@ -8,7 +8,7 @@ import cats.implicits.*
 import io.gen4s.core.templating.Template
 import io.gen4s.core.Domain.NumberOfSamplesToGenerate
 import io.gen4s.outputs.processors.*
-import io.gen4s.outputs.processors.kafka.{KafkaAvroOutputProcessor, KafkaOutputProcessor}
+import io.gen4s.outputs.processors.kafka.{KafkaAvroOutputProcessor, KafkaOutputProcessor, KafkaProtobufOutputProcessor}
 
 import fs2.io.file.Files
 
@@ -30,11 +30,12 @@ object OutputStreamExecutor {
 
   def make[F[_]: Async: EffConsole: Files: Logger](): OutputStreamExecutor[F] = new OutputStreamExecutor[F] {
 
-    private val stdProcessor        = new StdOutputProcessor[F]()
-    private val fsProcessor         = new FileSystemOutputProcessor[F]()
-    private val kafkaProcessor      = new KafkaOutputProcessor[F]()
-    private val kafkaAvroProcessor  = new KafkaAvroOutputProcessor[F]()
-    private val httpOutputProcessor = new HttpOutputProcessor[F]()
+    private val stdProcessor           = new StdOutputProcessor[F]()
+    private val fsProcessor            = new FileSystemOutputProcessor[F]()
+    private val kafkaProcessor         = new KafkaOutputProcessor[F]()
+    private val kafkaAvroProcessor     = new KafkaAvroOutputProcessor[F]()
+    private val kafkaProtobufProcessor = new KafkaProtobufOutputProcessor[F]()
+    private val httpOutputProcessor    = new HttpOutputProcessor[F]()
 
     override def write(n: NumberOfSamplesToGenerate, flow: fs2.Stream[F, Template], output: Output): F[Unit] =
       output match {
@@ -53,6 +54,8 @@ object OutputStreamExecutor {
             s"Writing data to kafka brokers: ${out.bootstrapServers}, topic <${out.topic}>, registry: ${out.avroConfig.schemaRegistryUrl}"
           ) *>
             kafkaAvroProcessor.process(n, flow, out)
+
+        case out: KafkaProtobufOutput => kafkaProtobufProcessor.process(n, flow, out)
       }
   }
 }
