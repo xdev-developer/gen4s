@@ -5,14 +5,13 @@ import org.apache.kafka.clients.producer.ProducerConfig
 import cats.effect.kernel.{Async, Sync}
 import cats.effect.Resource
 import cats.implicits.*
-import cats.Applicative
 import io.circe.ParsingFailure
-import io.gen4s.core.templating.Template
+import io.gen4s.core.templating.{RenderedTemplate, Template}
 import io.gen4s.core.Domain
-import io.gen4s.core.Domain.{BootstrapServers, Topic}
-import io.gen4s.outputs.KafkaProducerConfig
+import io.gen4s.core.Domain.{BootstrapServers, NumberOfSamplesToGenerate}
+import io.gen4s.outputs.{KafkaOutputBase, KafkaProducerConfig}
 
-import fs2.kafka.{Acks, Headers, KeySerializer, ProducerRecords, ProducerSettings, ValueSerializer}
+import fs2.kafka.{Acks, KeySerializer, ProducerRecord, ProducerRecords, ProducerSettings, ValueSerializer}
 import fs2.Chunk
 import me.tongfei.progressbar.{ProgressBarBuilder, ProgressBarStyle}
 
@@ -20,38 +19,6 @@ trait KafkaOutputProcessorBase {
 
   protected type Key   = Array[Byte]
   protected type Value = Array[Byte]
-
-  protected def processBatch[F[_]: Async](
-    batch: Chunk[Template],
-    topic: Topic,
-    headers: Headers,
-    decodeInputAsKeyValue: Boolean): F[ProducerRecords[Option[Key], Value]] = {
-    batch
-      .map { value =>
-        if (decodeInputAsKeyValue) {
-          value.render().asKeyValue match {
-            case Right((key, v)) =>
-              Applicative[F].pure(
-                fs2.kafka
-                  .ProducerRecord(topic.value, key.asByteArray.some, v.asByteArray)
-                  .withHeaders(headers)
-              )
-
-            case Left(ex) =>
-              Async[F].raiseError(ParsingFailure(s"Template key/value parsing failure: ${ex.message}", ex))
-          }
-
-        } else {
-          Applicative[F].pure(
-            fs2.kafka
-              .ProducerRecord(topic.value, none[Key], value.render().asByteArray)
-              .withHeaders(headers)
-          )
-        }
-      }
-      .sequence
-      .map(fs2.kafka.ProducerRecords.apply)
-  }
 
   protected def mkProducerSettings[F[_]: Async, K, V](bootstrapServers: BootstrapServers, conf: KafkaProducerConfig)(
     using
@@ -86,10 +53,45 @@ trait KafkaOutputProcessorBase {
 
   }
 
-  protected def progressInfo[F[_]: Sync, V](n: Domain.NumberOfSamplesToGenerate): fs2.Pipe[F, Chunk[V], Chunk[V]] =
-    if (n.value >= 10_000) progressBar(n) else identity()
+  protected def runStream[F[_]: Async, K, V](
+    n: NumberOfSamplesToGenerate,
+    flow: fs2.Stream[F, Template],
+    output: KafkaOutputBase,
+    producerSettings: ProducerSettings[F, K, V],
+    kvFun: (RenderedTemplate, RenderedTemplate) => F[ProducerRecord[K, V]],
+    vFun: RenderedTemplate => F[ProducerRecord[K, V]]
+  ): F[Unit] = {
 
-  private def identity[F[_]: Sync, V](): fs2.Pipe[F, Chunk[V], Chunk[V]] = src => src
+    val groupSize = if (output.batchSize.value < n.value) output.batchSize.value else n.value
+    flow
+      .chunkN(groupSize)
+      .through(progressInfo(n))
+      .evalMap { batch =>
+        batch
+          .map { value =>
+            if (output.decodeInputAsKeyValue) {
+              value.render().asKeyValue match {
+                case Right((key, v)) => kvFun(key, v)
+                case Left(ex) =>
+                  Async[F].raiseError(ParsingFailure(s"Template key/value parsing failure: ${ex.message}", ex))
+              }
+
+            } else { // No key usage
+              vFun(value.render())
+            }
+          }
+          .sequence
+          .map(fs2.kafka.ProducerRecords.apply)
+      }
+      .through(fs2.kafka.KafkaProducer.pipe(producerSettings))
+      .compile
+      .drain
+  }
+
+  private def progressInfo[F[_]: Sync, V](n: Domain.NumberOfSamplesToGenerate): fs2.Pipe[F, Chunk[V], Chunk[V]] =
+    if (n.value >= 10_000) progressBar(n) else passThrough()
+
+  private def passThrough[F[_]: Sync, V](): fs2.Pipe[F, Chunk[V], Chunk[V]] = src => src
 
   private def progressBar[F[_]: Sync, V](n: Domain.NumberOfSamplesToGenerate): fs2.Pipe[F, Chunk[V], Chunk[V]] =
     src =>

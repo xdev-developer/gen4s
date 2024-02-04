@@ -6,16 +6,15 @@ import org.typelevel.log4cats.Logger
 import cats.effect.kernel.{Async, Resource}
 import cats.implicits.*
 import cats.Applicative
-import io.circe.ParsingFailure
 import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient
-import io.gen4s.core.templating.Template
+import io.gen4s.core.templating.{RenderedTemplate, Template}
 import io.gen4s.core.Domain
 import io.gen4s.core.Domain.{NumberOfSamplesToGenerate, Topic}
 import io.gen4s.outputs.avro.{AvroCodec, AvroDynamicKey, AvroDynamicValue, SchemaLoader}
 import io.gen4s.outputs.processors.OutputProcessor
 import io.gen4s.outputs.KafkaAvroOutput
 
-import fs2.kafka.{Headers, KeySerializer, Serializer, ValueSerializer}
+import fs2.kafka.{KeySerializer, ProducerRecord, Serializer, ValueSerializer}
 import fs2.kafka.vulcan.{AvroSettings, SchemaRegistryClient}
 import vulcan.Avro
 import vulcan.Codec.Aux
@@ -57,39 +56,21 @@ class KafkaAvroOutputProcessor[F[_]: Async: Logger]
             output.kafkaProducerConfig
           )
 
-        val groupSize = if (output.batchSize.value < n.value) output.batchSize.value else n.value
-        val headers   = KafkaOutputProcessor.toKafkaHeaders(output.headers)
+        val headers = KafkaOutputProcessor.toKafkaHeaders(output.headers)
 
-        flow
-          .chunkN(groupSize)
-          .through(progressInfo(n))
-          .evalMap { batch =>
-            batch
-              .map { value =>
-                if (output.decodeInputAsKeyValue) {
-                  value.render().asKeyValue match {
-                    case Right((key, v)) =>
-                      produce(output.topic, AvroDynamicKey(key.asByteArray), AvroDynamicValue(v.asByteArray), headers)
+        def produce(key: AvroDynamicKey, value: AvroDynamicValue) = {
+          Applicative[F].pure(fs2.kafka.ProducerRecord(output.topic.value, key, value).withHeaders(headers))
+        }
 
-                    case Left(ex) =>
-                      Async[F].raiseError(ParsingFailure(s"Template key/value parsing failure: ${ex.message}", ex))
-                  }
-
-                } else { // No key usage
-                  produce(output.topic, AvroDynamicKey(null), AvroDynamicValue(value.render().asByteArray), headers)
-                }
-              }
-              .sequence
-              .map(fs2.kafka.ProducerRecords.apply)
-          }
-          .through(fs2.kafka.KafkaProducer.pipe(producerSettings))
-          .compile
-          .drain
+        runStream[F, AvroDynamicKey, AvroDynamicValue](
+          n,
+          flow,
+          output,
+          producerSettings,
+          kvFun = (key, v) => produce(AvroDynamicKey(key.asByteArray), AvroDynamicValue(v.asByteArray)),
+          vFun = v => produce(AvroDynamicKey(null), AvroDynamicValue(v.asByteArray))
+        )
       }
-  }
-
-  private def produce(topic: Topic, key: AvroDynamicKey, value: AvroDynamicValue, headers: Headers) = {
-    Applicative[F].pure(fs2.kafka.ProducerRecord(topic.value, key, value).withHeaders(headers))
   }
 
   private def loadKeySchema(output: KafkaAvroOutput, client: SchemaRegistryClient): F[Option[Schema]] = {
