@@ -4,6 +4,7 @@ import java.io.File
 
 import io.gen4s.conf.ExecMode
 import io.gen4s.core.Domain.NumberOfSamplesToGenerate
+import io.gen4s.core.InputRecord
 
 import scala.concurrent.duration.FiniteDuration
 
@@ -13,5 +14,6 @@ final case class Args(
   configFile: File = new File("."),
   profileFile: Option[File] = None,
   prettyPreview: Boolean = false,
-  stageDelay: Option[FiniteDuration] = None
+  stageDelay: Option[FiniteDuration] = None,
+  userInput: Option[InputRecord] = None
 )

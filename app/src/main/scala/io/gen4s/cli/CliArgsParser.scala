@@ -2,8 +2,11 @@ package io.gen4s.cli
 
 import java.io.File
 
+import cats.implicits.*
 import io.gen4s.conf.ExecMode
+import io.gen4s.core.generators.{GeneratedValue, Variable}
 import io.gen4s.core.Domain.*
+import io.gen4s.core.InputRecord
 
 class CliArgsParser extends scopt.OptionParser[Args]("gen4s") {
   head("Gen4s")
@@ -23,6 +26,13 @@ class CliArgsParser extends scopt.OptionParser[Args]("gen4s") {
     .valueName("<file>")
     .action((x, c) => c.copy(profileFile = Option(x).filter(_.exists())))
     .text("Environment variables profile.")
+
+  opt[Map[String, String]]('i', "input-records")
+    .valueName("key=value,key1=value1")
+    .action((m, c) =>
+      c.copy(userInput = InputRecord(m.map { case (k, v) => Variable(k) -> GeneratedValue.fromString(v) }).some)
+    )
+    .text("Key/Value pairs to override generated variable")
 
   cmd("preview")
     .action((_, c) => c.copy(mode = ExecMode.Preview))

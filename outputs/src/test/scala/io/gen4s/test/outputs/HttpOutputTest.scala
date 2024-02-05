@@ -10,7 +10,7 @@ import cats.effect.{IO, Sync}
 import cats.effect.testing.scalatest.AsyncIOSpec
 import io.gen4s.core.generators.Variable
 import io.gen4s.core.streams.GeneratorStream
-import io.gen4s.core.templating.{OutputTransformer, SourceTemplate, TemplateBuilder}
+import io.gen4s.core.templating.{SourceTemplate, TemplateBuilder}
 import io.gen4s.core.Domain.NumberOfSamplesToGenerate
 import io.gen4s.generators.impl.TimestampGenerator
 import io.gen4s.outputs.{HttpMethods, HttpOutput, OutputStreamExecutor}
@@ -27,9 +27,7 @@ class HttpOutputTest extends AsyncFunSpec with AsyncIOSpec with Matchers {
       val streams = OutputStreamExecutor.make[IO]()
       val builder = TemplateBuilder.make(
         NonEmptyList.one(template),
-        List(TimestampGenerator(Variable("ts"))),
-        Set.empty[Variable],
-        Set.empty[OutputTransformer]
+        List(TimestampGenerator(Variable("ts")))
       )
 
       val output = HttpOutput(
@@ -47,9 +45,7 @@ class HttpOutputTest extends AsyncFunSpec with AsyncIOSpec with Matchers {
       val streams = OutputStreamExecutor.make[IO]()
       val builder = TemplateBuilder.make(
         NonEmptyList.one(template),
-        List(TimestampGenerator(Variable("ts"))),
-        Set.empty[Variable],
-        Set.empty[OutputTransformer]
+        List(TimestampGenerator(Variable("ts")))
       )
 
       val output = HttpOutput(
@@ -67,9 +63,7 @@ class HttpOutputTest extends AsyncFunSpec with AsyncIOSpec with Matchers {
       val streams = OutputStreamExecutor.make[IO]()
       val builder = TemplateBuilder.make(
         NonEmptyList.one(template),
-        List(TimestampGenerator(Variable("ts"))),
-        Set.empty[Variable],
-        Set.empty[OutputTransformer]
+        List(TimestampGenerator(Variable("ts")))
       )
 
       val output = HttpOutput(

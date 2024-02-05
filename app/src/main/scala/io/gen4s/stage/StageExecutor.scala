@@ -90,14 +90,15 @@ object StageExecutor {
                                      sources,
                                      schema.generators,
                                      conf.input.globalVars,
+                                     args.userInput.map(_.fields).getOrElse(Map.empty),
                                      conf.output.transformers
                                    )
                                  } else {
                                    TemplateBuilder.ofRecordsStream(
                                      sources,
+                                     NonEmptyList.fromListUnsafe(recordsStream),
                                      schema.generators,
                                      conf.input.globalVars,
-                                     NonEmptyList.fromListUnsafe(recordsStream),
                                      conf.output.transformers
                                    )
                                  }

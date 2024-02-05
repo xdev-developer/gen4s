@@ -13,7 +13,7 @@ import cats.implicits.*
 import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient
 import io.gen4s.core.generators.Variable
 import io.gen4s.core.streams.GeneratorStream
-import io.gen4s.core.templating.{OutputTransformer, SourceTemplate, TemplateBuilder}
+import io.gen4s.core.templating.{SourceTemplate, TemplateBuilder}
 import io.gen4s.core.Domain.*
 import io.gen4s.generators.impl.{IntNumberGenerator, StringPatternGenerator}
 import io.gen4s.outputs.{KafkaProtobufOutput, OutputStreamExecutor, ProtobufConfig, ProtobufDescriptorConfig}
@@ -54,9 +54,7 @@ class KafkaProtobufOutputStreamTest
           List(
             StringPatternGenerator(Variable("name"), NonEmptyString.unsafeFrom("username_###")),
             IntNumberGenerator(Variable("age"), max = 50.some)
-          ),
-          Set.empty[Variable],
-          Set.empty[OutputTransformer]
+          )
         )
 
         val output =

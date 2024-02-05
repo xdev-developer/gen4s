@@ -19,7 +19,7 @@ import io.confluent.kafka.schemaregistry.client.rest.exceptions.RestClientExcept
 import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient
 import io.gen4s.core.generators.Variable
 import io.gen4s.core.streams.GeneratorStream
-import io.gen4s.core.templating.{OutputTransformer, SourceTemplate, TemplateBuilder}
+import io.gen4s.core.templating.{SourceTemplate, TemplateBuilder}
 import io.gen4s.core.Domain.*
 import io.gen4s.generators.impl.{IntNumberGenerator, StringPatternGenerator}
 import io.gen4s.outputs.{AvroConfig, KafkaAvroOutput, OutputStreamExecutor}
@@ -113,9 +113,7 @@ class KafkaAvroOutputStreamTest
           List(
             StringPatternGenerator(Variable("name"), NonEmptyString.unsafeFrom("username_###")),
             IntNumberGenerator(Variable("age"), max = 50.some)
-          ),
-          Set.empty[Variable],
-          Set.empty[OutputTransformer]
+          )
         )
 
         val output = mkOutput(
@@ -149,9 +147,7 @@ class KafkaAvroOutputStreamTest
           List(
             StringPatternGenerator(Variable("name"), NonEmptyString.unsafeFrom("username_###")),
             IntNumberGenerator(Variable("age"), max = 50.some)
-          ),
-          Set.empty[Variable],
-          Set.empty[OutputTransformer]
+          )
         )
 
         val output = mkOutput(
@@ -197,9 +193,7 @@ class KafkaAvroOutputStreamTest
             StringPatternGenerator(Variable("name"), NonEmptyString.unsafeFrom("username_###")),
             IntNumberGenerator(Variable("age"), min = 1.some, max = 50.some),
             IntNumberGenerator(Variable("id"), min = 1.some, max = 50.some)
-          ),
-          Set.empty[Variable],
-          Set.empty[OutputTransformer]
+          )
         )
 
         val output =
@@ -260,9 +254,7 @@ class KafkaAvroOutputStreamTest
             StringPatternGenerator(Variable("name"), NonEmptyString.unsafeFrom("username_###")),
             IntNumberGenerator(Variable("age"), min = 1.some, max = 50.some),
             IntNumberGenerator(Variable("id"), min = 1.some, max = 50.some)
-          ),
-          Set.empty[Variable],
-          Set.empty[OutputTransformer]
+          )
         )
 
         val output = mkOutput(
@@ -310,9 +302,7 @@ class KafkaAvroOutputStreamTest
             StringPatternGenerator(Variable("name"), NonEmptyString.unsafeFrom("username_###")),
             IntNumberGenerator(Variable("age"), min = 1.some, max = 50.some),
             IntNumberGenerator(Variable("id"), min = 1.some, max = 50.some)
-          ),
-          Set.empty[Variable],
-          Set.empty[OutputTransformer]
+          )
         )
 
         val output = mkOutput(
@@ -347,9 +337,7 @@ class KafkaAvroOutputStreamTest
             StringPatternGenerator(Variable("name"), NonEmptyString.unsafeFrom("username_###")),
             IntNumberGenerator(Variable("age"), min = 1.some, max = 50.some),
             IntNumberGenerator(Variable("id"), min = 1.some, max = 50.some)
-          ),
-          Set.empty[Variable],
-          Set.empty[OutputTransformer]
+          )
         )
 
         val output = mkOutput(
@@ -377,9 +365,7 @@ class KafkaAvroOutputStreamTest
           List(
             StringPatternGenerator(Variable("name"), NonEmptyString.unsafeFrom("username_###")),
             IntNumberGenerator(Variable("age"), min = 1.some, max = 50.some)
-          ),
-          Set.empty[Variable],
-          Set.empty[OutputTransformer]
+          )
         )
 
         val output =
@@ -412,9 +398,7 @@ class KafkaAvroOutputStreamTest
           List(
             StringPatternGenerator(Variable("name"), NonEmptyString.unsafeFrom("username_###")),
             IntNumberGenerator(Variable("age"), min = 1.some, max = 50.some)
-          ),
-          Set.empty[Variable],
-          Set.empty[OutputTransformer]
+          )
         )
 
         val output =
