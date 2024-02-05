@@ -19,6 +19,13 @@ case class StdOutput() extends Output {
   override def description(): String = "std-output"
 }
 
+trait KafkaOutputBase {
+  val topic: Topic
+  val headers: Map[String, String]
+  val batchSize: PosInt
+  val decodeInputAsKeyValue: Boolean
+}
+
 final case class KafkaOutput(
   topic: Topic,
   bootstrapServers: BootstrapServers,
@@ -26,7 +33,8 @@ final case class KafkaOutput(
   headers: Map[String, String] = Map.empty,
   batchSize: PosInt = PosInt.unsafeFrom(1000),
   producerConfig: Option[KafkaProducerConfig] = None)
-    extends Output {
+    extends Output
+    with KafkaOutputBase {
 
   def kafkaProducerConfig: KafkaProducerConfig = producerConfig.getOrElse(KafkaProducerConfig.default)
 
@@ -49,7 +57,8 @@ final case class KafkaAvroOutput(
   headers: Map[String, String] = Map.empty,
   batchSize: PosInt = PosInt.unsafeFrom(1000),
   producerConfig: Option[KafkaProducerConfig] = None)
-    extends Output {
+    extends Output
+    with KafkaOutputBase {
 
   def kafkaProducerConfig: KafkaProducerConfig = producerConfig.getOrElse(KafkaProducerConfig.default)
 
@@ -76,7 +85,8 @@ final case class KafkaProtobufOutput(
   headers: Map[String, String] = Map.empty,
   batchSize: PosInt = PosInt.unsafeFrom(1000),
   producerConfig: Option[KafkaProducerConfig] = None)
-    extends Output {
+    extends Output
+    with KafkaOutputBase {
 
   def kafkaProducerConfig: KafkaProducerConfig = producerConfig.getOrElse(KafkaProducerConfig.default)
 

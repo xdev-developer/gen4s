@@ -1,5 +1,6 @@
 package io.gen4s.test.outputs
 
+import java.io.File
 import java.time.Instant
 
 import org.apache.avro.SchemaParseException
@@ -48,7 +49,6 @@ class KafkaAvroOutputStreamTest
 
   case class PersonKey(id: Int, orgId: Int)
   case class Person(username: String, age: Option[Int], birthDate: Instant)
-  case class UpdatedPerson(username: String, email: String, age: Option[Int])
 
   private given keyCodec: Codec[PersonKey] = Codec.record(
     name = "PersonKey",
@@ -65,6 +65,39 @@ class KafkaAvroOutputStreamTest
   }
 
   private val personTemplate = """{ "username": "{{name}}", "age": {{age}}, "birthDate": "2007-12-03T10:15:30.999Z" }"""
+
+  private def mkOutput(
+    b: BootstrapServers,
+    registryUrl: String,
+    keySchema: Option[File] = None,
+    valueSchema: Option[File] = None,
+    autoRegisterSchemas: Boolean = false) =
+    KafkaAvroOutput(
+      topic = Topic("person"),
+      bootstrapServers = b,
+      AvroConfig(
+        schemaRegistryUrl = registryUrl,
+        keySchema = keySchema,
+        valueSchema = valueSchema,
+        autoRegisterSchemas = autoRegisterSchemas
+      )
+    )
+
+  private def runStream(
+    bootstrapServers: BootstrapServers,
+    streams: OutputStreamExecutor[IO],
+    builder: TemplateBuilder,
+    output: KafkaAvroOutput) = {
+    (for {
+      _ <- streams.write(n, GeneratorStream.stream[IO](n, builder), output)
+      r <- consumeAvroMessages[IO, Person](
+             output.topic,
+             bootstrapServers,
+             output.avroConfig.schemaRegistryUrl,
+             count = n.value.toLong
+           )
+    } yield r).unsafeRunSync()
+  }
 
   describe("Kafka Avro output stream") {
 
@@ -85,27 +118,14 @@ class KafkaAvroOutputStreamTest
           Set.empty[OutputTransformer]
         )
 
-        val output =
-          KafkaAvroOutput(
-            topic = Topic("person"),
-            bootstrapServers = kafka,
-            AvroConfig(
-              schemaRegistryUrl = s"http://localhost:${config.schemaRegistryPort}",
-              keySchema = None,
-              valueSchema = java.io.File("./outputs/src/test/resources/person-value.avsc").some,
-              autoRegisterSchemas = true
-            )
-          )
+        val output = mkOutput(
+          kafka,
+          s"http://localhost:${config.schemaRegistryPort}",
+          valueSchema = java.io.File("./outputs/src/test/resources/person-value.avsc").some,
+          autoRegisterSchemas = true
+        )
 
-        val list = (for {
-          _ <- streams.write(n, GeneratorStream.stream[IO](n, builder), output)
-          r <- consumeAvroMessages[IO, Person](
-                 output.topic,
-                 kafka,
-                 output.avroConfig.schemaRegistryUrl,
-                 count = n.value.toLong
-               )
-        } yield r).unsafeRunSync()
+        val list = runStream(kafka, streams, builder, output)
 
         list.foreach(p => info(p.toString))
         list should not be empty
@@ -134,18 +154,13 @@ class KafkaAvroOutputStreamTest
           Set.empty[OutputTransformer]
         )
 
-        val output =
-          KafkaAvroOutput(
-            topic = Topic("person"),
-            bootstrapServers = kafka,
-            decodeInputAsKeyValue = true,
-            avroConfig = AvroConfig(
-              schemaRegistryUrl = s"http://localhost:${config.schemaRegistryPort}",
-              keySchema = java.io.File("./outputs/src/test/resources/person-key.avsc").some,
-              valueSchema = java.io.File("./outputs/src/test/resources/person-value.avsc").some,
-              autoRegisterSchemas = true
-            )
-          )
+        val output = mkOutput(
+          kafka,
+          s"http://localhost:${config.schemaRegistryPort}",
+          keySchema = java.io.File("./outputs/src/test/resources/person-key.avsc").some,
+          valueSchema = java.io.File("./outputs/src/test/resources/person-value.avsc").some,
+          autoRegisterSchemas = true
+        ).copy(decodeInputAsKeyValue = true)
 
         val list = (for {
           _ <- streams.write(n, GeneratorStream.stream[IO](n, builder), output)
@@ -161,70 +176,6 @@ class KafkaAvroOutputStreamTest
         list should not be empty
         val (key, value) = list.head
         key.value.id shouldBe 1
-        value.username should include("username_")
-
-      }
-    }
-
-    it("Send AVRO key/value records to kafka topic (read schema from schema registry)") {
-      withRunningKafkaOnFoundPort(randomPorts) { config =>
-        val kafka = BootstrapServers(s"localhost:${config.kafkaPort}")
-        val template = SourceTemplate(s""" {
-                                         |   "key": {"id": {{id}}, "orgId": 2},
-                                         |   "value": $personTemplate
-                                         |}""".stripMargin)
-
-        val streams = OutputStreamExecutor.make[IO]()
-
-        val builder = TemplateBuilder.make(
-          NonEmptyList.one(template),
-          List(
-            StringPatternGenerator(Variable("name"), NonEmptyString.unsafeFrom("username_###")),
-            IntNumberGenerator(Variable("age"), min = 1.some, max = 50.some),
-            IntNumberGenerator(Variable("id"), min = 1.some, max = 50.some)
-          ),
-          Set.empty[Variable],
-          Set.empty[OutputTransformer]
-        )
-
-        val output =
-          KafkaAvroOutput(
-            topic = Topic("person"),
-            bootstrapServers = kafka,
-            decodeInputAsKeyValue = true,
-            avroConfig = AvroConfig(
-              schemaRegistryUrl = s"http://localhost:${config.schemaRegistryPort}",
-              keySchema = java.io.File("./outputs/src/test/resources/person-key.avsc").some,
-              valueSchema = java.io.File("./outputs/src/test/resources/person-value.avsc").some
-            )
-          )
-
-        val client = CachedSchemaRegistryClient(output.avroConfig.schemaRegistryUrl, 100)
-
-        SchemaLoader
-          .loadSchemaFromFile(new java.io.File("./outputs/src/test/resources/person-key.avsc"))
-          .foreach { schema =>
-            client.register("person-key", new AvroSchema(schema))
-          }
-
-        SchemaLoader.loadSchemaFromFile(output.avroConfig.valueSchema.get).foreach { schema =>
-          client.register("person-value", new AvroSchema(schema))
-        }
-
-        val list = (for {
-          _ <- streams.write(n, GeneratorStream.stream[IO](n, builder), output)
-          r <- consumeKeyValueAvroMessages[IO, Option[PersonKey], Person](
-                 output.topic,
-                 kafka,
-                 output.avroConfig.schemaRegistryUrl,
-                 count = n.value.toLong
-               )
-        } yield r).unsafeRunSync()
-
-        list.foreach(p => info(p.toString))
-        list should not be empty
-        val (key, value) = list.head
-        key.value.id should be > 0
         value.username should include("username_")
 
       }
@@ -314,15 +265,10 @@ class KafkaAvroOutputStreamTest
           Set.empty[OutputTransformer]
         )
 
-        val output =
-          KafkaAvroOutput(
-            topic = Topic("person"),
-            bootstrapServers = kafka,
-            decodeInputAsKeyValue = true,
-            avroConfig = AvroConfig(
-              schemaRegistryUrl = s"http://localhost:${config.schemaRegistryPort}"
-            )
-          )
+        val output = mkOutput(
+          kafka,
+          s"http://localhost:${config.schemaRegistryPort}"
+        ).copy(decodeInputAsKeyValue = true)
 
         val client = CachedSchemaRegistryClient(output.avroConfig.schemaRegistryUrl, 100)
 
@@ -369,29 +315,16 @@ class KafkaAvroOutputStreamTest
           Set.empty[OutputTransformer]
         )
 
-        val output =
-          KafkaAvroOutput(
-            topic = Topic("person"),
-            bootstrapServers = kafka,
-            decodeInputAsKeyValue = true,
-            avroConfig = AvroConfig(
-              schemaRegistryUrl = s"http://localhost:${config.schemaRegistryPort}",
-              keySchema = java.io.File("./outputs/src/test/resources/person-key.avsc").some,
-              valueSchema = java.io.File("./outputs/src/test/resources/person-key.avsc").some,
-              autoRegisterSchemas = true
-            )
-          )
+        val output = mkOutput(
+          kafka,
+          s"http://localhost:${config.schemaRegistryPort}",
+          keySchema = java.io.File("./outputs/src/test/resources/person-key.avsc").some,
+          valueSchema = java.io.File("./outputs/src/test/resources/person-key.avsc").some,
+          autoRegisterSchemas = true
+        ).copy(decodeInputAsKeyValue = true)
 
         val error = the[AvroException] thrownBy {
-          (for {
-            _ <- streams.write(n, GeneratorStream.stream[IO](n, builder), output)
-            r <- consumeAvroMessages[IO, Person](
-                   output.topic,
-                   kafka,
-                   output.avroConfig.schemaRegistryUrl,
-                   count = n.value.toLong
-                 )
-          } yield r).unsafeRunSync()
+          runStream(kafka, streams, builder, output)
         }
 
         error.getMessage shouldBe "Avro value encoder error: Missing INT node @ /id"
@@ -419,26 +352,13 @@ class KafkaAvroOutputStreamTest
           Set.empty[OutputTransformer]
         )
 
-        val output =
-          KafkaAvroOutput(
-            topic = Topic("person"),
-            bootstrapServers = kafka,
-            decodeInputAsKeyValue = true,
-            avroConfig = AvroConfig(
-              schemaRegistryUrl = s"http://localhost:${config.schemaRegistryPort}"
-            )
-          )
+        val output = mkOutput(
+          kafka,
+          s"http://localhost:${config.schemaRegistryPort}"
+        ).copy(decodeInputAsKeyValue = true)
 
         val error = the[RestClientException] thrownBy {
-          (for {
-            _ <- streams.write(n, GeneratorStream.stream[IO](n, builder), output)
-            r <- consumeAvroMessages[IO, Person](
-                   output.topic,
-                   kafka,
-                   output.avroConfig.schemaRegistryUrl,
-                   count = n.value.toLong
-                 )
-          } yield r).unsafeRunSync()
+          runStream(kafka, streams, builder, output)
         }
 
         error.getMessage shouldBe "Subject 'person-value' not found.; error code: 40401"
@@ -474,15 +394,7 @@ class KafkaAvroOutputStreamTest
           )
 
         val error = the[AvroException] thrownBy {
-          (for {
-            _ <- streams.write(n, GeneratorStream.stream[IO](n, builder), output)
-            r <- consumeAvroMessages[IO, Person](
-                   output.topic,
-                   kafka,
-                   output.avroConfig.schemaRegistryUrl,
-                   count = n.value.toLong
-                 )
-          } yield r).unsafeRunSync()
+          runStream(kafka, streams, builder, output)
         }
         error.getMessage should include("""Avro value encoder error: Missing INT node @ /id""")
       }
@@ -518,15 +430,7 @@ class KafkaAvroOutputStreamTest
           )
 
         val error = the[SchemaParseException] thrownBy {
-          (for {
-            _ <- streams.write(n, GeneratorStream.stream[IO](n, builder), output)
-            r <- consumeAvroMessages[IO, Person](
-                   output.topic,
-                   kafka,
-                   output.avroConfig.schemaRegistryUrl,
-                   count = n.value.toLong
-                 )
-          } yield r).unsafeRunSync()
+          runStream(kafka, streams, builder, output)
         }
 
         error.getMessage shouldBe """Schema parsing error: Record has no fields: {"type":"record","name":"PersonKey","namespace":"io.gen4s"}"""

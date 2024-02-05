@@ -7,9 +7,7 @@ import com.google.protobuf.DynamicMessage
 
 import cats.effect.kernel.{Async, Resource}
 import cats.implicits.*
-import cats.Applicative
-import io.circe.ParsingFailure
-import io.gen4s.core.templating.Template
+import io.gen4s.core.templating.{RenderedTemplate, Template}
 import io.gen4s.core.Domain
 import io.gen4s.core.Domain.NumberOfSamplesToGenerate
 import io.gen4s.outputs.{KafkaProtobufOutput, ProtobufDescriptorConfig}
@@ -43,54 +41,27 @@ class KafkaProtobufOutputProcessor[F[_]: Async: Logger]
           protobufSerializer[DynamicMessage].forValue(protoSettings)
 
         val producerSettings =
-          mkProducerSettingsResource[F, Array[Byte], DynamicMessage](
+          mkProducerSettingsResource[F, Option[Key], DynamicMessage](
             output.bootstrapServers,
             output.kafkaProducerConfig
           )
 
-        val groupSize = if (output.batchSize.value < n.value) output.batchSize.value else n.value
-        val headers   = KafkaOutputProcessor.toKafkaHeaders(output.headers)
+        val headers = KafkaOutputProcessor.toKafkaHeaders(output.headers)
 
-        flow
-          .chunkN(groupSize)
-          .evalMap { batch =>
-            batch
-              .map { value =>
-                if (output.decodeInputAsKeyValue) {
-                  value.render().asKeyValue match {
-                    case Right((key, v)) =>
-                      Applicative[F].pure(
-                        fs2.kafka
-                          .ProducerRecord(
-                            output.topic.value,
-                            key.asByteArray,
-                            ProtobufConverter.toDynamicRecord(descriptor, v)
-                          )
-                          .withHeaders(headers)
-                      )
+        def produce(key: Option[Key], value: RenderedTemplate, descriptor: Descriptor) = {
+          Async[F]
+            .catchNonFatal(ProtobufConverter.toDynamicRecord(descriptor, value))
+            .map(msg => fs2.kafka.ProducerRecord(output.topic.value, key, msg).withHeaders(headers))
+        }
 
-                    case Left(ex) =>
-                      Async[F].raiseError(ParsingFailure(s"Template key/value parsing failure: ${ex.message}", ex))
-                  }
-
-                } else {
-                  Applicative[F].pure(
-                    fs2.kafka
-                      .ProducerRecord(
-                        output.topic.value,
-                        null,
-                        ProtobufConverter.toDynamicRecord(descriptor, value.render())
-                      )
-                      .withHeaders(headers)
-                  )
-                }
-              }
-              .sequence
-              .map(fs2.kafka.ProducerRecords.apply)
-          }
-          .through(fs2.kafka.KafkaProducer.pipe(producerSettings))
-          .compile
-          .drain
+        runStream[F, Option[Key], DynamicMessage](
+          n,
+          flow,
+          output,
+          producerSettings,
+          kvFun = (key, v) => produce(key.asByteArray.some, v, descriptor),
+          vFun = v => produce(none[Key], v, descriptor)
+        )
       }
   }
 
