@@ -7,7 +7,7 @@ import org.scalatest.EitherValues
 import cats.data.NonEmptyList
 import cats.implicits.*
 import io.circe.Json
-import io.gen4s.core.generators.Variable
+import io.gen4s.core.generators.{GeneratedValue, Variable}
 import io.gen4s.core.templating.*
 import io.gen4s.core.InputRecord
 import io.gen4s.generators.impl.{StaticValueGenerator, TimestampGenerator}
@@ -25,9 +25,7 @@ class TemplateBuilderTest extends AnyFunSpec with Matchers with EitherValues {
 
       val builder = TemplateBuilder.make(
         sourceTemplates = NonEmptyList.one(sourceTemplate),
-        generators = List(tsGenerator),
-        globalVariables = Set.empty[Variable],
-        transformers = Set.empty[OutputTransformer]
+        generators = List(tsGenerator)
       )
 
       val result = builder.build()
@@ -47,8 +45,7 @@ class TemplateBuilderTest extends AnyFunSpec with Matchers with EitherValues {
       val builder = TemplateBuilder.make(
         sourceTemplates = NonEmptyList.one(sourceTemplate),
         generators = List(tsGenerator),
-        globalVariables = Set(testV),
-        transformers = Set.empty[OutputTransformer]
+        globalVariables = Set(testV)
       )
 
       val result = builder.build()
@@ -70,8 +67,7 @@ class TemplateBuilderTest extends AnyFunSpec with Matchers with EitherValues {
         generators = List(tsGenerator),
         globalVariables = Set(testV),
         recordsStream = NonEmptyList
-          .one(InputRecord.of(nameV, StaticValueGenerator(nameV, Json.fromString("Den")).gen())),
-        transformers = Set.empty[OutputTransformer]
+          .one(InputRecord.of(nameV, StaticValueGenerator(nameV, Json.fromString("Den")).gen()))
       )
 
       val result = builder.build()
@@ -86,7 +82,30 @@ class TemplateBuilderTest extends AnyFunSpec with Matchers with EitherValues {
       template.source shouldBe sourceTemplate
       template.context.globalValues should not be empty
       template.context.generators shouldBe empty
+    }
 
+    it("Build template with user input") {
+      val sourceTemplate = SourceTemplate(s""""hello": {{test}}, "event_id":{{id}} """)
+      val tsGenerator    = TimestampGenerator(testV)
+
+      val builder = TemplateBuilder.make(
+        sourceTemplates = NonEmptyList.one(sourceTemplate),
+        generators = List(tsGenerator),
+        userInput = Map(Variable("id") -> GeneratedValue.fromInt(12345))
+      )
+
+      val result = builder.build()
+      result should not be empty
+      val head = result.head
+      head shouldBe an[TextTemplate]
+      val template = head.asInstanceOf[TextTemplate]
+      template.source shouldBe sourceTemplate
+      template.context.globalValues should not be empty
+      template.context.generators should not be empty
+
+      val rendered = template.render().value
+      info(rendered)
+      rendered should include(""""event_id":12345""")
     }
 
   }

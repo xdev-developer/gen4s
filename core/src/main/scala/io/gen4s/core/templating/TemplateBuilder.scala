@@ -17,37 +17,52 @@ object TemplateBuilder {
 
   def make(
     sourceTemplates: NonEmptyList[SourceTemplate],
-    generators: List[Generator],
-    globalVariables: Set[Variable],
-    transformers: Set[OutputTransformer]): TemplateBuilder = {
+    generators: List[Generator] = List.empty[Generator],
+    globalVariables: Set[Variable] = Set.empty[Variable],
+    userInput: Map[Variable, GeneratedValue] = Map.empty[Variable, GeneratedValue],
+    transformers: Set[OutputTransformer] = Set.empty[OutputTransformer]): TemplateBuilder = {
     new TemplateBuilder() {
 
       override def build(): List[Template] = {
+        // Split global vars (generated once per run) vs local vars (generated for each sample)
         val (global, local) = generators.partition(g => globalVariables.contains(g.variable))
 
+        // Filter out/replace locals with user input records, so input records has higher priority
+        val userInputVars = userInput.keys.toList
+        val toGenerate    = local.filterNot(g => userInputVars.contains(g.variable))
+
+        // Generate global vars
         val globalValues: Map[Variable, GeneratedValue] =
           generators
             .filter(s => globalVariables.contains(s.variable))
             .map(g => g.variable -> g.gen())
             .toMap
 
-        sourceTemplates.toList.map(source => TextTemplate(source, TemplateContext(globalValues, local), transformers))
+        sourceTemplates.toList.map(source =>
+          TextTemplate(source, TemplateContext(globalValues ++ userInput, toGenerate), transformers)
+        )
       }
     }
   }
 
   def ofRecordsStream(
     sourceTemplates: NonEmptyList[SourceTemplate],
-    generators: List[Generator],
-    globalVariables: Set[Variable],
     recordsStream: NonEmptyList[InputRecord],
-    transformers: Set[OutputTransformer]
+    generators: List[Generator] = List.empty[Generator],
+    globalVariables: Set[Variable] = Set.empty[Variable],
+    transformers: Set[OutputTransformer] = Set.empty[OutputTransformer]
   ): TemplateBuilder = {
     new TemplateBuilder() {
 
       override def build(): List[Template] = {
+        // Split global vars (generated once per run) vs local vars (generated for each sample)
         val (global, local) = generators.partition(g => globalVariables.contains(g.variable))
 
+        // Filter out/replace locals with records in records stream (csv), so input records has higher priority
+        val inputRecordsVars = recordsStream.toList.flatMap(_.fields.keys)
+        val toGenerate       = local.filterNot(g => inputRecordsVars.contains(g.variable))
+
+        // Generate global vars
         val globalValues: Map[Variable, GeneratedValue] =
           generators
             .filter(s => globalVariables.contains(s.variable))
@@ -57,7 +72,7 @@ object TemplateBuilder {
         (for {
           r      <- recordsStream
           source <- sourceTemplates
-        } yield TextTemplate(source, TemplateContext(globalValues ++ r.fields, local), transformers)).toList
+        } yield TextTemplate(source, TemplateContext(globalValues ++ r.fields, toGenerate), transformers)).toList
 
       }
     }

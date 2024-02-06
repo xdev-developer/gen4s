@@ -21,6 +21,8 @@ Usage: gen4s [preview|run|scenario] [options]
 
   -c, --config <file>      Configuration file. Default ./config.conf
   -p, --profile <file>     Environment variables profile.
+  -i, --input-records key=value,key1=value1
+                           Key/Value pairs to override generated variable
 
 Command: preview [options]
 Preview data generation.
@@ -37,7 +39,7 @@ Run scenario
 ```
 
 ```shell
-./bin/gen4s run -c ./examples/playground/config.conf -s 5 -p ./profiles/dev.profile
+./bin/gen4s run -c ./examples/playground/config.conf
 ```
 
 
@@ -60,11 +62,21 @@ ORG_ID=12345
 ```
 
 
+
+### Running with value override
+
+```shell
+./bin/gen4s run -i test-string=hello,test-int=12345 -c ./examples/playground/config.conf
+```
+
+
+
 ### Runninng scenario
 
 ```shell
 ./bin/gen4s scenario -c ./examples/scenario/scenario.conf -p ./profiles/dev.profile
 ```
+
 
 
 ## Building from source
