@@ -1,5 +1,7 @@
 # Gen4s - data generator tool for developers and QA engineers.
 
+[![Scala Steward badge](https://img.shields.io/badge/Scala_Steward-helping-blue.svg?style=flat&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAMAAAARSr4IAAAAVFBMVEUAAACHjojlOy5NWlrKzcYRKjGFjIbp293YycuLa3pYY2LSqql4f3pCUFTgSjNodYRmcXUsPD/NTTbjRS+2jomhgnzNc223cGvZS0HaSD0XLjbaSjElhIr+AAAAAXRSTlMAQObYZgAAAHlJREFUCNdNyosOwyAIhWHAQS1Vt7a77/3fcxxdmv0xwmckutAR1nkm4ggbyEcg/wWmlGLDAA3oL50xi6fk5ffZ3E2E3QfZDCcCN2YtbEWZt+Drc6u6rlqv7Uk0LdKqqr5rk2UCRXOk0vmQKGfc94nOJyQjouF9H/wCc9gECEYfONoAAAAASUVORK5CYII=)](https://scala-steward.org)
+
 Using this tool you can:
 
 - Publish 'fresh' and up to date data to your system.
@@ -61,23 +63,17 @@ ORG_ID=12345
 ./bin/gen4s run -c ./examples/playground/config.conf -s 5 -p ./profiles/dev.profile
 ```
 
-
-
 ### Running with value override
 
 ```shell
 ./bin/gen4s run -i test-string=hello,test-int=12345 -c ./examples/playground/config.conf
 ```
 
-
-
 ### Runninng scenario
 
 ```shell
 ./bin/gen4s scenario -c ./examples/scenario/scenario.conf -p ./profiles/dev.profile
 ```
-
-
 
 ## Building from source
 
@@ -167,11 +163,11 @@ output {
     writer {
         type = kafka-output
 
-        topic = ${?KAFKA_TOPIC}
         topic = "logs"
+        topic = ${?KAFKA_TOPIC}
 
-        bootstrap-servers = ${?KAFKA_BOOTSTRAP_SERVERS}
         bootstrap-servers = "localhost:9092"
+        bootstrap-servers = ${?KAFKA_BOOTSTRAP_SERVERS}
 
         batch-size = 1000
                 
@@ -212,11 +208,11 @@ output {
     writer {
         type = kafka-avro-output
 
-        topic = ${?KAFKA_TOPIC}
         topic = "logs-avro"
+        topic = ${?KAFKA_TOPIC}
 
-        bootstrap-servers = ${?KAFKA_BOOTSTRAP_SERVERS}
         bootstrap-servers = "localhost:9092"
+        bootstrap-servers = ${?KAFKA_BOOTSTRAP_SERVERS}
 
         batch-size = 1000
                 
@@ -235,8 +231,8 @@ output {
         }
 
         avro-config {
-          schema-registry-url = ${?SCHEMA_REGISTRY_URL}
           schema-registry-url = "http://localhost:8081"
+          schema-registry-url = ${?SCHEMA_REGISTRY_URL}
 
           key-schema = "/path/to/file/key.avsc"
           value-schema = "/path/to/file/value.avsc"
@@ -267,11 +263,11 @@ output {
     writer {
         type = kafka-protobuf-output
 
-        topic = ${?KAFKA_TOPIC}
         topic = "persons-proto"
+        topic = ${?KAFKA_TOPIC}
 
-        bootstrap-servers = ${?KAFKA_BOOTSTRAP_SERVERS}
         bootstrap-servers = "localhost:9092"
+        bootstrap-servers = ${?KAFKA_BOOTSTRAP_SERVERS}
 
         batch-size = 1000
 
@@ -282,8 +278,9 @@ output {
         decode-input-as-key-value = true
 
         proto-config {
-        	schema-registry-url = ${?SCHEMA_REGISTRY_URL}
           schema-registry-url = "http://localhost:8081"
+          schema-registry-url = ${?SCHEMA_REGISTRY_URL}
+          
           value-descriptor {
             file = "./examples/kafka-protobuf/person-value.desc"
             message-type = "Person"
@@ -314,10 +311,6 @@ or using `scalapbc`
 scalapbc --include_imports --descriptor_set_out=person-value.desc person-value.proto
 ```
 
-
-
-
-
 #### File System output
 
 ```properties
@@ -332,8 +325,6 @@ output {
 }
 ```
 
-
-
 #### Http output
 
 ```properties
@@ -341,6 +332,8 @@ output {
   writer {
     type = http-output
     url = "http://example.com"
+    url = ${?REQUEST_URL}
+
     method = POST
     headers {
         key = value
@@ -355,13 +348,11 @@ output {
 ```
 
 
-
 #### Transformers
 
 **json-minify**  - transform generated JSON to _compact_ printed JSON - (removes all new lines and spaces). 
 
 **json-prettify**  - transform generated JSON to _pretty_ printed JSON.
-
 
 
 ### Scenario configuration
