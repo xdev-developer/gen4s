@@ -9,9 +9,9 @@ import scala.concurrent.duration.FiniteDuration
 import pureconfig.*
 import pureconfig.generic.derivation.default.*
 
-case class StageConfig(input: InputConfig, output: OutputConfig) derives ConfigReader
+final case class StageConfig(input: InputConfig, output: OutputConfig) derives ConfigReader
 
-case class StageInput(
+final case class StageInput(
   name: Option[String] = None,
   samples: NumberOfSamplesToGenerate = NumberOfSamplesToGenerate(1),
   configFile: File,

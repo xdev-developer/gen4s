@@ -22,7 +22,7 @@ object KafkaProducerConfig {
     )
 }
 
-case class KafkaProducerConfig(
+final case class KafkaProducerConfig(
   compressionType: KafkaProducerConfig.CompressionTypes,
   lingerMs: Long,
   maxBatchSizeBytes: Int,

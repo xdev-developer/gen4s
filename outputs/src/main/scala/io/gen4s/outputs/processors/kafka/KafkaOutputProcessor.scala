@@ -1,5 +1,7 @@
 package io.gen4s.outputs.processors.kafka
 
+import java.nio.charset.StandardCharsets
+
 import cats.effect.kernel.Async
 import cats.implicits.*
 import cats.Applicative
@@ -15,7 +17,7 @@ object KafkaOutputProcessor {
 
   def toKafkaHeaders(headers: Map[String, String]): Headers = {
     val list = headers.map { case (k, v) =>
-      fs2.kafka.Header(k, v.getBytes)
+      fs2.kafka.Header(k, v.getBytes(StandardCharsets.UTF_8))
     }.toList
     fs2.kafka.Headers(list: _*)
   }

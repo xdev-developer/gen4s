@@ -15,7 +15,7 @@ sealed trait Output {
   def description(): String
 }
 
-case class StdOutput() extends Output {
+final case class StdOutput() extends Output {
   override def description(): String = "std-output"
 }
 

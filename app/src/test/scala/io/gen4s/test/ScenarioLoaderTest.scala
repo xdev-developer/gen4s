@@ -33,9 +33,9 @@ class ScenarioLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers wi
         .asserting { out =>
           val stages = out.stages.toList
           stages should not be empty
-          stages.head.name.value shouldBe "My cool stage"
-          stages.head.configFile.getPath shouldBe "/tmp/file"
-          stages.head.delay.value shouldBe FiniteDuration(5, TimeUnit.SECONDS)
+          stages.headOption.flatMap(_.name).value shouldBe "My cool stage"
+          stages.headOption.map(_.configFile.getPath).value shouldBe "/tmp/file"
+          stages.headOption.flatMap(_.delay).value shouldBe FiniteDuration(5, TimeUnit.SECONDS)
         }
     }
   }

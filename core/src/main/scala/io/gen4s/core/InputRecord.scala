@@ -9,4 +9,4 @@ object InputRecord {
   }
 }
 
-case class InputRecord(fields: Map[Variable, GeneratedValue])
+final case class InputRecord(fields: Map[Variable, GeneratedValue])

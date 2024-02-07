@@ -31,7 +31,7 @@ object EnvironmentVariablesProfileLoader {
 
     override def unsafeApplyProfile(p: EnvVarsProfile): F[Unit] =
       p.vars
-        .foreach { case (k, v) => System.setProperty(k, v) }
+        .foreachEntry { case (k, v) => System.setProperty(k, v) }
         .pure[F]
   }
 }

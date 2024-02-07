@@ -59,7 +59,7 @@ class KafkaOutputStreamTest
         } yield r).asserting { list =>
           list should not be empty
           list.size shouldBe n.value
-          list.head.value should include("timestamp")
+          list.headOption.map(_.value).value should include("timestamp")
         }
       }
     }
@@ -82,8 +82,8 @@ class KafkaOutputStreamTest
         } yield r).asserting { list =>
           list should not be empty
           list.size shouldBe n.value
-          list.head.value should include("timestamp")
-          list.head.headers shouldBe Symbol("defined")
+          list.headOption.map(_.value).value should include("timestamp")
+          list.headOption.map(_.headers) shouldBe Symbol("defined")
         }
       }
     }
@@ -107,9 +107,9 @@ class KafkaOutputStreamTest
           r <- consumeAllAsMessages[IO](output.topic, output.bootstrapServers, count = n.value.toLong)
         } yield r).asserting { list =>
           list should not be empty
-          list.head.key.value shouldBe "my-key"
-          list.head.value should include("timestamp")
-          list.head.headers shouldBe Symbol("defined")
+          list.headOption.flatMap(_.key).value shouldBe "my-key"
+          list.headOption.map(_.value).value should include("timestamp")
+          list.headOption.map(_.headers) shouldBe Symbol("defined")
         }
       }
     }

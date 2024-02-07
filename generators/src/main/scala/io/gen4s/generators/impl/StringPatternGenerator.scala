@@ -2,6 +2,7 @@ package io.gen4s.generators.impl
 
 import scala.util.Random
 
+import cats.syntax.option.*
 import io.circe.derivation.ConfiguredCodec
 import io.circe.refined.*
 import io.gen4s.core.generators.*
@@ -32,8 +33,8 @@ final case class StringPatternGenerator(variable: Variable, pattern: NonEmptyStr
   private def randChars(random: Random, pattern: String): String = {
     import StringPatternGenerator.*
 
-    pattern.map {
-      case '?'  => chars(random.nextInt(CharsLen))
-      case char => char
+    pattern.flatMap {
+      case '?'  => chars.lift(random.nextInt(CharsLen))
+      case char => char.some
     }.mkString
   }

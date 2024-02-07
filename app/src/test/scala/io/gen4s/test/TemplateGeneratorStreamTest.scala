@@ -2,6 +2,7 @@ package io.gen4s.test
 
 import org.scalatest.funspec.AsyncFunSpec
 import org.scalatest.matchers.should.Matchers
+import org.scalatest.OptionValues
 
 import cats.data.NonEmptyList
 import cats.effect.testing.scalatest.AsyncIOSpec
@@ -14,7 +15,7 @@ import io.gen4s.generators.impl.{StringPatternGenerator, TimestampGenerator}
 
 import eu.timepit.refined.types.string.NonEmptyString
 
-class TemplateGeneratorStreamTest extends AsyncFunSpec with AsyncIOSpec with Matchers {
+class TemplateGeneratorStreamTest extends AsyncFunSpec with AsyncIOSpec with Matchers with OptionValues {
 
   private val timestampV = Variable("ts")
   private val nameV      = Variable("name")
@@ -44,7 +45,7 @@ class TemplateGeneratorStreamTest extends AsyncFunSpec with AsyncIOSpec with Mat
 
           elements.foreach(c => info("Generated content: " + c.asString))
 
-          elements.head.asString should fullyMatch regex "timestamp: ([0-9])+"
+          elements.headOption.map(_.asString).value should fullyMatch regex "timestamp: ([0-9])+"
         }
 
     }
@@ -68,8 +69,8 @@ class TemplateGeneratorStreamTest extends AsyncFunSpec with AsyncIOSpec with Mat
         .toList
         .asserting { elements =>
           elements.foreach(c => info("Generated content: " + c.asString))
-          elements.head.asString should fullyMatch regex "username: user-([0-9])+"
-          elements.head.asString shouldBe elements.last.asString
+          elements.headOption.map(_.asString).value should fullyMatch regex "username: user-([0-9])+"
+          elements.headOption.map(_.asString) shouldBe elements.lastOption.map(_.asString)
         }
 
     }

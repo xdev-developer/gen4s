@@ -19,6 +19,7 @@ import fs2.kafka.vulcan.{AvroSettings, SchemaRegistryClient}
 import vulcan.Avro
 import vulcan.Codec.Aux
 
+@SuppressWarnings(Array("org.wartremover.warts.Null"))
 class KafkaAvroOutputProcessor[F[_]: Async: Logger]
     extends OutputProcessor[F, KafkaAvroOutput]
     with KafkaOutputProcessorBase {

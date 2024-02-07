@@ -1,6 +1,7 @@
 package io.gen4s.test.outputs
 
 import java.io.File
+import java.nio.charset.StandardCharsets
 
 import org.scalatest.funspec.AsyncFunSpec
 import org.scalatest.matchers.should.Matchers
@@ -47,7 +48,7 @@ class FileSystemOutputTest extends AsyncFunSpec with AsyncIOSpec with Matchers {
   }
 
   private def readFile(in: File): String = {
-    val bufferedSource = Source.fromFile(in)
+    val bufferedSource = Source.fromFile(in)(StandardCharsets.UTF_8)
     try bufferedSource.mkString
     finally bufferedSource.close()
   }

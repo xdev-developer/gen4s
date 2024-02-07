@@ -15,7 +15,7 @@ import _root_.vulcan.Codec
 import fs2.kafka.*
 import fs2.kafka.vulcan.CachedSchemaRegistryClient
 
-case class Message(key: Option[String], value: String, headers: Option[Headers] = None)
+final case class Message(key: Option[String], value: String, headers: Option[Headers] = None)
 
 trait KafkaConsumers {
 
@@ -28,7 +28,7 @@ trait KafkaConsumers {
       valueDeserializer = Deserializer[F, String]
     ).withAutoOffsetReset(AutoOffsetReset.Earliest)
       .withBootstrapServers(bootstrapServer.value)
-      .withGroupId(UUID.randomUUID().toString)
+      .withGroupId(String.valueOf(UUID.randomUUID()))
 
     KafkaConsumer
       .stream(consumerSettings)
@@ -50,7 +50,7 @@ trait KafkaConsumers {
       valueDeserializer = Deserializer[F, Array[Byte]]
     ).withAutoOffsetReset(AutoOffsetReset.Earliest)
       .withBootstrapServers(bootstrapServer.value)
-      .withGroupId(UUID.randomUUID().toString)
+      .withGroupId(String.valueOf(UUID.randomUUID()))
 
     KafkaConsumer
       .stream(consumerSettings)
@@ -80,7 +80,7 @@ trait KafkaConsumers {
       valueDeserializer = entityDeserializer
     ).withAutoOffsetReset(AutoOffsetReset.Earliest)
       .withBootstrapServers(bootstrapServer.value)
-      .withGroupId(UUID.randomUUID().toString)
+      .withGroupId(String.valueOf(UUID.randomUUID()))
 
     KafkaConsumer
       .stream(consumerSettings)
@@ -113,7 +113,7 @@ trait KafkaConsumers {
       valueDeserializer = entityDeserializer
     ).withAutoOffsetReset(AutoOffsetReset.Earliest)
       .withBootstrapServers(bootstrapServer.value)
-      .withGroupId(UUID.randomUUID().toString)
+      .withGroupId(String.valueOf(UUID.randomUUID()))
 
     KafkaConsumer
       .stream(consumerSettings)
@@ -126,6 +126,7 @@ trait KafkaConsumers {
       .toList
   }
 
+  @SuppressWarnings(Array("org.wartremover.warts.Null"))
   def consumeProtoMessages[F[_]: Async, T <: com.google.protobuf.Message: ClassTag](
     topic: Topic,
     bootstrapServer: BootstrapServers,
@@ -151,7 +152,7 @@ trait KafkaConsumers {
       valueDeserializer = entityDeserializer
     ).withAutoOffsetReset(AutoOffsetReset.Earliest)
       .withBootstrapServers(bootstrapServer.value)
-      .withGroupId(UUID.randomUUID().toString)
+      .withGroupId(String.valueOf(UUID.randomUUID()))
 
     KafkaConsumer
       .stream(consumerSettings)

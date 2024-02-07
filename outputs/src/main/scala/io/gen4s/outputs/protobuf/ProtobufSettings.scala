@@ -201,7 +201,7 @@ object ProtobufSettings {
       copy(createProtobufSerializerWith = createProtobufSerializerWith)
 
     override def toString: String =
-      "ProtobufSettings$" + System.identityHashCode(this)
+      s"ProtobufSettings$${System.identityHashCode(this)}"
   }
 
   private[this] def withDefaults(properties: Map[String, String]) = {
