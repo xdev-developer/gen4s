@@ -3,7 +3,7 @@ package io.gen4s.conf
 import cats.Eq
 
 import enumeratum.*
-
+// $COVERAGE-OFF$
 sealed abstract class ExecMode(override val entryName: String) extends EnumEntry
 
 object ExecMode extends Enum[ExecMode] {
@@ -16,3 +16,4 @@ object ExecMode extends Enum[ExecMode] {
   case object Preview     extends ExecMode("Preview")
   case object RunScenario extends ExecMode("Run Scenario")
 }
+// $COVERAGE-ON$
