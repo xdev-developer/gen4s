@@ -14,6 +14,7 @@ import io.gen4s.stage.StageExecutor
 import fs2.io.file.Files
 import pureconfig.error.ConfigReaderException
 
+// $COVERAGE-OFF$
 object App extends IOApp {
 
   implicit def unsafeLogger[F[_]: Sync]: SelfAwareStructuredLogger[F] = Slf4jLogger.getLogger[F]
@@ -82,3 +83,4 @@ object App extends IOApp {
     case None => Sync[F].pure(EnvProfileConfig.empty)
   }
 }
+// $COVERAGE-ON$
