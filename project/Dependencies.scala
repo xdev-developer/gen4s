@@ -14,14 +14,14 @@ object Dependencies {
     val fs2Kafka          = "3.2.0"
     val log4cats          = "2.6.0"
     val pureConfig        = "0.17.5"
-    val sttp              = "3.9.2"
+    val sttp              = "3.9.3"
     var refined           = "0.11.1"
     val parserCombinators = "2.3.0"
     val csv               = "1.3.10"
     val monocle           = "3.2.0"
 
-    val scalaTest      = "3.2.17"
-    val testContainers = "0.41.0"
+    val scalaTest      = "3.2.18"
+    val testContainers = "0.41.2"
 
     val betterMonadicFor = "0.3.1"
     val kindProjector    = "0.13.2"
