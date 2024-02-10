@@ -4,8 +4,8 @@ import java.io.File
 
 import com.typesafe.config.*
 
+import cats.{MonadThrow, Show}
 import cats.syntax.all.*
-import cats.MonadThrow
 import io.gen4s.conf.*
 
 import pureconfig.ConfigSource
@@ -13,6 +13,13 @@ import pureconfig.ConfigSource
 trait EnvironmentVariablesProfileLoader[F[_]] {
   def fromFile(file: File): F[EnvVarsProfile]
   def unsafeApplyProfile(p: EnvVarsProfile): F[Unit]
+}
+
+object EnvVarsProfile {
+
+  given Show[EnvVarsProfile] = Show.show[EnvVarsProfile] { p =>
+    s"[${p.vars.mkString(", ")}]"
+  }
 }
 
 final case class EnvVarsProfile(source: EnvProfileConfig, vars: Map[String, String])
