@@ -44,7 +44,7 @@ object StageExecutor {
         override def preview(): F[Unit] = {
           for {
             logger <- Slf4jLogger.create[F]
-            _      <- Logger[F].info(s"Running [${greenOut(name)}] stage.")
+            _      <- Logger[F].info(s"Running ${greenOut(name)} stage.")
             flow   <- generatorFlow(args, conf)
             _      <- flow.through(prettify(args.prettyPreview)).printlns.compile.drain
             _      <- Logger[F].info(s"${greenOut(name)} execution finished.")

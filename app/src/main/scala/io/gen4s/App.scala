@@ -42,7 +42,7 @@ object App extends IOApp {
   private def program[F[_]: Async: Console: Files](args: Args) =
     for {
       logger         <- Slf4jLogger.create[F]
-      _              <- logger.info("Running data generation stream")
+      _              <- logger.info(greenOut("Running data generation stream"))
       _              <- logger.info(s"Configuration file: ${args.configFile.getAbsolutePath}")
       _              <- logger.info(s"${args.mode.entryName}")
       envVarsProfile <- loadEnvVarsProfile[F](args.profileFile)
@@ -72,11 +72,12 @@ object App extends IOApp {
     } yield ()
   }
 
-  private def loadEnvVarsProfile[F[_]: Sync](in: Option[java.io.File]): F[EnvProfileConfig] = in match {
+  private def loadEnvVarsProfile[F[_]: Sync: Logger](in: Option[java.io.File]): F[EnvProfileConfig] = in match {
     case Some(f) =>
       val loader = EnvironmentVariablesProfileLoader.make[F]()
       for {
         p <- loader.fromFile(f)
+        _ <- Logger[F].info("Env vars profile: " + p.show)
         _ <- loader.unsafeApplyProfile(p)
       } yield p.source
 
