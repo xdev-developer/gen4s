@@ -12,6 +12,7 @@ ThisBuild / scalacOptions += "-Wunused:all"
 ThisBuild / resolvers ++= Resolver.sonatypeOssRepos("snapshots")
 ThisBuild / resolvers += "confluent" at "https://packages.confluent.io/maven/"
 ThisBuild / resolvers += "jitpack" at "https://jitpack.io"
+ThisBuild / wartremoverErrors ++= Warts.allBut(Wart.Any, Wart.DefaultArguments, Wart.Overloading)
 
 lazy val core = project
   .in(file("core"))

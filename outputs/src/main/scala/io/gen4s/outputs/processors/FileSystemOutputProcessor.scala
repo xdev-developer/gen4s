@@ -12,6 +12,7 @@ import fs2.text
  * Writes generated content into files
  * @tparam F
  */
+@SuppressWarnings(Array("org.wartremover.warts.Nothing"))
 class FileSystemOutputProcessor[F[_]: Sync: Files] extends OutputProcessor[F, FsOutput] {
 
   override def process(

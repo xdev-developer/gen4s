@@ -17,7 +17,9 @@ object GeneratorStream {
     fs2.Stream
       .range(0, n.value)
       .flatMap { _ =>
-        fs2.Stream.emit(templates(Random.nextInt(templates.size)))
+        fs2.Stream
+          .emit[F, Option[Template]](templates.lift(Random.nextInt(templates.size)))
+          .unNone
       }
   }
 }

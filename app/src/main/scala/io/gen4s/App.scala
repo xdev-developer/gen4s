@@ -46,9 +46,9 @@ object App extends IOApp {
       _              <- logger.info(s"Configuration file: ${args.configFile.getAbsolutePath}")
       _              <- logger.info(s"${args.mode.entryName}")
       envVarsProfile <- loadEnvVarsProfile[F](args.profileFile)
-      _              <- Async[F].whenA(args.mode == ExecMode.Run)(runStage(args, envVarsProfile))
-      _              <- Async[F].whenA(args.mode == ExecMode.Preview)(runStage(args, envVarsProfile))
-      _              <- Async[F].whenA(args.mode == ExecMode.RunScenario)(runScenario(args, envVarsProfile))
+      _              <- Async[F].whenA(args.mode === ExecMode.Run)(runStage(args, envVarsProfile))
+      _              <- Async[F].whenA(args.mode === ExecMode.Preview)(runStage(args, envVarsProfile))
+      _              <- Async[F].whenA(args.mode === ExecMode.RunScenario)(runScenario(args, envVarsProfile))
     } yield ExitCode.Success
 
   private def runStage[F[_]: Async: Console: Files: Logger](args: Args, envVarsProfile: EnvProfileConfig) = {
@@ -59,8 +59,8 @@ object App extends IOApp {
                     args,
                     conf
                   )
-      _ <- Async[F].whenA(args.mode == ExecMode.Run)(executor.exec())
-      _ <- Async[F].whenA(args.mode == ExecMode.Preview)(executor.preview())
+      _ <- Async[F].whenA(args.mode === ExecMode.Run)(executor.exec())
+      _ <- Async[F].whenA(args.mode === ExecMode.Preview)(executor.preview())
     } yield ()
   }
 
@@ -68,7 +68,7 @@ object App extends IOApp {
     for {
       conf     <- ScenarioConfigLoader.fromFile[F](args.configFile).withEnvProfile(envVarsProfile)
       executor <- ScenarioExecutor.make[F](args, conf, envVarsProfile)
-      _        <- Async[F].whenA(args.mode == ExecMode.RunScenario)(executor.exec())
+      _        <- Async[F].whenA(args.mode === ExecMode.RunScenario)(executor.exec())
     } yield ()
   }
 

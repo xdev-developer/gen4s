@@ -13,5 +13,5 @@ final case class EnumGenerator(variable: Variable, oneOf: NonEmptyList[String]) 
   private val values = oneOf.toList
 
   override def gen(): GeneratedValue = {
-    GeneratedValue.fromString(values(Random.nextInt(values.length)))
+    GeneratedValue.fromString(values.lift(Random.nextInt(values.length)).getOrElse(oneOf.head))
   }

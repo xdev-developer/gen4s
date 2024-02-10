@@ -25,7 +25,7 @@ object TextTemplate {
  * @param source source raw template
  * @param context template context
  */
-case class TextTemplate(source: SourceTemplate, context: TemplateContext, transformers: Set[OutputTransformer])
+final case class TextTemplate(source: SourceTemplate, context: TemplateContext, transformers: Set[OutputTransformer])
     extends Template {
 
   override def render(): RenderedTemplate = {
@@ -35,7 +35,7 @@ case class TextTemplate(source: SourceTemplate, context: TemplateContext, transf
         .toMap
 
     val values = (context.globalValues ++ localValues).map { case (v, c) =>
-      v.toString -> stripQuotes(c.v.noSpaces)
+      v.value -> stripQuotes(c.v.noSpaces)
     }
 
     RenderedTemplate(

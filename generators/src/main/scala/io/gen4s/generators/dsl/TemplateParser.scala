@@ -2,6 +2,7 @@ package io.gen4s.generators.dsl
 
 import scala.util.parsing.combinator.*
 
+@SuppressWarnings(Array("org.wartremover.warts.Throw"))
 object TemplateParser extends RegexParsers:
 
   override val skipWhitespace: Boolean = false

@@ -23,11 +23,11 @@ class RendererSpec extends AnyWordSpecLike with Matchers:
     }
 
     "generate AnySymbols with fixed length" in {
-      gen(Dsl.AnySymbols(3, 3)).size shouldBe 3
+      gen(Dsl.AnySymbols(3, 3)).length shouldBe 3
     }
 
     "generate a random word of fixed length" in {
-      gen(Dsl.Word(4, 4)).size shouldBe 4
+      gen(Dsl.Word(4, 4)).length shouldBe 4
     }
 
     "generate a random number between min and max bounds" in {
@@ -37,7 +37,7 @@ class RendererSpec extends AnyWordSpecLike with Matchers:
     }
 
     "generate a random hex with fixed length" in {
-      gen(Dsl.HEX(5, 5)).size shouldBe 5
+      gen(Dsl.HEX(5, 5)).length shouldBe 5
     }
 
     "generate a random IPv4" in {

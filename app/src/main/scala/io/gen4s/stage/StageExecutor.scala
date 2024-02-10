@@ -11,6 +11,7 @@ import cats.Applicative
 import io.gen4s.{greenOut, RecordsReader, TemplateReader, TemplateValidationError}
 import io.gen4s.cli.Args
 import io.gen4s.conf.StageConfig
+import io.gen4s.core.generators.{GeneratedValue, Variable}
 import io.gen4s.core.streams.GeneratorStream
 import io.gen4s.core.templating.{OutputValidator, Template}
 import io.gen4s.core.templating.TemplateBuilder
@@ -90,7 +91,7 @@ object StageExecutor {
                                      sources,
                                      schema.generators,
                                      conf.input.globalVars,
-                                     args.userInput.map(_.fields).getOrElse(Map.empty),
+                                     args.userInput.map(_.fields).getOrElse(Map.empty[Variable, GeneratedValue]),
                                      conf.output.transformers
                                    )
                                  } else {

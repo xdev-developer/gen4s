@@ -1,5 +1,7 @@
 package io.gen4s.core.templating
 
+import java.nio.charset.StandardCharsets
+
 import cats.implicits.*
 import io.circe.{Json, ParsingFailure}
 import io.gen4s.core.Newtype
@@ -26,8 +28,8 @@ object RenderedTemplate extends Newtype[String] {
     def asString: String = rt.value
 
     def asByteArray: Array[Byte] = {
-      val bytes = rt.value.getBytes
-      if (bytes.isEmpty) " ".getBytes() else bytes
+      val bytes = rt.value.getBytes(StandardCharsets.UTF_8)
+      if (bytes.isEmpty) " ".getBytes(StandardCharsets.UTF_8) else bytes
     }
 
     def asJson: Either[ParsingFailure, Json] = {

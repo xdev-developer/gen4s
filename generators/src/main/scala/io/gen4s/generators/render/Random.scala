@@ -1,5 +1,9 @@
 package io.gen4s.generators.render
 
+import java.util.Locale
+
+import scala.io.Codec
+
 private[generators] sealed trait Random[+T]:
   protected val rand = scala.util.Random()
 
@@ -17,10 +21,10 @@ private[generators] object RandomAnySymbols extends Random[String]:
 private[generators] object RandomWord extends Random[String]:
 
   private val words = scala.io.Source
-    .fromResource("words_alpha.txt")
+    .fromResource("words_alpha.txt")(Codec.UTF8)
     .getLines
     .toVector
-    .groupBy(_.size)
+    .groupBy(_.length)
     .toMap
 
   // the longest word in the dictionary
@@ -33,7 +37,7 @@ private[generators] object RandomWord extends Random[String]:
 
     val index = rand.between(0, sizedWords.size)
 
-    sizedWords(index)
+    sizedWords.lift(index).getOrElse("")
   }
 
 private[generators] object RandomNumber extends Random[Double]:
@@ -57,7 +61,7 @@ private[generators] object RandomIPv6 extends Random[String]:
 
   // format: "#{4}:#{4}:#{4}:#{4}:#{4}:#{4}:#{4}:#{4}"
   def generate(minLength: Int, maxLength: Int): String =
-    (for (_ <- 1 to 8) yield RandomHEX.generate(4, 4)).mkString(":").toLowerCase()
+    (for (_ <- 1 to 8) yield RandomHEX.generate(4, 4)).mkString(":").toLowerCase(Locale.US)
 
 private[generators] object RandomMacAddress extends Random[String]:
 

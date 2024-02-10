@@ -14,6 +14,7 @@ import cats.data.NonEmptyList
 import cats.effect.{IO, Sync}
 import cats.effect.unsafe.implicits.global
 import cats.implicits.*
+import cats.Show
 import io.confluent.kafka.schemaregistry.avro.AvroSchema
 import io.confluent.kafka.schemaregistry.client.rest.exceptions.RestClientException
 import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient
@@ -49,6 +50,8 @@ class KafkaAvroOutputStreamTest
 
   case class PersonKey(id: Int, orgId: Int)
   case class Person(username: String, age: Option[Int], birthDate: Instant)
+
+  private given Show[Person] = Show.fromToString[Person]
 
   private given keyCodec: Codec[PersonKey] = Codec.record(
     name = "PersonKey",
@@ -125,10 +128,9 @@ class KafkaAvroOutputStreamTest
 
         val list = runStream(kafka, streams, builder, output)
 
-        list.foreach(p => info(p.toString))
+        list.foreach(p => info(p.show))
         list should not be empty
-        val first = list.head
-        first.username should include("username_")
+        list.headOption.map(_.username).value should include("username_")
       }
     }
 
@@ -168,9 +170,9 @@ class KafkaAvroOutputStreamTest
                )
         } yield r).unsafeRunSync()
 
-        list.foreach(p => info(p.toString))
+        list.foreach(p => info(s"$p"))
         list should not be empty
-        val (key, value) = list.head
+        val (key, value) = list.headOption.value
         key.value.id shouldBe 1
         value.username should include("username_")
 
@@ -229,9 +231,9 @@ class KafkaAvroOutputStreamTest
                )
         } yield r).unsafeRunSync()
 
-        list.foreach(p => info(p.toString))
+        list.foreach(p => info(s"$p"))
         list should not be empty
-        val (key, value) = list.head
+        val (key, value) = list.headOption.value
         key.value.id should be > 0
         value.username should include("username_")
 
@@ -278,9 +280,9 @@ class KafkaAvroOutputStreamTest
                )
         } yield r).unsafeRunSync()
 
-        list.foreach(p => info(p.toString))
+        list.foreach(p => info(s"$p"))
         list should not be empty
-        val record = list.head
+        val record = list.headOption.value
         record.key.value should include("key_")
 
       }
