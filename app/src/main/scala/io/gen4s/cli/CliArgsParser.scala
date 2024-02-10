@@ -8,6 +8,7 @@ import io.gen4s.core.generators.{GeneratedValue, Variable}
 import io.gen4s.core.Domain.*
 import io.gen4s.core.InputRecord
 
+// $COVERAGE-OFF$
 class CliArgsParser extends scopt.OptionParser[Args]("gen4s") {
   head("Gen4s")
 
@@ -75,3 +76,4 @@ class CliArgsParser extends scopt.OptionParser[Args]("gen4s") {
 
   help("help").text("prints usage info")
 }
+// $COVERAGE-ON$
