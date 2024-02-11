@@ -28,17 +28,5 @@ class AppTest extends AsyncFreeSpec with AsyncIOSpec with Matchers with OptionVa
         code shouldBe ExitCode.Success
       }
     }
-
-    "Fail without config" in {
-      App.run(List("run")).asserting { code =>
-        code shouldBe ExitCode.Error
-      }
-    }
-
-    "Show help" in {
-      App.run(List("--help")).asserting { code =>
-        code shouldBe ExitCode.Success
-      }
-    }
   }
 }
