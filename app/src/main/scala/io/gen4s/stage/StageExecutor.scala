@@ -31,6 +31,7 @@ object StageExecutor {
   def make[F[_]: Async: EffConsole: Files: Logger](name: String, args: Args, conf: StageConfig): F[StageExecutor[F]] =
     Async[F].delay {
       new StageExecutor[F] {
+
         override def exec(): F[Unit] = {
           for {
             logger <- Slf4jLogger.create[F]
