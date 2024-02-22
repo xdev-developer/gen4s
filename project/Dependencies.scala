@@ -141,6 +141,6 @@ object Dependencies {
   // Runtime
   val Logback: Seq[ModuleID] = List(
     "ch.qos.logback" % "logback-classic"  % V.logback,
-    "org.slf4j"      % "log4j-over-slf4j" % "2.0.11"
+    "org.slf4j"      % "log4j-over-slf4j" % "2.0.12"
   )
 }
