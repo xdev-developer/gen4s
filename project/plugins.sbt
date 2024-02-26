@@ -5,6 +5,6 @@ addSbtPlugin("com.github.sbt"     % "sbt-native-packager" % "1.9.16")
 addSbtPlugin("com.github.sbt"     % "sbt-release"         % "1.4.0")
 addSbtPlugin("pl.project13.scala" % "sbt-jmh"             % "0.4.7")
 addSbtPlugin("org.wartremover"    % "sbt-wartremover"     % "3.1.6")
-addSbtPlugin("org.scoverage"      % "sbt-scoverage"       % "2.0.5")
+addSbtPlugin("org.scoverage"      % "sbt-scoverage"       % "2.0.11")
 addSbtPlugin("org.scoverage"      % "sbt-coveralls"       % "1.3.11")
 addDependencyTreePlugin
