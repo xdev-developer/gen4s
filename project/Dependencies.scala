@@ -125,7 +125,7 @@ object Dependencies {
 
   val ProtoConverter: Seq[ModuleID] = List(
     "io.confluent"        % "kafka-protobuf-serializer" % "7.5.1",
-    "com.google.protobuf" % "protobuf-java-util"        % "3.22.2"
+    "com.google.protobuf" % "protobuf-java-util"        % "3.22.5"
   )
 
   val ScalaTest: Seq[ModuleID]      = List("org.scalatest" %% "scalatest" % V.scalaTest % Test)
