@@ -24,6 +24,7 @@ object ScenarioExecutor {
     conf: ScenarioConfig,
     envProfileConfig: EnvProfileConfig): F[ScenarioExecutor[F]] = Async[F].delay {
     new ScenarioExecutor[F]() {
+
       override def exec(): F[Unit] = {
         initStages(conf).flatMap { stages =>
           stages.traverse { case (in, executor) =>
