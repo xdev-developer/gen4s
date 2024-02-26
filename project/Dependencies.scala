@@ -11,7 +11,7 @@ object Dependencies {
     val catsRetry         = "3.1.0"
     val circe             = "0.14.6"
     val fs2               = "3.9.4"
-    val fs2Kafka          = "3.2.0"
+    val fs2Kafka          = "3.3.1"
     val log4cats          = "2.6.0"
     val pureConfig        = "0.17.5"
     val sttp              = "3.9.3"
@@ -21,11 +21,11 @@ object Dependencies {
     val monocle           = "3.2.0"
 
     val scalaTest      = "3.2.18"
-    val testContainers = "0.41.2"
+    val testContainers = "0.41.3"
 
     val betterMonadicFor = "0.3.1"
     val kindProjector    = "0.13.2"
-    val logback          = "1.4.14"
+    val logback          = "1.5.0"
   }
 
   val Cats: Seq[ModuleID] = List(
@@ -42,7 +42,7 @@ object Dependencies {
 
   val ApacheCommons: Seq[ModuleID] = List(
     "org.apache.commons" % "commons-text"  % "1.11.0",
-    "commons-codec"      % "commons-codec" % "1.16.0",
+    "commons-codec"      % "commons-codec" % "1.16.1",
     "commons-io"         % "commons-io"    % "2.15.1",
     "org.xerial.snappy"  % "snappy-java"   % "1.1.10.5"
   )
@@ -124,8 +124,8 @@ object Dependencies {
   )
 
   val ProtoConverter: Seq[ModuleID] = List(
-    "io.confluent"        % "kafka-protobuf-serializer" % "7.5.1",
-    "com.google.protobuf" % "protobuf-java-util"        % "3.22.2"
+    "io.confluent"        % "kafka-protobuf-serializer" % "7.5.3",
+    "com.google.protobuf" % "protobuf-java-util"        % "3.22.5"
   )
 
   val ScalaTest: Seq[ModuleID]      = List("org.scalatest" %% "scalatest" % V.scalaTest % Test)
