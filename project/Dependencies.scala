@@ -21,7 +21,7 @@ object Dependencies {
     val monocle           = "3.2.0"
 
     val scalaTest      = "3.2.18"
-    val testContainers = "0.41.2"
+    val testContainers = "0.41.3"
 
     val betterMonadicFor = "0.3.1"
     val kindProjector    = "0.13.2"
