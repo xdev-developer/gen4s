@@ -135,7 +135,7 @@ object Dependencies {
     "com.dimafeng"            %% "testcontainers-scala-scalatest"  % V.testContainers % Test,
     "com.dimafeng"            %% "testcontainers-scala-kafka"      % V.testContainers % Test,
     "com.dimafeng"            %% "testcontainers-scala-postgresql" % V.testContainers % Test,
-    "io.github.embeddedkafka" %% "embedded-kafka-schema-registry"  % "7.5.3"          % Test
+    "io.github.embeddedkafka" %% "embedded-kafka-schema-registry"  % "7.6.0"          % Test
   )
 
   // Runtime
