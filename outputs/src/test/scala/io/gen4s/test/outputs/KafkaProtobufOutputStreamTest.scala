@@ -89,5 +89,55 @@ class KafkaProtobufOutputStreamTest
         list should not be empty
       }
     }
+
+    it("Send Key/value Protobuf records to kafka topic") {
+      withRunningKafka {
+        val template =
+          SourceTemplate("""{ "key": {{id}}, "value": { "username": "{{name}}", "age": {{age}} } }""")
+
+        val streams = OutputStreamExecutor.make[IO]()
+
+        val builder = TemplateBuilder.make(
+          NonEmptyList.one(template),
+          List(
+            IntNumberGenerator(Variable("id"), max = 50.some),
+            StringPatternGenerator(Variable("name"), NonEmptyString.unsafeFrom("username_###")),
+            IntNumberGenerator(Variable("age"), max = 50.some)
+          )
+        )
+
+        val output =
+          KafkaProtobufOutput(
+            topic = Topic("person"),
+            bootstrapServers = kafka,
+            ProtobufConfig(
+              schemaRegistryUrl = s"http://localhost:${config.schemaRegistryPort}",
+              valueDescriptor = ProtobufDescriptorConfig(
+                java.io.File("./outputs/src/test/resources/person-value.desc"),
+                "Person"
+              ),
+              autoRegisterSchemas = true
+            ),
+            decodeInputAsKeyValue = true
+          )
+
+        val client = CachedSchemaRegistryClient(output.protoConfig.schemaRegistryUrl, 100)
+
+        val list = (for {
+          _ <- streams.write(n, GeneratorStream.stream[IO](n, builder), output)
+          _ <- IO.println(client.getLatestSchemaMetadata("person-value").getSchema)
+          r <- consumeProtoMessages[IO, PersonValue.Person](
+                 output.topic,
+                 kafka,
+                 s"http://localhost:${config.schemaRegistryPort}",
+                 count = n.value.toLong
+               )
+        } yield r).unsafeRunSync()
+
+        list.foreach(p => println(p))
+
+        list should not be empty
+      }
+    }
   }
 }
