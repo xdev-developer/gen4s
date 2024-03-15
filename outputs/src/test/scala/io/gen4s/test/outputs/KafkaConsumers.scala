@@ -131,7 +131,7 @@ trait KafkaConsumers {
     topic: Topic,
     bootstrapServer: BootstrapServers,
     registryUrl: String,
-    count: Long = 100L): F[List[T]] = {
+    count: Long = 100L): F[List[(Option[String], T)]] = {
 
     import scala.jdk.CollectionConverters.*
 
@@ -159,7 +159,7 @@ trait KafkaConsumers {
       .subscribeTo(topic.value)
       .records
       .take(count)
-      .map(r => r.record.value)
+      .map(r => (r.record.key, r.record.value))
       .interruptAfter(60.seconds)
       .compile
       .toList
