@@ -14,7 +14,7 @@ object Dependencies {
     val fs2Kafka          = "3.3.1"
     val log4cats          = "2.6.0"
     val pureConfig        = "0.17.6"
-    val sttp              = "3.9.4"
+    val sttp              = "3.9.5"
     var refined           = "0.11.1"
     val parserCombinators = "2.3.0"
     val csv               = "1.3.10"
