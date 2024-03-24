@@ -120,7 +120,7 @@ object Dependencies {
   )
 
   val ProgressBar: Seq[ModuleID] = List(
-    "me.tongfei" % "progressbar" % "0.10.0"
+    "me.tongfei" % "progressbar" % "0.10.1"
   )
 
   val ProtoConverter: Seq[ModuleID] = List(
