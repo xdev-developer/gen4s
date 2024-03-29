@@ -1,7 +1,7 @@
 import NativePackagerHelper.*
 import ReleaseTransformations.*
 
-val Scala3 = "3.3.3"
+val Scala3 = "3.4.1"
 
 ThisBuild / scalaVersion := Scala3
 
