@@ -41,7 +41,7 @@ class HttpOutputProcessor[F[_]: Async] extends OutputProcessor[F, HttpOutput] {
             }
             req
               .body(template.render().asByteArray)
-              .headers(headers: _*)
+              .headers(headers*)
               .send(backend)
               .flatMap[Boolean] { response =>
                 if (response.code.isSuccess) {

@@ -19,7 +19,7 @@ object KafkaOutputProcessor {
     val list = headers.map { case (k, v) =>
       fs2.kafka.Header(k, v.getBytes(StandardCharsets.UTF_8))
     }.toList
-    fs2.kafka.Headers(list: _*)
+    fs2.kafka.Headers(list*)
   }
 
 }

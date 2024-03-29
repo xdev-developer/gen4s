@@ -133,7 +133,7 @@ sealed abstract class ProtobufSettings[F[_], JavaProto <: Message] {
 
 object ProtobufSettings {
 
-  private[this] final case class ProtobufSettingsImpl[F[_], JavaProto <: Message](
+  private final case class ProtobufSettingsImpl[F[_], JavaProto <: Message](
     override val schemaRegistryClient: F[SchemaRegistryClient],
     override val properties: Map[String, String],
     val createProtobufDeserializerWith: (
@@ -204,13 +204,13 @@ object ProtobufSettings {
       s"ProtobufSettings$${System.identityHashCode(this)}"
   }
 
-  private[this] def withDefaults(properties: Map[String, String]) = {
+  private def withDefaults(properties: Map[String, String]) = {
     (if (!properties.contains("schema.registry.url")) {
        properties.updated("schema.registry.url", "")
      } else properties).asJava
   }
 
-  private[this] def create[F[_], JavaProto <: Message](
+  private def create[F[_], JavaProto <: Message](
     schemaRegistryClient: F[SchemaRegistryClient]
   )(implicit F: Sync[F], classTag: ClassTag[JavaProto]): ProtobufSettings[F, JavaProto] = {
     val properties = Map(
