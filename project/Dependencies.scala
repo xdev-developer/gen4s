@@ -43,7 +43,7 @@ object Dependencies {
   val ApacheCommons: Seq[ModuleID] = List(
     "org.apache.commons" % "commons-text"  % "1.11.0",
     "commons-codec"      % "commons-codec" % "1.16.1",
-    "commons-io"         % "commons-io"    % "2.15.1",
+    "commons-io"         % "commons-io"    % "2.16.0",
     "org.xerial.snappy"  % "snappy-java"   % "1.1.10.5"
   )
 
