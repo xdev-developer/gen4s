@@ -93,7 +93,7 @@ object Dependencies {
   val Scopt: Seq[ModuleID] = List("com.github.scopt" %% "scopt" % "4.1.0")
 
   val FS2Throttler: Seq[ModuleID] = List(
-    "dev.kovstas" %% "fs2-throttler" % "1.0.6"
+    "dev.kovstas" %% "fs2-throttler" % "1.0.8"
   )
 
   val Sttp: Seq[ModuleID] = List(

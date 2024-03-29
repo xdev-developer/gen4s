@@ -55,14 +55,14 @@ class KafkaAvroOutputStreamTest
     name = "PersonKey",
     namespace = "io.gen4s"
   ) { field =>
-    (field("id", _.id), field("orgId", _.orgId)).mapN(PersonKey(_, _))
+    (field("id", _.id), field("orgId", _.orgId)).mapN(PersonKey)
   }
 
   private given Codec[Person] = Codec.record(
     name = "Person",
     namespace = "io.gen4s"
   ) { field =>
-    (field("username", _.username), field("age", _.age), field("birthDate", _.birthDate)).mapN(Person(_, _, _))
+    (field("username", _.username), field("age", _.age), field("birthDate", _.birthDate)).mapN(Person)
   }
 
   private val personTemplate = """{ "username": "{{name}}", "age": {{age}}, "birthDate": "2007-12-03T10:15:30.999Z" }"""

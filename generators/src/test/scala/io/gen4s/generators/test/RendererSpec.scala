@@ -10,7 +10,7 @@ import Renderer.given
 
 class RendererSpec extends AnyWordSpecLike with Matchers:
 
-  "Renderrer" should {
+  "Renderer" should {
 
     "generate random values for all Dsl types" in {
 

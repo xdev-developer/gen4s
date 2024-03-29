@@ -4,11 +4,7 @@ import io.circe.Decoder
 import io.circe.Decoder.Result
 import io.circe.Json
 
-/**
- * Represents generated value
- *
- * @param v
- */
+
 opaque type GeneratedValue = Json
 
 object GeneratedValue {
