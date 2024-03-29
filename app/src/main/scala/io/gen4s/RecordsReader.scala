@@ -10,16 +10,33 @@ import io.gen4s.core.generators.{GeneratedValue, Variable}
 import io.gen4s.core.InputRecord
 import io.gen4s.generators.impl.StaticValueGenerator
 
+/**
+ * A trait that defines the method for reading records from a file.
+ *
+ * @tparam F the effect type, which must have a Sync type class instance
+ */
 trait RecordsReader[F[_]] {
   def read(file: File): F[List[InputRecord]]
 }
 
 object RecordsReader {
 
+  /**
+   * Factory method for creating an instance of RecordsReader.
+   *
+   * @tparam F the effect type, which must have a Sync type class instance
+   * @return an instance of RecordsReader
+   */
   def make[F[_]: Sync](): RecordsReader[F] = new RecordsReader[F] {
 
     private val noneV = Variable("_")
 
+    /**
+     * Reads records from a CSV file and converts them to a list of InputRecord.
+     *
+     * @param file the CSV file to read from
+     * @return a list of InputRecord
+     */
     override def read(file: File): F[List[InputRecord]] = {
       import com.github.tototoshi.csv.defaultCSVFormat
       val F = Sync[F]

@@ -25,6 +25,15 @@ object TemplateReader {
 
   def make[F[_]: Sync](): TemplateReader[F] = new TemplateReader[F] {
 
+    /**
+     * Reads templates from a file and converts them to a list of SourceTemplate.
+     * If decodeNewLineAsTemplate is true, each line is considered a separate template.
+     * Otherwise, the entire file content is considered a single template.
+     *
+     * @param file                    the file to read from
+     * @param decodeNewLineAsTemplate a flag indicating whether each line should be considered a separate template
+     * @return a list of SourceTemplate
+     */
     override def read(file: File, decodeNewLineAsTemplate: Boolean): F[NonEmptyList[SourceTemplate]] = {
       if (decodeNewLineAsTemplate) {
         FileUtils.readLines(file).use { lines =>

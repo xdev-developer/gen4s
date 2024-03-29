@@ -5,14 +5,31 @@
 
 Using this tool you can:
 
-- Publish 'fresh' and up to date data to your system.
-- Keep your test data in file system or repository and share it with your co-workers.
-- Switch between different profiles - dev, local, qa etc.
-- Run generation scenario - publish some data, wait, publish another portion of data. (Event time processing).
-- Load test your system - publishing 1-5M messages for test your system load.
-- Semi-generate your data - you can generate `csv` file from your DB and use it as part of data generation schema.
+Gen4s is a powerful data generation tool designed for developers and QA engineers. 
 
+- **Data Generation**: Gen4s allows users to generate up-to-date data and publish it to their systems. This is particularly useful for testing and development purposes.
 
+-  **Maintain Test Data**: Gen4s enables users to maintain test data in the file system or repository, ensuring that the data is always accessible and up-to-date.
+
+-  **Data Sharing**: With Gen4s, users can easily share test data with their team, improving collaboration and efficiency.
+
+-  **Support for Different Profiles**: Gen4s supports different profiles such as dev, local, QA, etc. This allows users to switch between different environments as needed.
+
+-  **Generation Scenarios**: Gen4s supports running generation scenarios. These can be used to publish data, wait, and then publish another portion of data, simulating event time processing.
+
+-  **Load Testing**: Gen4s is capable of load testing your system by publishing millions of messages. This can help identify potential performance issues.
+
+-  **Semi-Generation of Data**: Gen4s supports semi-generation of data, where users can generate a CSV file from their database and use it as part of the data generation schema.
+
+-  **Command Line Execution**: Gen4s can be executed directly from the command line, providing a simple and efficient way to generate data.
+
+-  **Environment Variables Profile Loading**: Gen4s allows loading environment variables from a file and applying them, which can be useful for managing different runtime environments.
+
+-  **Support for Multiple Output Formats**: Gen4s supports various output formats including stdout, Kafka, Avro, Protobuf, file system, and HTTP.
+
+-  **Schema Definition and Data Generators**: Gen4s provides a variety of data generators for different data types and structures, including static values, timestamps, numbers, strings, UUIDs, IP addresses, and more.
+
+-  **Scenario Configuration**: Gen4s allows for the configuration of multiple stages in a scenario, with configurable delays between stages and the number of samples to generate.
 
 ## Running
 
@@ -44,7 +61,6 @@ Run scenario
 ```shell
 ./bin/gen4s run -c ./examples/playground/config.conf
 ```
-
 
 
 ### Running with profile
