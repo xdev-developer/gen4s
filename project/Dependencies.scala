@@ -132,10 +132,8 @@ object Dependencies {
   val CatsEffectTest: Seq[ModuleID] = List("org.typelevel" %% "cats-effect-testing-scalatest" % "1.5.0" % Test)
 
   val TestContainers: Seq[ModuleID] = List(
-    "com.dimafeng"            %% "testcontainers-scala-scalatest"  % V.testContainers % Test,
-    "com.dimafeng"            %% "testcontainers-scala-kafka"      % V.testContainers % Test,
-    "com.dimafeng"            %% "testcontainers-scala-postgresql" % V.testContainers % Test,
-    "io.github.embeddedkafka" %% "embedded-kafka-schema-registry"  % "7.5.3"          % Test
+    "com.dimafeng" %% "testcontainers-scala-scalatest" % V.testContainers % Test,
+    "com.dimafeng" %% "testcontainers-scala-kafka"     % V.testContainers % Test
   )
 
   // Runtime
