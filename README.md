@@ -35,6 +35,15 @@ Features:
 
 Download latest release from [Releases page](https://github.com/xdev-developer/gen4s/releases), unzip archive and execute `./bin/gen4s`
 
+### Using Homebrew
+To install Gen4s using Homebrew, you first need to tap into the `xdev-developer/tap` repository. Tapping a repository in Homebrew adds it to the list of formulae that Homebrew tracks, updates, and installs from. Once the repository is tapped, you can install Gen4s. Here are the steps:
+
+1. Open your terminal.
+2. Tap into the `xdev-developer/tap` repository by running the command: `brew tap xdev-developer/tap`.
+3. Once the repository is tapped, install Gen4s by running the command: `brew install gen4s`.
+
+Please note that Homebrew is a package manager for macOS. If you're using a different operating system, you might need to use a different package manager or install method.
+
 ```shell
 Gen4s
 Usage: gen4s [preview|run|scenario] [options]
