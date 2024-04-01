@@ -4,7 +4,6 @@ import io.circe.Decoder
 import io.circe.Decoder.Result
 import io.circe.Json
 
-
 opaque type GeneratedValue = Json
 
 object GeneratedValue {
