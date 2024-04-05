@@ -14,6 +14,8 @@ import io.gen4s.outputs.StdOutput
 
 import eu.timepit.refined.types.numeric.PosInt
 import eu.timepit.refined.types.string.NonEmptyString
+import software.amazon.awssdk.endpoints.Endpoint
+import software.amazon.awssdk.regions.Region
 
 class OutputLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
 
@@ -116,6 +118,30 @@ class OutputLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
           out.writer shouldBe FsOutput(
             dir = NonEmptyString.unsafeFrom("/tmp"),
             filenamePattern = NonEmptyString.unsafeFrom("my-cool-logs-%s.txt")
+          )
+        }
+    }
+
+    "Load s3 output" in {
+      load[IO]("""
+        writer: { 
+          type: s-3-output
+          bucket: "test-bucket"
+          key: "key-%s.json"
+          region: "us-east-1"
+          endpoint: "http://localhost:4566"
+          part-size-mb: 5
+       }
+      
+       transformers = []
+       validators = []
+       """.stripMargin)
+        .asserting { out =>
+          out.writer shouldBe S3Output(
+            bucket = NonEmptyString.unsafeFrom("test-bucket"),
+            key = NonEmptyString.unsafeFrom("key-%s.json"),
+            region = Region.of("us-east-1"),
+            endpoint = Some(Endpoint.builder().url(new java.net.URI("http://localhost:4566")).build())
           )
         }
     }

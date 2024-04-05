@@ -8,7 +8,8 @@ import cats.implicits.*
 import io.gen4s.core.templating.Template
 import io.gen4s.core.Domain.NumberOfSamplesToGenerate
 import io.gen4s.outputs.processors.*
-import io.gen4s.outputs.processors.kafka.{KafkaAvroOutputProcessor, KafkaOutputProcessor, KafkaProtobufOutputProcessor}
+import io.gen4s.outputs.processors.aws.S3OutputProcessor
+import io.gen4s.outputs.processors.kafka.*
 
 import fs2.io.file.Files
 
@@ -28,6 +29,13 @@ trait OutputStreamExecutor[F[_]] {
 
 object OutputStreamExecutor {
 
+  /**
+   * Factory method for creating an instance of OutputStreamExecutor.
+   *
+   * This method creates an instance of OutputStreamExecutor with a set of predefined processors for different output types.
+   *
+   * @return an instance of OutputStreamExecutor.
+   */
   def make[F[_]: Async: EffConsole: Files: Logger](): OutputStreamExecutor[F] = new OutputStreamExecutor[F] {
 
     private val stdProcessor           = new StdOutputProcessor[F]()
@@ -36,26 +44,19 @@ object OutputStreamExecutor {
     private val kafkaAvroProcessor     = new KafkaAvroOutputProcessor[F]()
     private val kafkaProtobufProcessor = new KafkaProtobufOutputProcessor[F]()
     private val httpOutputProcessor    = new HttpOutputProcessor[F]()
+    private val s3OutputProcessor      = new S3OutputProcessor[F]()
 
-    override def write(n: NumberOfSamplesToGenerate, flow: fs2.Stream[F, Template], output: Output): F[Unit] =
-      output match {
-        case out: StdOutput => Logger[F].info("Writing data to std-output") *> stdProcessor.process(n, flow, out)
-        case out: FsOutput  => Logger[F].info(s"Writing data file ${out.path()}") *> fsProcessor.process(n, flow, out)
-        case out: HttpOutput =>
-          Logger[F].info(s"Writing data to HTTP endpoint ${out.url}") *>
-            httpOutputProcessor.process(n, flow, out)
-
-        case out: KafkaOutput =>
-          Logger[F].info(s"Writing data to kafka brokers: ${out.bootstrapServers}, topic ${out.topic}") *>
-            kafkaProcessor.process(n, flow, out)
-
-        case out: KafkaAvroOutput =>
-          Logger[F].info(
-            s"Writing data to kafka brokers: ${out.bootstrapServers}, topic <${out.topic}>, registry: ${out.avroConfig.schemaRegistryUrl}"
-          ) *>
-            kafkaAvroProcessor.process(n, flow, out)
-
+    override def write(n: NumberOfSamplesToGenerate, flow: fs2.Stream[F, Template], output: Output): F[Unit] = {
+      val io = output match {
+        case out: StdOutput           => stdProcessor.process(n, flow, out)
+        case out: FsOutput            => fsProcessor.process(n, flow, out)
+        case out: HttpOutput          => httpOutputProcessor.process(n, flow, out)
+        case out: KafkaOutput         => kafkaProcessor.process(n, flow, out)
+        case out: KafkaAvroOutput     => kafkaAvroProcessor.process(n, flow, out)
         case out: KafkaProtobufOutput => kafkaProtobufProcessor.process(n, flow, out)
+        case out: S3Output            => s3OutputProcessor.process(n, flow, out)
       }
+      Logger[F].info(s"Writing data to ${output.description()}") *> io
+    }
   }
 }
