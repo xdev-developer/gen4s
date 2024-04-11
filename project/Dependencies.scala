@@ -124,7 +124,7 @@ object Dependencies {
   )
 
   val ProtoConverter: Seq[ModuleID] = List(
-    "io.confluent"        % "kafka-protobuf-serializer" % "7.6.0",
+    "io.confluent"        % "kafka-protobuf-serializer" % "7.6.1",
     "com.google.protobuf" % "protobuf-java-util"        % "3.25.3"
   )
 
