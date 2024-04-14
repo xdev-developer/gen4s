@@ -3,6 +3,8 @@
 [![Scala Steward badge](https://img.shields.io/badge/Scala_Steward-helping-blue.svg?style=flat&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAMAAAARSr4IAAAAVFBMVEUAAACHjojlOy5NWlrKzcYRKjGFjIbp293YycuLa3pYY2LSqql4f3pCUFTgSjNodYRmcXUsPD/NTTbjRS+2jomhgnzNc223cGvZS0HaSD0XLjbaSjElhIr+AAAAAXRSTlMAQObYZgAAAHlJREFUCNdNyosOwyAIhWHAQS1Vt7a77/3fcxxdmv0xwmckutAR1nkm4ggbyEcg/wWmlGLDAA3oL50xi6fk5ffZ3E2E3QfZDCcCN2YtbEWZt+Drc6u6rlqv7Uk0LdKqqr5rk2UCRXOk0vmQKGfc94nOJyQjouF9H/wCc9gECEYfONoAAAAASUVORK5CYII=)](https://scala-steward.org)
 [![Coverage Status](https://coveralls.io/repos/github/xdev-developer/gen4s/badge.svg?branch=main)](https://coveralls.io/github/xdev-developer/gen4s?branch=main)
 
+![Build status](https://github.com/xdev-developer/gen4s/actions/workflows/build.yml/badge.svg)
+
 Gen4s is a powerful data generation tool designed for developers and QA engineers. 
 
 Features:
@@ -377,6 +379,29 @@ output {
 }
 ```
 
+### AWS S3 Output
+```properties
+output {
+  writer {
+    type = s-3-output
+    bucket = "test-bucket"
+    key = "key-%s.json"
+    region = "us-east-1"
+    endpoint = "http://localhost:4566"
+    part-size-mb = 5
+  }
+  transformers = ["json-minify"]
+  validators = ["json", "missing-vars"]
+}
+```
+
+The available options for configuring an S3 output are:
+
+- `bucket`: This is the name of the S3 bucket where the output data will be written.
+- `key`:  Represents the object key pattern. The `%s` is a placeholder that will be replaced unique identifier.
+- `region`: This is the AWS region where the S3 bucket is located.
+- `endpoint`: This is the URL of the S3 service endpoint. This can be useful for testing with local S3-compatible services like LocalStack.
+- `part-size-mb`: This is used to specify the part size for multipart uploads to the S3 bucket. The value is in megabytes.
 
 #### Transformers
 

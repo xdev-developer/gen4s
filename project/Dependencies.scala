@@ -64,6 +64,10 @@ object Dependencies {
     "com.github.fd4s" %% "fs2-kafka-vulcan" % V.fs2Kafka
   )
 
+  val Fs2S3: Seq[ModuleID] = List(
+    "io.laserdisc" %% "fs2-aws-s3" % "6.1.2"
+  )
+
   val CirceCore    = circe("core")
   val CirceParser  = circe("parser")
   val CirceRefined = circe("refined")
@@ -113,6 +117,7 @@ object Dependencies {
 
   val AvroConverter: Seq[ModuleID] = List(
     "io.github.agolovenko" % "avro-tools-json_2.13" % "0.8.0"
+      exclude ("org.scala-lang.modules", "scala-collection-compat_2.13")
   )
 
   val Monocle: Seq[ModuleID] = List(
@@ -132,8 +137,9 @@ object Dependencies {
   val CatsEffectTest: Seq[ModuleID] = List("org.typelevel" %% "cats-effect-testing-scalatest" % "1.5.0" % Test)
 
   val TestContainers: Seq[ModuleID] = List(
-    "com.dimafeng" %% "testcontainers-scala-scalatest" % V.testContainers % Test,
-    "com.dimafeng" %% "testcontainers-scala-kafka"     % V.testContainers % Test
+    "com.dimafeng" %% "testcontainers-scala-scalatest"     % V.testContainers % Test,
+    "com.dimafeng" %% "testcontainers-scala-kafka"         % V.testContainers % Test,
+    "com.dimafeng" %% "testcontainers-scala-localstack-v2" % V.testContainers % Test
   )
 
   // Runtime
