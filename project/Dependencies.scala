@@ -16,7 +16,7 @@ object Dependencies {
     val pureConfig        = "0.17.6"
     val sttp              = "3.9.5"
     var refined           = "0.11.1"
-    val parserCombinators = "2.3.0"
+    val parserCombinators = "2.4.0"
     val csv               = "1.3.10"
     val monocle           = "3.2.0"
 
