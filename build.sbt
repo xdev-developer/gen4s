@@ -1,3 +1,5 @@
+import org.typelevel.scalacoptions.ScalacOptions
+
 import NativePackagerHelper.*
 import ReleaseTransformations.*
 
@@ -46,7 +48,8 @@ lazy val generators = project
       Dependencies.ParserCombinators,
       Dependencies.ScalaTest,
       Dependencies.CatsEffectTest
-    )
+    ),
+    Test / tpolecatExcludeOptions += ScalacOptions.warnNonUnitStatement
   )
   .dependsOn(core)
 
@@ -75,7 +78,8 @@ lazy val outputs = project
       Dependencies.CatsEffectTest,
       Dependencies.TestContainers,
       Dependencies.ScalaTest
-    )
+    ),
+    Test / tpolecatExcludeOptions += ScalacOptions.warnNonUnitStatement
   )
   .dependsOn(core, generators)
 
@@ -115,7 +119,8 @@ lazy val app = project
     Universal / packageXzTarball / mappings += file("README.md") -> "README.md",
     Universal / packageXzTarball / mappings ++= directory("examples"),
     Universal / packageBin / mappings := (Universal / packageXzTarball / mappings).value,
-    Compile / packageDoc / mappings   := Seq()
+    Compile / packageDoc / mappings   := Seq(),
+    Test / tpolecatExcludeOptions += ScalacOptions.warnNonUnitStatement
   )
   .dependsOn(core, generators, outputs)
 
@@ -135,5 +140,6 @@ lazy val root = project
       setNextVersion,            // : ReleaseStep
       commitNextVersion          // : ReleaseStep
     ),
-    releaseTagName := s"release-v${if (releaseUseGlobalVersion.value) (ThisBuild / version).value else version.value}"
+    releaseTagName := s"release-v${if (releaseUseGlobalVersion.value) (ThisBuild / version).value else version.value}",
+    Test / tpolecatExcludeOptions += ScalacOptions.warnNonUnitStatement
   )
