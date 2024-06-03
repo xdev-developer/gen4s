@@ -6,7 +6,7 @@ object Dependencies {
     "io.circe" %% s"circe-$artifact" % V.circe
 
   object V {
-    val cats              = "2.10.0"
+    val cats              = "2.12.0"
     val catsEffect        = "3.5.4"
     val catsRetry         = "3.1.0"
     val circe             = "0.14.7"
@@ -15,7 +15,7 @@ object Dependencies {
     val log4cats          = "2.7.0"
     val pureConfig        = "0.17.6"
     val sttp              = "3.9.7"
-    var refined           = "0.11.1"
+    var refined           = "0.11.2"
     val parserCombinators = "2.4.0"
     val csv               = "1.3.10"
     val monocle           = "3.2.0"
