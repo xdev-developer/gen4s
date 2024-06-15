@@ -20,8 +20,7 @@ final case class TimestampGenerator(
   shiftMinutes: Option[Long] = None,
   shiftSeconds: Option[Long] = None,
   shiftMillis: Option[Long] = None)
-    extends Generator
-    derives ConfiguredCodec {
+    extends Generator derives ConfiguredCodec {
 
   override def gen(): GeneratedValue = {
     val millis =

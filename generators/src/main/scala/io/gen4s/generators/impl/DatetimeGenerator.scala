@@ -17,8 +17,7 @@ final case class DatetimeGenerator(
   shiftHours: Option[Long] = None,
   shiftMinutes: Option[Long] = None,
   shiftSeconds: Option[Long] = None)
-    extends Generator
-    derives ConfiguredCodec:
+    extends Generator derives ConfiguredCodec:
 
   private val defaultFormat: String = "MM/dd/yyyy"
 
