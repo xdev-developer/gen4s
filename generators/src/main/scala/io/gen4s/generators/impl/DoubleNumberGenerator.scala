@@ -12,8 +12,7 @@ final case class DoubleNumberGenerator(
   min: Option[Double] = None,
   max: Option[Double] = None,
   scale: Option[Int] = None)
-    extends Generator
-    derives ConfiguredCodec:
+    extends Generator derives ConfiguredCodec:
 
   override def gen(): GeneratedValue = {
     val minV  = min.getOrElse(0.0d)
