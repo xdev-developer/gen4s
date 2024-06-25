@@ -17,7 +17,7 @@ object Dependencies {
     val sttp              = "3.9.7"
     var refined           = "0.11.2"
     val parserCombinators = "2.4.0"
-    val csv               = "1.3.10"
+    val csv               = "1.4.0"
     val monocle           = "3.2.0"
 
     val scalaTest      = "3.2.18"
