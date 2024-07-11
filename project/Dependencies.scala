@@ -73,8 +73,8 @@ object Dependencies {
   val CirceRefined = circe("refined")
 
   val Enumeratum: Seq[ModuleID] = List(
-    "com.beachape" %% "enumeratum"       % "1.7.3",
-    "com.beachape" %% "enumeratum-circe" % "1.7.3"
+    "com.beachape" %% "enumeratum"       % "1.7.4",
+    "com.beachape" %% "enumeratum-circe" % "1.7.4"
   )
 
   val Log4cats: Seq[ModuleID] = List(
