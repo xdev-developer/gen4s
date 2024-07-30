@@ -17,10 +17,10 @@ object Dependencies {
     val sttp              = "3.9.7"
     var refined           = "0.11.2"
     val parserCombinators = "2.4.0"
-    val csv               = "1.3.10"
+    val csv               = "1.4.1"
     val monocle           = "3.2.0"
 
-    val scalaTest      = "3.2.18"
+    val scalaTest      = "3.2.19"
     val testContainers = "0.41.4"
 
     val betterMonadicFor = "0.3.1"
@@ -42,7 +42,7 @@ object Dependencies {
 
   val ApacheCommons: Seq[ModuleID] = List(
     "org.apache.commons" % "commons-text"  % "1.12.0",
-    "commons-codec"      % "commons-codec" % "1.17.0",
+    "commons-codec"      % "commons-codec" % "1.17.1",
     "commons-io"         % "commons-io"    % "2.16.1",
     "org.xerial.snappy"  % "snappy-java"   % "1.1.10.5"
   )
@@ -73,8 +73,8 @@ object Dependencies {
   val CirceRefined = circe("refined")
 
   val Enumeratum: Seq[ModuleID] = List(
-    "com.beachape" %% "enumeratum"       % "1.7.3",
-    "com.beachape" %% "enumeratum-circe" % "1.7.3"
+    "com.beachape" %% "enumeratum"       % "1.7.4",
+    "com.beachape" %% "enumeratum-circe" % "1.7.4"
   )
 
   val Log4cats: Seq[ModuleID] = List(
@@ -129,7 +129,7 @@ object Dependencies {
   )
 
   val ProtoConverter: Seq[ModuleID] = List(
-    "io.confluent"        % "kafka-protobuf-serializer" % "7.6.1",
+    "io.confluent"        % "kafka-protobuf-serializer" % "7.6.2",
     "com.google.protobuf" % "protobuf-java-util"        % "3.25.3"
   )
 
