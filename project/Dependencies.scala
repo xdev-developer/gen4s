@@ -20,7 +20,7 @@ object Dependencies {
     val csv               = "1.3.10"
     val monocle           = "3.2.0"
 
-    val scalaTest      = "3.2.18"
+    val scalaTest      = "3.2.19"
     val testContainers = "0.41.4"
 
     val betterMonadicFor = "0.3.1"
