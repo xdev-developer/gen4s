@@ -18,7 +18,7 @@ object Dependencies {
     var refined           = "0.11.2"
     val parserCombinators = "2.4.0"
     val csv               = "1.4.1"
-    val monocle           = "3.2.0"
+    val monocle           = "3.3.0"
 
     val scalaTest      = "3.2.19"
     val testContainers = "0.41.4"
