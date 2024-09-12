@@ -44,7 +44,7 @@ object Dependencies {
     "org.apache.commons" % "commons-text"  % "1.12.0",
     "commons-codec"      % "commons-codec" % "1.17.1",
     "commons-io"         % "commons-io"    % "2.16.1",
-    "org.xerial.snappy"  % "snappy-java"   % "1.1.10.6"
+    "org.xerial.snappy"  % "snappy-java"   % "1.1.10.7"
   )
 
   val ScalaCsv: Seq[ModuleID] = List(
