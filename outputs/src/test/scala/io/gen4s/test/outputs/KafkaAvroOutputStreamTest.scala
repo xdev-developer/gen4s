@@ -12,6 +12,8 @@ import org.typelevel.log4cats.Logger
 
 import com.dimafeng.testcontainers.{ForEachTestContainer, MultipleContainers}
 
+import scala.annotation.nowarn
+
 import cats.data.NonEmptyList
 import cats.effect.{IO, Sync}
 import cats.effect.unsafe.implicits.global
@@ -31,6 +33,7 @@ import io.gen4s.outputs.avro.SchemaLoader
 import eu.timepit.refined.types.string.NonEmptyString
 import vulcan.{AvroException, Codec}
 
+@nowarn
 class KafkaAvroOutputStreamTest
     extends AnyFunSpec
     with Matchers
@@ -47,7 +50,7 @@ class KafkaAvroOutputStreamTest
   private def kafkaServers = bootstrapServers
 
   case class PersonKey(id: Int, orgId: Int)
-  case class Person(username: String, age: Option[Int], birthDate: Instant)
+  case class Person(username: String, age: Option[Int], birthDate: Instant, accountBalance: BigDecimal)
 
   private given Show[Person] = Show.fromToString[Person]
 
@@ -58,14 +61,28 @@ class KafkaAvroOutputStreamTest
     (field("id", _.id), field("orgId", _.orgId)).mapN(PersonKey.apply)
   }
 
+  private given Codec[BigDecimal] = Codec.decimal(32, 10)
+
   private given Codec[Person] = Codec.record(
     name = "Person",
     namespace = "io.gen4s"
   ) { field =>
-    (field("username", _.username), field("age", _.age), field("birthDate", _.birthDate)).mapN(Person.apply)
+    (
+      field("username", _.username),
+      field("age", _.age),
+      field("birthDate", _.birthDate),
+      field("accountBalance", _.accountBalance)
+    ).mapN(Person.apply)
   }
 
-  private val personTemplate = """{ "username": "{{name}}", "age": {{age}}, "birthDate": "2007-12-03T10:15:30.999Z" }"""
+  private val personTemplate =
+    """
+      |{
+      |"username": "{{name}}",
+      |"age": {{age}},
+      |"birthDate": "2007-12-03T10:15:30.999Z",
+      |"accountBalance": 10000.50
+      | }""".stripMargin
 
   private def mkOutput(
     b: BootstrapServers,
@@ -293,7 +310,7 @@ class KafkaAvroOutputStreamTest
         kafkaServers,
         getSchemaRegistryAddress,
         keySchema = java.io.File("./outputs/src/test/resources/person-key.avsc").some,
-        valueSchema = java.io.File("./outputs/src/test/resources/person-key.avsc").some,
+        valueSchema = java.io.File("./outputs/src/test/resources/person-key.avsc").some, // Just for test
         autoRegisterSchemas = true
       ).copy(decodeInputAsKeyValue = true)
 
@@ -301,7 +318,7 @@ class KafkaAvroOutputStreamTest
         runStream(kafkaServers, streams, builder, output)
       }
 
-      error.getMessage shouldBe "Avro value encoder error: Missing INT node @ /id"
+      error.getMessage shouldBe "Avro value encoder error: Failed to convert JSON to Avro"
     }
 
     it("Fail without schema") {
@@ -360,7 +377,7 @@ class KafkaAvroOutputStreamTest
       val error = the[AvroException] thrownBy {
         runStream(kafkaServers, streams, builder, output)
       }
-      error.getMessage should include("""Avro value encoder error: Missing INT node @ /id""")
+      error.getMessage should include("""Avro value encoder error: Failed to convert JSON to Avro""")
     }
 
     it("Fail with broken schema (auto schema register enabled)") {

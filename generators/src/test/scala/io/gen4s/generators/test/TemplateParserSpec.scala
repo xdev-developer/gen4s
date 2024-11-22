@@ -3,9 +3,12 @@ package io.gen4s.generators.test
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
 
+import scala.annotation.nowarn
+
 import io.gen4s.generators.dsl.Dsl
 import io.gen4s.generators.dsl.TemplateParser
 
+@nowarn
 class TemplateParserSpec extends AnyWordSpecLike with Matchers:
 
   "TemplateParser" should {

@@ -117,8 +117,7 @@ object Dependencies {
   )
 
   val AvroConverter: Seq[ModuleID] = List(
-    "io.github.agolovenko" % "avro-tools-json_2.13" % "0.8.0"
-      exclude ("org.scala-lang.modules", "scala-collection-compat_2.13")
+    "tech.allegro.schema.json2avro" % "converter" % "0.2.15"
   )
 
   val Monocle: Seq[ModuleID] = List(
