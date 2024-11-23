@@ -9,6 +9,8 @@ import org.typelevel.log4cats.Logger
 import com.dimafeng.testcontainers.scalatest.TestContainersForAll
 import com.dimafeng.testcontainers.KafkaContainer
 
+import scala.annotation.nowarn
+
 import cats.data.NonEmptyList
 import cats.effect.{IO, Sync}
 import cats.effect.testing.scalatest.AsyncIOSpec
@@ -20,6 +22,7 @@ import io.gen4s.generators.impl.TimestampGenerator
 import io.gen4s.outputs.KafkaOutput
 import io.gen4s.outputs.OutputStreamExecutor
 
+@nowarn
 class KafkaOutputStreamTest
     extends AsyncFunSpec
     with AsyncIOSpec

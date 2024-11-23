@@ -5,6 +5,20 @@
   "fields":[
     {"name":"username","type":"string"},
     {"name":"age","type":["null","int"], "default":  null},
-    {"name": "birthDate", "type": {"type": "long", "logicalType": "timestamp-millis"}}
+    {"name": "birthDate", "type": {"type": "long", "logicalType": "timestamp-millis"}},
+    {
+          "name": "accountBalance",
+          "type": {
+            "type": "bytes",
+            "scale": 10,
+            "precision": 32,
+            "connect.version": 1,
+            "connect.parameters": {
+              "scale": "10"
+            },
+            "connect.name": "org.apache.kafka.connect.data.Decimal",
+            "logicalType": "decimal"
+          }
+        }
   ]
 }

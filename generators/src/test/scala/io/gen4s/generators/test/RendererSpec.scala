@@ -3,11 +3,14 @@ package io.gen4s.generators.test
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
 
+import scala.annotation.nowarn
+
 import io.gen4s.generators.dsl.Dsl
 import io.gen4s.generators.render.Renderer
 
 import Renderer.given
 
+@nowarn
 class RendererSpec extends AnyWordSpecLike with Matchers:
 
   "Renderer" should {
