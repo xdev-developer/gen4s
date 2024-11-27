@@ -35,7 +35,8 @@ class ScenarioExecutorTest extends AsyncFunSpec with AsyncIOSpec with Matchers {
               name = Some("Playground Stage"),
               samples = numSamples,
               configFile = new java.io.File("./examples/playground/config.conf"),
-              delay = Some(1.second)
+              delay = Some(1.second),
+              overrides = None
             )
           )
         )

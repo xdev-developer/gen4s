@@ -40,7 +40,8 @@ object ScenarioExecutor {
         cfg.stages
           .map { sc =>
             val name = sc.name.getOrElse(sc.configFile.getAbsolutePath)
-            val args = Args(numberOfSamplesToGenerate = sc.samples, stageDelay = sc.delay)
+            val args =
+              Args(numberOfSamplesToGenerate = sc.samples, stageDelay = sc.delay, userInput = sc.overridesInput)
 
             StageConfigLoader
               .fromFile[F](sc.configFile)
