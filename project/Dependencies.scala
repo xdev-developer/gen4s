@@ -134,7 +134,7 @@ object Dependencies {
   )
 
   val ScalaTest: Seq[ModuleID]      = List("org.scalatest" %% "scalatest" % V.scalaTest % Test)
-  val CatsEffectTest: Seq[ModuleID] = List("org.typelevel" %% "cats-effect-testing-scalatest" % "1.5.0" % Test)
+  val CatsEffectTest: Seq[ModuleID] = List("org.typelevel" %% "cats-effect-testing-scalatest" % "1.6.0" % Test)
 
   val TestContainers: Seq[ModuleID] = List(
     "com.dimafeng" %% "testcontainers-scala-scalatest"     % V.testContainers % Test,
