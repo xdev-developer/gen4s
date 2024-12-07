@@ -99,7 +99,7 @@ ORG_ID=12345
 ./bin/gen4s run -i test-string=hello,test-int=12345 -c ./examples/playground/config.conf
 ```
 
-### Runninng scenario
+### Running scenario
 
 ```shell
 ./bin/gen4s scenario -c ./examples/scenario/scenario.conf -p ./profiles/dev.profile
@@ -410,16 +410,20 @@ The available options for configuring an S3 output are:
 
 ### Scenario configuration
 
-Using scenario you can run multiple stages, configure `delay` between stages and number of samples to generate.
+Using scenario you can run multiple stages, configure `delay` between stages, number of samples to generate, override any variable.
 
 ```properties
 stages: [
     { name: "Playground", samples: 5, config-file: "./examples/playground/config.conf", delay: 5 seconds},
-    { name: "CSV Input",  samples: 3, config-file: "./examples/csv-input/config.conf"}
+    { name: "CSV Input",  samples: 3, config-file: "./examples/csv-input/config.conf"},
+    { name: "Playground with override",  samples: 3, config-file: "./examples/playground/config.conf",
+      overrides {
+        test-string: "overridden",
+        test-int: 777
+      }
+   }
 ]
 ```
-
-
 
 ## Schema definition and data generators
 
