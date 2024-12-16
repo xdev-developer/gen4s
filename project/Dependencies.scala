@@ -13,7 +13,7 @@ object Dependencies {
     val fs2               = "3.11.0"
     val fs2Kafka          = "3.5.1"
     val log4cats          = "2.7.0"
-    val pureConfig        = "0.17.7"
+    val pureConfig        = "0.17.8"
     val sttp              = "3.10.1"
     var refined           = "0.11.2"
     val parserCombinators = "2.4.0"
@@ -45,7 +45,7 @@ object Dependencies {
     "commons-codec"      % "commons-codec" % "1.17.1",
     "org.xerial.snappy"  % "snappy-java"   % "1.1.10.7",
     "commons-io"         % "commons-io"    % "2.18.0",
-    "org.xerial.snappy"  % "snappy-java"   % "1.1.10.6"
+    "org.xerial.snappy"  % "snappy-java"   % "1.1.10.7"
   )
 
   val ScalaCsv: Seq[ModuleID] = List(
