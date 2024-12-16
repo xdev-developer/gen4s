@@ -9,7 +9,6 @@ import io.gen4s.core.InputRecord
 import scala.concurrent.duration.FiniteDuration
 
 import pureconfig.*
-import pureconfig.generic.derivation.default.*
 
 final case class StageConfig(input: InputConfig, output: OutputConfig) derives ConfigReader
 

@@ -5,7 +5,6 @@ import java.io.File
 import io.gen4s.core.generators.Variable
 
 import pureconfig.*
-import pureconfig.generic.derivation.default.*
 
 final case class InputConfig(
   schema: File,
