@@ -27,6 +27,7 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
         cache: 'sbt'
+    - uses: sbt/setup-sbt@v1
     - name: Build archive
       run: sbt -J-Xss6M 'universal:packageBin'
 

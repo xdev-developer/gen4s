@@ -26,5 +26,6 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
         cache: 'sbt'
+    - uses: sbt/setup-sbt@v1
     - name: Run benchmarks
       run: sbt clean 'project benchmarks;jmh:run -i 3 -wi 1 -f1 -t1'
