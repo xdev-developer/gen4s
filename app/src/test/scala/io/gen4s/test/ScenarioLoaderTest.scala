@@ -26,7 +26,7 @@ class ScenarioLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers wi
 
   "Scenario config loader" - {
 
-    "Load std output" in {
+    "Load std output" in
       load[IO]("""stages: [
                  | { name: "My cool stage", samples: 1, config-file: "/tmp/file", delay: 5 seconds }
                  |]""".stripMargin)
@@ -37,7 +37,6 @@ class ScenarioLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers wi
           stages.headOption.map(_.configFile.getPath).value shouldBe "/tmp/file"
           stages.headOption.flatMap(_.delay).value shouldBe FiniteDuration(5, TimeUnit.SECONDS)
         }
-    }
   }
 
 }
