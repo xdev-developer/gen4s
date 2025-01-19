@@ -222,9 +222,8 @@ class KafkaAvroOutputStreamTest
           client.register("person-key", new AvroSchema(schema))
         }
 
-      SchemaLoader.loadSchemaFromFile(java.io.File("./outputs/src/test/resources/person-value.avsc")).foreach {
-        schema =>
-          client.register("person-value", new AvroSchema(schema))
+      SchemaLoader.loadSchemaFromFile(java.io.File("./outputs/src/test/resources/person-value.avsc")).foreach { schema =>
+        client.register("person-value", new AvroSchema(schema))
       }
 
       val list = (for {
@@ -268,9 +267,8 @@ class KafkaAvroOutputStreamTest
 
       val client = CachedSchemaRegistryClient(output.avroConfig.schemaRegistryUrl, 100)
 
-      SchemaLoader.loadSchemaFromFile(java.io.File("./outputs/src/test/resources/person-value.avsc")).foreach {
-        schema =>
-          client.register("person-value", new AvroSchema(schema))
+      SchemaLoader.loadSchemaFromFile(java.io.File("./outputs/src/test/resources/person-value.avsc")).foreach { schema =>
+        client.register("person-value", new AvroSchema(schema))
       }
 
       val list = (for {
