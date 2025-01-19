@@ -66,7 +66,7 @@ object Dependencies {
   )
 
   val Fs2S3: Seq[ModuleID] = List(
-    "io.laserdisc" %% "fs2-aws-s3" % "6.1.3"
+    "io.laserdisc" %% "fs2-aws-s3" % "6.2.0"
   )
 
   val CirceCore    = circe("core")
