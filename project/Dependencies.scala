@@ -6,7 +6,7 @@ object Dependencies {
     "io.circe" %% s"circe-$artifact" % V.circe
 
   object V {
-    val cats              = "2.12.0"
+    val cats              = "2.13.0"
     val catsEffect        = "3.5.7"
     val catsRetry         = "3.1.0"
     val circe             = "0.14.9"
