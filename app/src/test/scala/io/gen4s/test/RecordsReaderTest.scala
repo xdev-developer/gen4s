@@ -15,7 +15,7 @@ import io.gen4s.RecordsReader
 class RecordsReaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers with OptionValues {
 
   "Records reader" - {
-    "Read csv file" in {
+    "Read csv file" in
       RecordsReader
         .make[IO]()
         .read(new File("./app/src/test/resources/entities.csv"))
@@ -26,6 +26,5 @@ class RecordsReaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers wit
             Variable("user") -> GeneratedValue.fromString("Denys")
           ).some
         }
-    }
   }
 }

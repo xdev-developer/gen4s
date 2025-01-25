@@ -21,7 +21,7 @@ class InputLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
 
   "Input loader" - {
 
-    "Load input" in {
+    "Load input" in
       load[IO]("""{
                  |    schema = "input.schema.json"
                  |    template = "input.template.json"
@@ -29,6 +29,5 @@ class InputLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
                  |    csv-records = "entities.csv"
                  |    global-variables = ["name", "timestamp"]
                  |}""".stripMargin).assertNoException
-    }
   }
 }

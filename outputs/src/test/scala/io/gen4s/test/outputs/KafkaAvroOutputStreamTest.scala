@@ -222,9 +222,8 @@ class KafkaAvroOutputStreamTest
           client.register("person-key", new AvroSchema(schema))
         }
 
-      SchemaLoader.loadSchemaFromFile(java.io.File("./outputs/src/test/resources/person-value.avsc")).foreach {
-        schema =>
-          client.register("person-value", new AvroSchema(schema))
+      SchemaLoader.loadSchemaFromFile(java.io.File("./outputs/src/test/resources/person-value.avsc")).foreach { schema =>
+        client.register("person-value", new AvroSchema(schema))
       }
 
       val list = (for {
@@ -268,9 +267,8 @@ class KafkaAvroOutputStreamTest
 
       val client = CachedSchemaRegistryClient(output.avroConfig.schemaRegistryUrl, 100)
 
-      SchemaLoader.loadSchemaFromFile(java.io.File("./outputs/src/test/resources/person-value.avsc")).foreach {
-        schema =>
-          client.register("person-value", new AvroSchema(schema))
+      SchemaLoader.loadSchemaFromFile(java.io.File("./outputs/src/test/resources/person-value.avsc")).foreach { schema =>
+        client.register("person-value", new AvroSchema(schema))
       }
 
       val list = (for {
@@ -314,9 +312,8 @@ class KafkaAvroOutputStreamTest
         autoRegisterSchemas = true
       ).copy(decodeInputAsKeyValue = true)
 
-      val error = the[AvroException] thrownBy {
+      val error = the[AvroException] thrownBy
         runStream(kafkaServers, streams, builder, output)
-      }
 
       error.getMessage shouldBe "Avro value encoder error: Failed to convert JSON to Avro"
     }
@@ -343,9 +340,8 @@ class KafkaAvroOutputStreamTest
         getSchemaRegistryAddress
       ).copy(decodeInputAsKeyValue = true)
 
-      val error = the[RestClientException] thrownBy {
+      val error = the[RestClientException] thrownBy
         runStream(kafkaServers, streams, builder, output)
-      }
 
       error.getMessage shouldBe "Subject 'person-value' not found.; error code: 40401"
     }
@@ -374,9 +370,8 @@ class KafkaAvroOutputStreamTest
           )
         )
 
-      val error = the[AvroException] thrownBy {
+      val error = the[AvroException] thrownBy
         runStream(kafkaServers, streams, builder, output)
-      }
       error.getMessage should include("""Avro value encoder error: Failed to convert JSON to Avro""")
     }
 
@@ -405,9 +400,8 @@ class KafkaAvroOutputStreamTest
           )
         )
 
-      val error = the[SchemaParseException] thrownBy {
+      val error = the[SchemaParseException] thrownBy
         runStream(kafkaServers, streams, builder, output)
-      }
 
       error.getMessage shouldBe """Schema parsing error: Record has no fields: {"type":"record","name":"PersonKey","namespace":"io.gen4s"}"""
     }
