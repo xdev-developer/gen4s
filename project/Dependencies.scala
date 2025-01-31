@@ -6,7 +6,7 @@ object Dependencies {
     "io.circe" %% s"circe-$artifact" % V.circe
 
   object V {
-    val cats              = "2.12.0"
+    val cats              = "2.13.0"
     val catsEffect        = "3.5.7"
     val catsRetry         = "3.1.0"
     val circe             = "0.14.9"
@@ -15,17 +15,17 @@ object Dependencies {
     val log4cats          = "2.7.0"
     val pureConfig        = "0.17.8"
     val sttp              = "3.10.1"
-    var refined           = "0.11.2"
+    var refined           = "0.11.3"
     val parserCombinators = "2.4.0"
     val csv               = "1.4.1"
     val monocle           = "3.3.0"
 
     val scalaTest      = "3.2.19"
-    val testContainers = "0.41.5"
+    val testContainers = "0.41.8"
 
     val betterMonadicFor = "0.3.1"
     val kindProjector    = "0.13.2"
-    val logback          = "1.5.15"
+    val logback          = "1.5.16"
   }
 
   val Cats: Seq[ModuleID] = List(
@@ -42,7 +42,7 @@ object Dependencies {
 
   val ApacheCommons: Seq[ModuleID] = List(
     "org.apache.commons" % "commons-text"  % "1.13.0",
-    "commons-codec"      % "commons-codec" % "1.17.1",
+    "commons-codec"      % "commons-codec" % "1.17.2",
     "org.xerial.snappy"  % "snappy-java"   % "1.1.10.7",
     "commons-io"         % "commons-io"    % "2.18.0",
     "org.xerial.snappy"  % "snappy-java"   % "1.1.10.7"
@@ -66,7 +66,7 @@ object Dependencies {
   )
 
   val Fs2S3: Seq[ModuleID] = List(
-    "io.laserdisc" %% "fs2-aws-s3" % "6.1.3"
+    "io.laserdisc" %% "fs2-aws-s3" % "6.2.0"
   )
 
   val CirceCore    = circe("core")
