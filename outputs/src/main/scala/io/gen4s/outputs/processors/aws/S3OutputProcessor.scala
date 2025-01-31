@@ -39,7 +39,7 @@ class S3OutputProcessor[F[_]: Async: Logger] extends OutputProcessor[F, S3Output
   }
 
   private def formatKey(key: NonEmptyString): FileKey = {
-    FileKey(NonEmptyString.unsafeFrom(key.value.format(UUID.randomUUID().toString)))
+    FileKey(NonEmptyString.unsafeFrom(key.value.format(UUID.randomUUID())))
   }
 
   private def s3Resource(output: S3Output) = {
