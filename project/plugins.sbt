@@ -7,6 +7,6 @@ addSbtPlugin("pl.project13.scala" % "sbt-jmh"             % "0.4.7")
 addSbtPlugin("org.scoverage"      % "sbt-scoverage"       % "2.3.0")
 addSbtPlugin("org.scoverage"      % "sbt-coveralls"       % "1.3.11")
 addSbtPlugin("org.wartremover"    % "sbt-wartremover"     % "3.2.7")
-addSbtPlugin("org.scoverage"      % "sbt-coveralls"       % "1.3.14")
+addSbtPlugin("org.scoverage"      % "sbt-coveralls"       % "1.3.15")
 
 addDependencyTreePlugin
