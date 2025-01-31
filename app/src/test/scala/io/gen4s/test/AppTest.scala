@@ -11,22 +11,19 @@ import io.gen4s.App
 class AppTest extends AsyncFreeSpec with AsyncIOSpec with Matchers with OptionValues {
 
   "App" - {
-    "Run" in {
+    "Run" in
       App.run(List("run", "-c", "./examples/playground/config.conf")).asserting { code =>
         code shouldBe ExitCode.Success
       }
-    }
 
-    "Preview" in {
+    "Preview" in
       App.run(List("preview", "-c", "./examples/playground/config.conf")).asserting { code =>
         code shouldBe ExitCode.Success
       }
-    }
 
-    "Run scenario" in {
+    "Run scenario" in
       App.run(List("scenario", "-c", "./examples/scenario/scenario.conf")).asserting { code =>
         code shouldBe ExitCode.Success
       }
-    }
   }
 }

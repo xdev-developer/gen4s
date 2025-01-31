@@ -31,7 +31,7 @@ class OutputLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
 
   "Output loader" - {
 
-    "Load std output" in {
+    "Load std output" in
       load[IO]("""writer: { type: std-output }
                  |transformers = []
                  |validators = []
@@ -39,9 +39,8 @@ class OutputLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
         .asserting { out =>
           out.writer shouldBe StdOutput()
         }
-    }
 
-    "Load kafka output" in {
+    "Load kafka output" in
       load[IO]("""
         writer: { 
           type = kafka-output
@@ -74,9 +73,8 @@ class OutputLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
             producerConfig = Some(KafkaProducerConfig(KafkaProducerConfig.CompressionTypes.gzip, 15L, 1024, 512L, 1))
           )
         }
-    }
 
-    "Load http output" in {
+    "Load http output" in
       load[IO]("""
         writer: { 
           type: http-output
@@ -102,9 +100,8 @@ class OutputLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
             stopOnError = true
           )
         }
-    }
 
-    "Load file system output" in {
+    "Load file system output" in
       load[IO]("""
         writer: { 
           type: fs-output
@@ -120,9 +117,8 @@ class OutputLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
             filenamePattern = NonEmptyString.unsafeFrom("my-cool-logs-%s.txt")
           )
         }
-    }
 
-    "Load s3 output" in {
+    "Load s3 output" in
       load[IO]("""
         writer: { 
           type: s-3-output
@@ -144,7 +140,6 @@ class OutputLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
             endpoint = Some(Endpoint.builder().url(new java.net.URI("http://localhost:4566")).build())
           )
         }
-    }
   }
 
 }
