@@ -41,7 +41,7 @@ class KafkaProtobufOutputStreamTest
   describe("Kafka Protobuf output stream") {
 
     it("Send Protobuf records to kafka topic") {
-      val template = SourceTemplate("""{ "username": "{{name}}", "age": {{age}} }""")
+      val template = SourceTemplate("""{ "username": "${name}", "age": ${age} }""")
 
       val streams = OutputStreamExecutor.make[IO]()
 
@@ -87,7 +87,7 @@ class KafkaProtobufOutputStreamTest
 
     it("Send Key/value Protobuf records to kafka topic") {
       val template =
-        SourceTemplate("""{ "key": {{id}}, "value": { "username": "{{name}}", "age": {{age}} } }""")
+        SourceTemplate("""{ "key": ${id}, "value": { "username": "${name}", "age": ${age} } }""")
 
       val streams = OutputStreamExecutor.make[IO]()
 

@@ -23,7 +23,7 @@ object OutputValidator extends Enum[OutputValidator] with CirceEnum[OutputValida
   }
 
   case object MissingVars extends OutputValidator("missing-vars") {
-    private val varPattern = "\\{\\{[\\w.-]+}}".r
+    private val varPattern = "\\$\\{[\\w.-]+}".r
 
     override def validate(template: RenderedTemplate): Validated[String, Unit] = {
       varPattern

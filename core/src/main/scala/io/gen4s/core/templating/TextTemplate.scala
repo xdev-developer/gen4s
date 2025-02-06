@@ -10,8 +10,8 @@ import io.gen4s.core.templating.TextTemplate.stripQuotes
 
 object TextTemplate {
   private val Quote          = "\""
-  private val VariablePrefix = "{{"
-  private val VariableSuffix = "}}"
+  private val VariablePrefix = "${"
+  private val VariableSuffix = "}"
 
   def stripQuotes(in: String): String = {
     in.stripPrefix(Quote)

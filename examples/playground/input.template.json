@@ -1,14 +1,14 @@
 {
-  "timestamp": {{ts}},
-  "flag-field": {{flag}},
-  "static-field": "{{static}}",
-  "date-field": "{{date}}",
-  "pattern-field": "{{pattern}}",
-  "int-field": {{test-int}},
-  "double-field": {{test-double}},
-  "string-field": "{{test-string}}",
-  "uuid-field": "{{test-uuid}}",
-  "enum-field": "{{test-enum}}",
-  "env-field": "{{test-var}}",
-  "list-field": {{test-list}}
+  "timestamp": ${ts},
+  "flag-field": ${flag},
+  "static-field": "${static}",
+  "date-field": "${date}",
+  "pattern-field": "${pattern}",
+  "int-field": ${test-int},
+  "double-field": ${test-double},
+  "string-field": "${test-string}",
+  "uuid-field": "${test-uuid}",
+  "enum-field": "${test-enum}",
+  "env-field": "${test-var}",
+  "list-field": ${test-list}
 }

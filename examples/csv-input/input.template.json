@@ -1,5 +1,5 @@
 {
-  "timestamp": {{ts}},
-  "id": {{id}},
-  "user": "{{user}}"
+  "timestamp": ${ts},
+  "id": ${id},
+  "user": "${user}"
 }

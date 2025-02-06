@@ -78,8 +78,8 @@ class KafkaAvroOutputStreamTest
   private val personTemplate =
     """
       |{
-      |"username": "{{name}}",
-      |"age": {{age}},
+      |"username": "${name}",
+      |"age": ${age},
       |"birthDate": "2007-12-03T10:15:30.999Z",
       |"accountBalance": 10000.50
       | }""".stripMargin
@@ -189,7 +189,7 @@ class KafkaAvroOutputStreamTest
 
     it("Send AVRO key/value records to kafka topic (encode with schema from schema registry)") {
       val template = SourceTemplate(s""" {
-                                       |   "key": {"id": {{id}}, "orgId": 2},
+                                       |   "key": {"id": $${id}, "orgId": 2},
                                        |   "value": $personTemplate
                                        |}""".stripMargin)
 
@@ -245,7 +245,7 @@ class KafkaAvroOutputStreamTest
 
     it("Send AVRO key/value records to kafka topic (simple key)") {
       val template = SourceTemplate(s""" {
-                                       |   "key": "key_{{id}}",
+                                       |   "key": "key_$${id}",
                                        |   "value": $personTemplate
                                        |}""".stripMargin)
 
@@ -289,7 +289,7 @@ class KafkaAvroOutputStreamTest
 
     it("Fail with unknown schema (auto schema register enabled)") {
       val template = SourceTemplate(s""" {
-                                       |   "key": {"id": {{id}}, "orgId": 2},
+                                       |   "key": {"id": $${id}, "orgId": 2},
                                        |   "value": $personTemplate
                                        |}""".stripMargin)
 
@@ -320,7 +320,7 @@ class KafkaAvroOutputStreamTest
 
     it("Fail without schema") {
       val template = SourceTemplate(s""" {
-                                       |   "key": {"id": {{id}}, "orgId": 2},
+                                       |   "key": {"id": $${id}, "orgId": 2},
                                        |   "value": $personTemplate
                                        |}""".stripMargin)
 

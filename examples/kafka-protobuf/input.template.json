@@ -1,8 +1,8 @@
 {
-  "key": {{age}},
+  "key": ${age},
   "value": {
-    "username": "{{name}}",
-    "age": {{age}}
+    "username": "${name}",
+    "age": ${age}
   }
 }
 
