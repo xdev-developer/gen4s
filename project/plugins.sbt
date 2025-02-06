@@ -1,7 +1,7 @@
 addSbtPlugin("org.typelevel"      % "sbt-tpolecat"        % "0.5.2")
 addSbtPlugin("org.scalameta"      % "sbt-scalafmt"        % "2.5.4")
 addSbtPlugin("com.timushev.sbt"   % "sbt-updates"         % "0.6.4")
-addSbtPlugin("com.github.sbt"     % "sbt-native-packager" % "1.11.0")
+addSbtPlugin("com.github.sbt"     % "sbt-native-packager" % "1.11.1")
 addSbtPlugin("com.github.sbt"     % "sbt-release"         % "1.4.0")
 addSbtPlugin("pl.project13.scala" % "sbt-jmh"             % "0.4.7")
 addSbtPlugin("org.scoverage"      % "sbt-scoverage"       % "2.3.0")
