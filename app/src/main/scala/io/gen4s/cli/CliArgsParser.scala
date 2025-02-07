@@ -5,6 +5,7 @@ import java.io.File
 import scala.annotation.nowarn
 
 import cats.implicits.*
+import io.gen4s.app.build.info.BuildInfo
 import io.gen4s.conf.ExecMode
 import io.gen4s.core.generators.{GeneratedValue, Variable}
 import io.gen4s.core.Domain.*
@@ -13,7 +14,7 @@ import io.gen4s.core.InputRecord
 // $COVERAGE-OFF$
 @nowarn
 class CliArgsParser extends scopt.OptionParser[Args]("gen4s") {
-  head("Gen4s")
+  head(s"Gen4s v${BuildInfo.version}")
 
   opt[File]('c', "config")
     .required()
