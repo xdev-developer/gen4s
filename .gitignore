@@ -18,3 +18,4 @@ project/target
 *.vscode
 .bsp
 .history
+outputs/src/test/resources/person-value.desc

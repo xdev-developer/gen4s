@@ -22,6 +22,8 @@ ThisBuild / coverageExcludedPackages := ".*App.*;.*CliArgsParser.*;"
 
 ThisBuild / Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-oSID")
 
+ThisBuild / Test / parallelExecution := false
+
 lazy val core = project
   .in(file("core"))
   .settings(
@@ -80,7 +82,14 @@ lazy val outputs = project
       Dependencies.TestContainers,
       Dependencies.ScalaTest
     ),
-    Test / tpolecatExcludeOptions += ScalacOptions.warnNonUnitStatement
+    Test / tpolecatExcludeOptions += ScalacOptions.warnNonUnitStatement,
+    Test / PB.protocOptions := Seq(
+      "--include_imports",
+      "--descriptor_set_out=" + (Test / baseDirectory).value / "src" / "test" / "resources" / "person-value.desc"
+    ),
+    Test / PB.targets := Seq(
+      PB.gens.java -> (Test / sourceManaged).value
+    )
   )
   .dependsOn(core, generators)
 
