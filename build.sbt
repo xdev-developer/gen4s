@@ -102,6 +102,7 @@ lazy val benchmarks = project
 lazy val app = project
   .in(file("app"))
   .enablePlugins(JavaAppPackaging)
+  .enablePlugins(BuildInfoPlugin)
   .settings(
     name := "gen4s-app",
     libraryDependencies ++= List.concat(
@@ -121,7 +122,9 @@ lazy val app = project
     Universal / packageXzTarball / mappings ++= directory("examples"),
     Universal / packageBin / mappings := (Universal / packageXzTarball / mappings).value,
     Compile / packageDoc / mappings   := Seq(),
-    Test / tpolecatExcludeOptions += ScalacOptions.warnNonUnitStatement
+    Test / tpolecatExcludeOptions += ScalacOptions.warnNonUnitStatement,
+    buildInfoKeys    := Seq[BuildInfoKey](name, version),
+    buildInfoPackage := "io.gen4s.app.build.info"
   )
   .dependsOn(core, generators, outputs)
 
