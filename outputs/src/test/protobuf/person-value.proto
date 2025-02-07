@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option java_package = "io.gen4s.protos";
+option java_package = "io.gen4s.proto";
 
 message Person {
   string username = 1;

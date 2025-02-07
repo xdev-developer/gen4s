@@ -17,7 +17,7 @@ object Dependencies {
     val sttp              = "3.10.3"
     var refined           = "0.11.3"
     val parserCombinators = "2.4.0"
-    val csv               = "1.4.1"
+    val csv               = "2.0.0"
     val monocle           = "3.3.0"
 
     val scalaTest      = "3.2.19"
@@ -98,7 +98,7 @@ object Dependencies {
   val Scopt: Seq[ModuleID] = List("com.github.scopt" %% "scopt" % "4.1.0")
 
   val FS2Throttler: Seq[ModuleID] = List(
-    "dev.kovstas" %% "fs2-throttler" % "1.0.8"
+    "dev.kovstas" %% "fs2-throttler" % "1.0.13"
   )
 
   val Sttp: Seq[ModuleID] = List(
@@ -130,11 +130,11 @@ object Dependencies {
 
   val ProtoConverter: Seq[ModuleID] = List(
     "io.confluent"        % "kafka-protobuf-serializer" % "7.7.0",
-    "com.google.protobuf" % "protobuf-java-util"        % "3.25.5"
+    "com.google.protobuf" % "protobuf-java-util"        % "3.25.6"
   )
 
   val ScalaTest: Seq[ModuleID]      = List("org.scalatest" %% "scalatest" % V.scalaTest % Test)
-  val CatsEffectTest: Seq[ModuleID] = List("org.typelevel" %% "cats-effect-testing-scalatest" % "1.5.0" % Test)
+  val CatsEffectTest: Seq[ModuleID] = List("org.typelevel" %% "cats-effect-testing-scalatest" % "1.6.0" % Test)
 
   val TestContainers: Seq[ModuleID] = List(
     "com.dimafeng" %% "testcontainers-scala-scalatest"     % V.testContainers % Test,

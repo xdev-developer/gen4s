@@ -27,20 +27,15 @@ object TemplateBuilder {
         // Split global vars (generated once per run) vs local vars (generated for each sample)
         val (global, local) = generators.partition(g => globalVariables.contains(g.variable))
 
+        // Generate global vars once
+        val globalValues: Map[Variable, GeneratedValue] = global.map(g => g.variable -> g.gen()).toMap
+
         // Filter out/replace locals with user input records, so input records has higher priority
         val userInputVars = userInput.keys.toList
         val toGenerate    = local.filterNot(g => userInputVars.contains(g.variable))
 
-        // Generate global vars
-        val globalValues: Map[Variable, GeneratedValue] =
-          generators
-            .filter(s => globalVariables.contains(s.variable))
-            .map(g => g.variable -> g.gen())
-            .toMap
-
-        sourceTemplates.toList.map(source =>
-          TextTemplate(source, TemplateContext(globalValues ++ userInput, toGenerate), transformers)
-        )
+        sourceTemplates.toList
+          .map(source => TextTemplate(source, TemplateContext(globalValues ++ userInput, toGenerate), transformers))
       }
     }
   }
@@ -63,11 +58,7 @@ object TemplateBuilder {
         val toGenerate       = local.filterNot(g => inputRecordsVars.contains(g.variable))
 
         // Generate global vars
-        val globalValues: Map[Variable, GeneratedValue] =
-          generators
-            .filter(s => globalVariables.contains(s.variable))
-            .map(g => g.variable -> g.gen())
-            .toMap
+        val globalValues: Map[Variable, GeneratedValue] = global.map(g => g.variable -> g.gen()).toMap
 
         (for {
           r      <- recordsStream

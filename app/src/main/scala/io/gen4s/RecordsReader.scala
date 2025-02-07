@@ -2,8 +2,6 @@ package io.gen4s
 
 import java.io.File
 
-import com.github.tototoshi.csv.CSVReader
-
 import cats.effect.kernel.{Resource, Sync}
 import io.circe.Json
 import io.gen4s.core.generators.{GeneratedValue, Variable}
@@ -38,7 +36,7 @@ object RecordsReader {
      * @return a list of InputRecord
      */
     override def read(file: File): F[List[InputRecord]] = {
-      import com.github.tototoshi.csv.defaultCSVFormat
+      import com.github.tototoshi.csv._
       val F = Sync[F]
 
       Resource

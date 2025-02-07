@@ -68,7 +68,7 @@ object App extends IOApp {
     for {
       conf     <- ScenarioConfigLoader.fromFile[F](args.configFile).withEnvProfile(envVarsProfile)
       executor <- ScenarioExecutor.make[F](args, conf, envVarsProfile)
-      _        <- Async[F].whenA(args.mode === ExecMode.RunScenario)(executor.exec())
+      _        <- executor.exec()
     } yield ()
   }
 
