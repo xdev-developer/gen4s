@@ -38,7 +38,7 @@ class KafkaOutputStreamTest
     kafka
   }
 
-  private val template = SourceTemplate("timestamp: {{ts}}")
+  private val template = SourceTemplate("timestamp: ${ts}")
 
   implicit def logger[F[_]: Sync]: Logger[F] = Slf4jLogger.getLogger[F]
 
@@ -92,7 +92,7 @@ class KafkaOutputStreamTest
     }
 
     it("Decode input as key-value message") {
-      val kvTemplate = SourceTemplate("""{ "key": "my-key", "value": { "timestamp": {{ts}} } }""")
+      val kvTemplate = SourceTemplate("""{ "key": "my-key", "value": { "timestamp": ${ts} } }""")
       withContainers { kafka =>
         val streams = OutputStreamExecutor.make[IO]()
         val builder = TemplateBuilder.make(

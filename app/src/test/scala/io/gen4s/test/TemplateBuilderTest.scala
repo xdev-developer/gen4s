@@ -20,7 +20,7 @@ class TemplateBuilderTest extends AnyFunSpec with Matchers with EitherValues wit
   describe("Template builder") {
 
     it("Build text template") {
-      val sourceTemplate = SourceTemplate(s""""hello": {{test}}""")
+      val sourceTemplate = SourceTemplate(""""hello": ${test}""")
       val tsGenerator    = TimestampGenerator(testV)
 
       val builder = TemplateBuilder.make(
@@ -39,7 +39,7 @@ class TemplateBuilderTest extends AnyFunSpec with Matchers with EitherValues wit
     }
 
     it("Build template with global variables") {
-      val sourceTemplate = SourceTemplate(s""""hello": {{test}}""")
+      val sourceTemplate = SourceTemplate(""""hello": ${test}""")
       val tsGenerator    = TimestampGenerator(testV)
 
       val builder = TemplateBuilder.make(
@@ -62,7 +62,7 @@ class TemplateBuilderTest extends AnyFunSpec with Matchers with EitherValues wit
     }
 
     it("Build template from records stream") {
-      val sourceTemplate = SourceTemplate(s"""{ "ts": {{test}}, "username": "{{name}}" }""")
+      val sourceTemplate = SourceTemplate("""{ "ts": ${test}, "username": "${name}" }""")
       val tsGenerator    = TimestampGenerator(testV)
 
       val builder = TemplateBuilder.ofRecordsStream(
@@ -91,7 +91,7 @@ class TemplateBuilderTest extends AnyFunSpec with Matchers with EitherValues wit
     }
 
     it("Build template with user input") {
-      val sourceTemplate = SourceTemplate(s""""hello": {{test}}, "event_id":{{id}} """)
+      val sourceTemplate = SourceTemplate(""""hello": ${test}, "event_id":${id} """)
       val tsGenerator    = TimestampGenerator(testV)
 
       val builder = TemplateBuilder.make(

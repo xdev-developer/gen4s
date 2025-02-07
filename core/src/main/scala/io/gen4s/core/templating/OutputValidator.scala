@@ -23,12 +23,26 @@ object OutputValidator extends Enum[OutputValidator] with CirceEnum[OutputValida
   }
 
   case object MissingVars extends OutputValidator("missing-vars") {
-    private val varPattern = "\\{\\{[\\w.-]+}}".r
+    private val varPattern = "\\$\\{[\\w.-]+}".r
 
     override def validate(template: RenderedTemplate): Validated[String, Unit] = {
       varPattern
         .findFirstIn(template.asString)
         .map(v => s"Found unresolved variable: $v".invalid[Unit])
+        .getOrElse(().valid[String])
+    }
+  }
+
+  case object OldStyleVars extends OutputValidator("old-style-vars") {
+    private val varPattern = "\\{\\{[\\w.-]+}}".r
+
+    override def validate(template: RenderedTemplate): Validated[String, Unit] = {
+      varPattern
+        .findFirstIn(template.asString)
+        .map(v =>
+          s"Found old style variable: $v, please migrate your template to use new $${variable-name} variable substitution format."
+            .invalid[Unit]
+        )
         .getOrElse(().valid[String])
     }
   }

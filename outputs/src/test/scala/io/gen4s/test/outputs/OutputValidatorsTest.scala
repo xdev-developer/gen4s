@@ -25,7 +25,7 @@ class OutputValidatorsTest extends AsyncFreeSpec with AsyncIOSpec with Matchers 
 
   }
 
-  "Output Validator Vars" - {
+  "Output Validator Missing Vars" - {
 
     "return valid for json template" in {
       OutputValidator.MissingVars
@@ -35,7 +35,24 @@ class OutputValidatorsTest extends AsyncFreeSpec with AsyncIOSpec with Matchers 
 
     "return error for invalid json template" in {
       OutputValidator.MissingVars
-        .validate(RenderedTemplate("""{"key": {{variable}}}"""))
+        .validate(RenderedTemplate("""{"key": ${variable}}"""))
+        .isValid shouldBe false
+
+    }
+
+  }
+
+  "Output Validator Old Style Vars" - {
+
+    "return valid for json template" in {
+      OutputValidator.OldStyleVars
+        .validate(RenderedTemplate("""{"key": ${variable} }"""))
+        .isValid shouldBe true
+    }
+
+    "return error for invalid json template" in {
+      OutputValidator.OldStyleVars
+        .validate(RenderedTemplate("""{"key": {{variable}} }"""))
         .isValid shouldBe false
 
     }

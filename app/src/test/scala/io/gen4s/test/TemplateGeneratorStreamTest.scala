@@ -24,7 +24,7 @@ class TemplateGeneratorStreamTest extends AsyncFunSpec with AsyncIOSpec with Mat
   describe("Generator Stream") {
 
     it("Run simple generation stream") {
-      val sourceTemplate = SourceTemplate("timestamp: {{ts}}")
+      val sourceTemplate = SourceTemplate("timestamp: ${ts}")
       val tsGenerator    = TimestampGenerator(timestampV)
 
       val tc = TemplateBuilder.make(
@@ -51,7 +51,7 @@ class TemplateGeneratorStreamTest extends AsyncFunSpec with AsyncIOSpec with Mat
     }
 
     it("Support global variables") {
-      val sourceTemplate    = SourceTemplate("username: {{name}}")
+      val sourceTemplate    = SourceTemplate("username: ${name}")
       val usernameGenerator = StringPatternGenerator(nameV, pattern = NonEmptyString.unsafeFrom("user-###"))
 
       val tc = TemplateBuilder.make(
