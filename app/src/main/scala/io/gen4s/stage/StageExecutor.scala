@@ -57,10 +57,11 @@ object StageExecutor {
 
         private def validate(builder: TemplateBuilder, validators: Set[OutputValidator]): F[Unit] = {
           val templates = builder.build().map(_.render())
-          val errors = validators
+          val errors = (validators + OutputValidator.OldStyleVars)
             .flatMap {
-              case OutputValidator.MissingVars => templates.map(OutputValidator.MissingVars.validate)
-              case OutputValidator.JSON        => templates.map(OutputValidator.JSON.validate)
+              case OutputValidator.MissingVars  => templates.map(OutputValidator.MissingVars.validate)
+              case OutputValidator.JSON         => templates.map(OutputValidator.JSON.validate)
+              case OutputValidator.OldStyleVars => templates.map(OutputValidator.OldStyleVars.validate)
             }
             .filter(_.isInvalid)
 
