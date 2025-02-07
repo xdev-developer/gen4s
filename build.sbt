@@ -83,6 +83,10 @@ lazy val outputs = project
       Dependencies.ScalaTest
     ),
     Test / tpolecatExcludeOptions += ScalacOptions.warnNonUnitStatement,
+    Test / PB.protocOptions := Seq(
+      "--include_imports",
+      "--descriptor_set_out=" + (Test / baseDirectory).value / "src" / "test" / "resources" / "person-value.desc"
+    ),
     Test / PB.targets := Seq(
       PB.gens.java -> (Test / sourceManaged).value
     )
