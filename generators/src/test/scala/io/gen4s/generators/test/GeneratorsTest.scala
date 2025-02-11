@@ -106,6 +106,18 @@ class GeneratorsTest extends AnyFunSpec with Matchers with EitherValues {
       )
     }
 
+    it("GUID generator") {
+      val g = GuidGenerator(testV)
+      val r = g.gen().as[String].value
+
+      info(s"Generated result: $r")
+
+      testCodec[GuidGenerator](
+        s""" { "variable": "${testV.value}", "type": "${Generators.GUID.entryName}"}""",
+        g
+      )
+    }
+
     it("Static value generator") {
       val g = StaticValueGenerator(testV, Json.fromString("hello"))
       val r = g.gen().as[String].value

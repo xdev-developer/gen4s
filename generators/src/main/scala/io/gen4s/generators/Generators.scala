@@ -24,6 +24,7 @@ object Generators extends Enum[Generators] {
   case object Double  extends Generators("double")
 
   case object UUID extends Generators("uuid")
+  case object GUID extends Generators("guid")
 
   case object String  extends Generators("string")
   case object Static  extends Generators("static")
@@ -33,5 +34,4 @@ object Generators extends Enum[Generators] {
 
   case object Ip  extends Generators("ip")
   case object Mac extends Generators("mac")
-
 }

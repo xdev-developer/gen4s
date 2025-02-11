@@ -49,6 +49,7 @@ lazy val generators = project
     libraryDependencies ++= List.concat(
       Dependencies.Cats,
       Dependencies.ParserCombinators,
+      Dependencies.Ride,
       Dependencies.ScalaTest,
       Dependencies.CatsEffectTest
     ),
