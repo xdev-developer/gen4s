@@ -4,7 +4,7 @@ package impl
 
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
-import java.time.LocalDateTime
+import java.time.ZonedDateTime
 
 import io.circe.derivation.ConfiguredCodec
 import io.gen4s.core.generators.*
@@ -22,7 +22,7 @@ final case class DatetimeGenerator(
   private val defaultFormat: String = "MM/dd/yyyy"
 
   override def gen(): GeneratedValue = {
-    val dt = LocalDateTime
+    val dt = ZonedDateTime
       .now()
       .plus(shiftSeconds.getOrElse(0L), ChronoUnit.SECONDS)
       .plus(shiftDays.getOrElse(0L), ChronoUnit.DAYS)
