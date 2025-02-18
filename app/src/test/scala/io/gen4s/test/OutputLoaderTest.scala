@@ -42,7 +42,7 @@ class OutputLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
 
     "Load kafka output" in
       load[IO]("""
-        writer: { 
+        writer: {
           type = kafka-output
           topic = test
           bootstrap-servers = "localhost:9092"
@@ -51,7 +51,7 @@ class OutputLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
           }
           batch-size = 1000
           decode-input-as-key-value = true
-          
+
           producer-config {
             compression-type = gzip
             in-flight-requests =  1
@@ -76,7 +76,7 @@ class OutputLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
 
     "Load http output" in
       load[IO]("""
-        writer: { 
+        writer: {
           type: http-output
           url: "http://example.com"
           method: POST
@@ -103,7 +103,7 @@ class OutputLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
 
     "Load file system output" in
       load[IO]("""
-        writer: { 
+        writer: {
           type: fs-output
           dir: "/tmp"
           filename-pattern: "my-cool-logs-%s.txt"
@@ -120,7 +120,7 @@ class OutputLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
 
     "Load s3 output" in
       load[IO]("""
-        writer: { 
+        writer: {
           type: s-3-output
           bucket: "test-bucket"
           key: "key-%s.json"
@@ -128,7 +128,7 @@ class OutputLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
           endpoint: "http://localhost:4566"
           part-size-mb: 5
        }
-      
+
        transformers = []
        validators = []
        """.stripMargin)
