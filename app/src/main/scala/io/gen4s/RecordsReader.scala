@@ -3,10 +3,8 @@ package io.gen4s
 import java.io.File
 
 import cats.effect.kernel.{Resource, Sync}
-import io.circe.Json
 import io.gen4s.core.generators.{GeneratedValue, Variable}
 import io.gen4s.core.InputRecord
-import io.gen4s.generators.impl.StaticValueGenerator
 
 /**
  * A trait that defines the method for reading records from a file.
@@ -27,8 +25,6 @@ object RecordsReader {
    */
   def make[F[_]: Sync](): RecordsReader[F] = new RecordsReader[F] {
 
-    private val noneV = Variable("_")
-
     /**
      * Reads records from a CSV file and converts them to a list of InputRecord.
      *
@@ -47,7 +43,7 @@ object RecordsReader {
               .allWithHeaders()
               .map[InputRecord] { fields =>
                 val recordFields: Map[Variable, GeneratedValue] = fields.map { case (k, v) =>
-                  Variable(k) -> StaticValueGenerator(noneV, Json.fromString(v)).gen()
+                  Variable(k) -> GeneratedValue.fromString(v)
                 }
 
                 InputRecord(recordFields)

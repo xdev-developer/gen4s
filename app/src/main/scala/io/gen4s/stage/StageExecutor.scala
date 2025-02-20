@@ -102,6 +102,7 @@ object StageExecutor {
                                      NonEmptyList.fromListUnsafe(recordsStream),
                                      schema.generators,
                                      conf.input.globalVars,
+                                     args.userInput.map(_.fields).getOrElse(Map.empty[Variable, GeneratedValue]),
                                      conf.output.transformers
                                    )
                                  }
