@@ -6,11 +6,10 @@ import org.scalatest.matchers.should.Matchers
 
 import cats.data.NonEmptyList
 import cats.implicits.*
-import io.circe.Json
 import io.gen4s.core.generators.{GeneratedValue, Variable}
 import io.gen4s.core.templating.*
 import io.gen4s.core.InputRecord
-import io.gen4s.generators.impl.{StaticValueGenerator, TimestampGenerator}
+import io.gen4s.generators.impl.TimestampGenerator
 
 class TemplateBuilderTest extends AnyFunSpec with Matchers with EitherValues with OptionValues {
 
@@ -70,7 +69,7 @@ class TemplateBuilderTest extends AnyFunSpec with Matchers with EitherValues wit
         generators = List(tsGenerator),
         globalVariables = Set(testV),
         recordsStream = NonEmptyList
-          .one(InputRecord.of(nameV, StaticValueGenerator(nameV, Json.fromString("Den")).gen()))
+          .one(InputRecord.of(nameV, GeneratedValue.fromString("Den")))
       )
 
       val result = builder.build()
@@ -112,6 +111,37 @@ class TemplateBuilderTest extends AnyFunSpec with Matchers with EitherValues wit
           val rendered = template.render().value
           info(rendered)
           rendered should include(""""event_id":12345""")
+        case _ => fail()
+      }
+    }
+
+    it("Build template from records stream and user input") {
+      val sourceTemplate = SourceTemplate("""{ "ts": ${test}, "id": ${id}, "username": "${name}" }""")
+      val tsGenerator    = TimestampGenerator(testV)
+
+      val builder = TemplateBuilder.ofRecordsStream(
+        sourceTemplates = NonEmptyList.one(sourceTemplate),
+        generators = List(tsGenerator),
+        globalVariables = Set(testV),
+        userInput = Map(Variable("id") -> GeneratedValue.fromInt(12345)),
+        recordsStream = NonEmptyList
+          .one(InputRecord.of(nameV, GeneratedValue.fromString("Den")))
+      )
+
+      val result = builder.build()
+      result should not be empty
+      val head = result.headOption.value
+      head shouldBe an[TextTemplate]
+      head match {
+        case template: TextTemplate =>
+          val rendered = template.render().asPrettyString
+          info(rendered)
+
+          rendered should include(""""username" : "Den"""")
+          rendered should include(""""id" : 12345""")
+          template.source shouldBe sourceTemplate
+          template.context.globalValues should not be empty
+          template.context.generators shouldBe empty
         case _ => fail()
       }
     }

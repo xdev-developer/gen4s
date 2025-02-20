@@ -45,6 +45,7 @@ object TemplateBuilder {
     recordsStream: NonEmptyList[InputRecord],
     generators: List[Generator] = List.empty[Generator],
     globalVariables: Set[Variable] = Set.empty[Variable],
+    userInput: Map[Variable, GeneratedValue] = Map.empty[Variable, GeneratedValue],
     transformers: Set[OutputTransformer] = Set.empty[OutputTransformer]
   ): TemplateBuilder = {
     new TemplateBuilder() {
@@ -55,7 +56,11 @@ object TemplateBuilder {
 
         // Filter out/replace locals with records in records stream (csv), so input records has higher priority
         val inputRecordsVars = recordsStream.toList.flatMap(_.fields.keys)
-        val toGenerate       = local.filterNot(g => inputRecordsVars.contains(g.variable))
+        val userInputVars    = userInput.keys.toList
+
+        val toGenerate = local
+          .filterNot(g => inputRecordsVars.contains(g.variable))
+          .filterNot(g => userInputVars.contains(g.variable))
 
         // Generate global vars
         val globalValues: Map[Variable, GeneratedValue] = global.map(g => g.variable -> g.gen()).toMap
@@ -63,7 +68,11 @@ object TemplateBuilder {
         (for {
           r      <- recordsStream
           source <- sourceTemplates
-        } yield TextTemplate(source, TemplateContext(globalValues ++ r.fields, toGenerate), transformers)).toList
+        } yield TextTemplate(
+          source,
+          TemplateContext(globalValues ++ r.fields ++ userInput, toGenerate),
+          transformers
+        )).toList
 
       }
     }
