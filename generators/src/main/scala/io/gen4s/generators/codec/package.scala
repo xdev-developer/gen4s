@@ -31,6 +31,7 @@ package object codec {
     case g: EnumGenerator          => withType(g.asJson, Generators.Enum)
     case g: ListGenerator          => withType(g.asJson, Generators.List)
     case g: MacAddressGenerator    => withType(g.asJson, Generators.Mac)
+    case g: GuidGenerator          => withType(g.asJson, Generators.GUID)
   }
 
   given Decoder[Generator] = (cursor: HCursor) =>
@@ -48,6 +49,7 @@ package object codec {
                   case Generators.Double  => cursor.as[DoubleNumberGenerator]
 
                   case Generators.UUID => cursor.as[UuidGenerator]
+                  case Generators.GUID => cursor.as[GuidGenerator]
 
                   case Generators.String  => cursor.as[StringGenerator]
                   case Generators.Static  => cursor.as[StaticValueGenerator]

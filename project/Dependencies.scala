@@ -19,6 +19,7 @@ object Dependencies {
     val parserCombinators = "2.4.0"
     val csv               = "2.0.0"
     val monocle           = "3.3.0"
+    val Ride              = "1.2.0"
 
     val scalaTest      = "3.2.19"
     val testContainers = "0.41.8"
@@ -67,6 +68,10 @@ object Dependencies {
 
   val Fs2S3: Seq[ModuleID] = List(
     "io.laserdisc" %% "fs2-aws-s3" % "6.2.0"
+  )
+
+  val Ride: Seq[ModuleID] = List(
+    "com.github.kolotaev" %% "ride" % V.Ride
   )
 
   val CirceCore    = circe("core")
