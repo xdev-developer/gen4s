@@ -3,11 +3,13 @@
   "flag-field": ${flag},
   "static-field": "${static}",
   "date-field": "${date}",
+  "date-time-field": "${date-time}",
   "pattern-field": "${pattern}",
   "int-field": ${test-int},
   "double-field": ${test-double},
   "string-field": "${test-string}",
   "uuid-field": "${test-uuid}",
+  "guid-field": "${test-guid}",
   "enum-field": "${test-enum}",
   "env-field": "${test-var}",
   "list-field": ${test-list}

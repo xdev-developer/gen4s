@@ -505,6 +505,14 @@ This sampler can be used like template constant (static value).
 
 
 
+### GUID field generator using [Ride](https://github.com/kolotaev/ride).
+
+```json
+{ "variable": "test-guid", "type": "guid" }
+```
+
+
+
 ### Ip address generator
 
 ```json
