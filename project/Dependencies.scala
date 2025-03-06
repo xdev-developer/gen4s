@@ -26,7 +26,7 @@ object Dependencies {
 
     val betterMonadicFor = "0.3.1"
     val kindProjector    = "0.13.2"
-    val logback          = "1.5.16"
+    val logback          = "1.5.17"
   }
 
   val Cats: Seq[ModuleID] = List(
