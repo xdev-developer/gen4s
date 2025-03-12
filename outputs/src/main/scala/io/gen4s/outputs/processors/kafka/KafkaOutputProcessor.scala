@@ -7,7 +7,6 @@ import cats.implicits.*
 import cats.Applicative
 import io.gen4s.core.templating.Template
 import io.gen4s.core.Domain
-import io.gen4s.core.Domain.NumberOfSamplesToGenerate
 import io.gen4s.outputs.processors.OutputProcessor
 import io.gen4s.outputs.KafkaOutput
 

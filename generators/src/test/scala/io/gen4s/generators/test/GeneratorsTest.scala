@@ -4,8 +4,6 @@ import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.EitherValues
 
-import scala.annotation.nowarn
-
 import cats.data.NonEmptyList
 import io.circe.{Decoder, Json}
 import io.circe.parser.*
@@ -206,7 +204,6 @@ class GeneratorsTest extends AnyFunSpec with Matchers with EitherValues {
       )
     }
 
-    @nowarn
     def testCodec[T: Decoder](json: String, expected: T) = {
       decode[T](json).value shouldBe expected
       decode[Generator](json).value shouldBe expected

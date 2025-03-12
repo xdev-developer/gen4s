@@ -7,10 +7,8 @@ import cats.effect.kernel.Sync
 import cats.effect.testing.scalatest.AsyncIOSpec
 import cats.effect.IO
 import io.gen4s.conf.*
-import io.gen4s.conf.OutputConfig
 import io.gen4s.core.Domain
 import io.gen4s.outputs.*
-import io.gen4s.outputs.StdOutput
 
 import eu.timepit.refined.types.numeric.PosInt
 import eu.timepit.refined.types.string.NonEmptyString
@@ -21,7 +19,6 @@ class OutputLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
 
   private def load[F[_]: Sync](str: String): F[OutputConfig] = {
     import pureconfig.*
-    import pureconfig.ConfigSource
     import pureconfig.module.catseffect.syntax.*
 
     ConfigSource

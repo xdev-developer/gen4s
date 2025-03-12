@@ -17,7 +17,7 @@ class StageExecutorTest extends AsyncFunSpec with AsyncIOSpec with Matchers {
 
   private val numSamples = NumberOfSamplesToGenerate(1)
 
-  implicit def unsafeLogger[F[_]: Sync]: SelfAwareStructuredLogger[F] = Slf4jLogger.getLogger[F]
+  given unsafeLogger[F[_]: Sync]: SelfAwareStructuredLogger[F] = Slf4jLogger.getLogger[F]
 
   private val executor = StageExecutor.make[IO](
     name = "Playground",
