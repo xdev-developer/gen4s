@@ -26,7 +26,7 @@ class ScenarioLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers wi
 
   "Scenario config loader" - {
 
-    "Load std output" in
+    "Load simple scenario" in
       load[IO]("""stages: [
                  | { name: "My cool stage", samples: 1, config-file: "/tmp/file", delay: 5 seconds }
                  |]""".stripMargin)
@@ -38,5 +38,27 @@ class ScenarioLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers wi
           stages.headOption.flatMap(_.delay).value shouldBe FiniteDuration(5, TimeUnit.SECONDS)
         }
   }
+
+  "Load scenario with overrides" in
+    load[IO](
+      """stages: [
+        | { name: "My cool stage", samples: 1, config-file: "/tmp/file", delay: 5 seconds, overrides: { key: "value" } }
+        |]""".stripMargin
+    )
+      .asserting { out =>
+        val stages = out.stages.toList
+        stages.headOption.flatMap(_.overrides).value shouldBe Map("key" -> Some("value"))
+      }
+
+  "Support null value in overrides" in
+    load[IO](
+      """stages: [
+        | { name: "My cool stage", samples: 1, config-file: "/tmp/file", delay: 5 seconds, overrides: { key: null } }
+        |]""".stripMargin
+    )
+      .asserting { out =>
+        val stages = out.stages.toList
+        stages.headOption.flatMap(_.overrides).value shouldBe Map("key" -> None)
+      }
 
 }
