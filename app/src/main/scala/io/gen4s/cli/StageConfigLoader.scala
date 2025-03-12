@@ -19,7 +19,6 @@ object StageConfigLoader {
 
     override def withEnvProfile(profileConf: EnvProfileConfig): F[StageConfig] = {
       import pureconfig.*
-      import pureconfig.ConfigSource
       import pureconfig.module.catseffect.syntax.*
 
       ConfigSource

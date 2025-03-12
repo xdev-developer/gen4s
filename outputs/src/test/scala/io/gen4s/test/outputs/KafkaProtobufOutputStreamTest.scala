@@ -33,7 +33,7 @@ class KafkaProtobufOutputStreamTest
 
   override val container: MultipleContainers = MultipleContainers(kafkaContainer, schemaRegistryContainer)
 
-  implicit def logger[F[_]: Sync]: Logger[F] = Slf4jLogger.getLogger[F]
+  given logger[F[_]: Sync]: Logger[F] = Slf4jLogger.getLogger[F]
 
   private def kafka = bootstrapServers
   private val n     = NumberOfSamplesToGenerate(5)

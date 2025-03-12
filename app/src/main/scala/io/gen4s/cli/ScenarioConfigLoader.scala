@@ -16,7 +16,6 @@ object ScenarioConfigLoader {
 
     override def withEnvProfile(profileConf: EnvProfileConfig): F[ScenarioConfig] = {
       import pureconfig.*
-      import pureconfig.ConfigSource
       import pureconfig.module.catseffect.syntax.*
 
       ConfigSource

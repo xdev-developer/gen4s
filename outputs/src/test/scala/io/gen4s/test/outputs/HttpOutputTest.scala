@@ -19,7 +19,7 @@ class HttpOutputTest extends AsyncFunSpec with AsyncIOSpec with Matchers {
 
   private val template = SourceTemplate("{ timestamp: {{ts}} }")
 
-  implicit def logger[F[_]: Sync]: Logger[F] = Slf4jLogger.getLogger[F]
+  given logger[F[_]: Sync]: Logger[F] = Slf4jLogger.getLogger[F]
 
   describe("Http Output") {
 

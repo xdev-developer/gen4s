@@ -21,7 +21,7 @@ class ScenarioExecutorTest extends AsyncFunSpec with AsyncIOSpec with Matchers {
 
   private val numSamples = NumberOfSamplesToGenerate(5)
 
-  implicit def unsafeLogger[F[_]: Sync]: SelfAwareStructuredLogger[F] = Slf4jLogger.getLogger[F]
+  given unsafeLogger[F[_]: Sync]: SelfAwareStructuredLogger[F] = Slf4jLogger.getLogger[F]
 
   describe("Generator Stream") {
 

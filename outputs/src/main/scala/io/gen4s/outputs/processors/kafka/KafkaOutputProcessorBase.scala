@@ -11,7 +11,7 @@ import io.gen4s.core.Domain
 import io.gen4s.core.Domain.{BootstrapServers, NumberOfSamplesToGenerate}
 import io.gen4s.outputs.{KafkaOutputBase, KafkaProducerConfig}
 
-import fs2.kafka.{Acks, KeySerializer, ProducerRecord, ProducerRecords, ProducerSettings, ValueSerializer}
+import fs2.kafka.{Acks, KeySerializer, ProducerRecord, ProducerSettings, ValueSerializer}
 import fs2.Chunk
 import me.tongfei.progressbar.{ProgressBarBuilder, ProgressBarStyle}
 

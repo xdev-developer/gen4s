@@ -12,8 +12,6 @@ import org.typelevel.log4cats.Logger
 
 import com.dimafeng.testcontainers.{ForEachTestContainer, MultipleContainers}
 
-import scala.annotation.nowarn
-
 import cats.data.NonEmptyList
 import cats.effect.{IO, Sync}
 import cats.effect.unsafe.implicits.global
@@ -33,7 +31,6 @@ import io.gen4s.outputs.avro.SchemaLoader
 import eu.timepit.refined.types.string.NonEmptyString
 import vulcan.{AvroException, Codec}
 
-@nowarn
 class KafkaAvroOutputStreamTest
     extends AnyFunSpec
     with Matchers
@@ -44,7 +41,7 @@ class KafkaAvroOutputStreamTest
 
   override val container: MultipleContainers = MultipleContainers(kafkaContainer, schemaRegistryContainer)
 
-  implicit def logger[F[_]: Sync]: Logger[F] = Slf4jLogger.getLogger[F]
+  given logger[F[_]: Sync]: Logger[F] = Slf4jLogger.getLogger[F]
 
   private val n            = NumberOfSamplesToGenerate(1)
   private def kafkaServers = bootstrapServers

@@ -17,7 +17,7 @@ import pureconfig.error.ConfigReaderException
 // $COVERAGE-OFF$
 object App extends IOApp {
 
-  implicit def unsafeLogger[F[_]: Sync]: SelfAwareStructuredLogger[F] = Slf4jLogger.getLogger[F]
+  given unsafeLogger[F[_]: Sync]: SelfAwareStructuredLogger[F] = Slf4jLogger.getLogger[F]
 
   override def run(args: List[String]): IO[ExitCode] =
     new CliArgsParser().parse(args, Args()) match {
