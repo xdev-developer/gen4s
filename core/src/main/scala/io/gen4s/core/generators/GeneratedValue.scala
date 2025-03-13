@@ -14,6 +14,7 @@ object GeneratedValue {
   def fromInt(v: Int): GeneratedValue            = GeneratedValue(Json.fromInt(v))
   def fromDecimal(v: BigDecimal): GeneratedValue = GeneratedValue(Json.fromBigDecimal(v))
   def fromSeq(v: Seq[Json]): GeneratedValue      = GeneratedValue(Json.arr(v*))
+  def nullValue(): GeneratedValue                = GeneratedValue(Json.Null)
 
   extension (gv: GeneratedValue) {
     inline def as[T](using d: Decoder[T]): Result[T] = v.as[T]

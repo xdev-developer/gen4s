@@ -17,12 +17,14 @@ final case class StageInput(
   samples: NumberOfSamplesToGenerate = NumberOfSamplesToGenerate(1),
   configFile: File,
   delay: Option[FiniteDuration],
-  overrides: Option[Map[String, String]])
+  overrides: Option[Map[String, Option[String]]])
     derives ConfigReader {
 
   def overridesInput: Option[InputRecord] = {
     overrides.map { o =>
-      InputRecord(o.map { case (k, v) => Variable(k) -> GeneratedValue.fromString(v) })
+      InputRecord(o.map { case (k, v) =>
+        Variable(k) -> v.map(GeneratedValue.fromString).getOrElse(GeneratedValue.nullValue())
+      })
     }
   }
 }
