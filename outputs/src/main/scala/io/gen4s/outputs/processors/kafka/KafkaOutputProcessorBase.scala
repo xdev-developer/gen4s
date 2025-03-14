@@ -58,8 +58,8 @@ trait KafkaOutputProcessorBase {
     flow: fs2.Stream[F, Template],
     output: KafkaOutputBase,
     producerSettings: ProducerSettings[F, K, V],
-    kvFun: (RenderedTemplate, RenderedTemplate) => F[ProducerRecord[K, V]],
-    vFun: RenderedTemplate => F[ProducerRecord[K, V]]
+    keyValueMapper: (RenderedTemplate, RenderedTemplate) => F[ProducerRecord[K, V]],
+    valueMapper: RenderedTemplate => F[ProducerRecord[K, V]]
   ): F[Unit] = {
 
     val groupSize = if (output.batchSize.value < n.value) output.batchSize.value else n.value
@@ -71,13 +71,13 @@ trait KafkaOutputProcessorBase {
           .map { value =>
             if (output.decodeInputAsKeyValue) {
               value.render().asKeyValue match {
-                case Right((key, v)) => kvFun(key, v)
+                case Right((key, v)) => keyValueMapper(key, v)
                 case Left(ex) =>
                   Async[F].raiseError(ParsingFailure(s"Template key/value parsing failure: ${ex.message}", ex))
               }
 
             } else { // No key usage
-              vFun(value.render())
+              valueMapper(value.render())
             }
           }
           .sequence

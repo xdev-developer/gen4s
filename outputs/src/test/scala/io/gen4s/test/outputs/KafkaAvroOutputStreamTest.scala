@@ -402,7 +402,6 @@ class KafkaAvroOutputStreamTest
 
       error.getMessage shouldBe """Schema parsing error: Record has no fields: {"type":"record","name":"PersonKey","namespace":"io.gen4s"}"""
     }
-
   }
 
 }

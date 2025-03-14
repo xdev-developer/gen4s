@@ -19,7 +19,6 @@ import fs2.kafka.vulcan.{AvroSettings, SchemaRegistryClient}
 import vulcan.Avro
 import vulcan.Codec.Aux
 
-@SuppressWarnings(Array("org.wartremover.warts.Null"))
 class KafkaAvroOutputProcessor[F[_]: Async: Logger]
     extends OutputProcessor[F, KafkaAvroOutput]
     with KafkaOutputProcessorBase {
@@ -68,8 +67,8 @@ class KafkaAvroOutputProcessor[F[_]: Async: Logger]
           flow,
           output,
           producerSettings,
-          kvFun = (key, v) => produce(AvroDynamicKey(key.asByteArray), AvroDynamicValue(v.asByteArray)),
-          vFun = v => produce(AvroDynamicKey(null), AvroDynamicValue(v.asByteArray))
+          keyValueMapper = (key, v) => produce(AvroDynamicKey(key.asByteArray), AvroDynamicValue(v.asByteArray)),
+          valueMapper = v => produce(AvroDynamicKey.none, AvroDynamicValue(v.asByteArray))
         )
       }
   }
@@ -113,14 +112,7 @@ class KafkaAvroOutputProcessor[F[_]: Async: Logger]
           .avroSerializer[AvroDynamicKey]
           .forKey[F](avroSettings)
 
-      case None =>
-        // Pass key as is without Avro encoding
-        given Serializer[F, AvroDynamicKey] = Serializer
-          .instance[F, AvroDynamicKey] { (_, _, key) =>
-            Applicative[F].pure(key.bytes)
-          }
-
-        Resource.pure(Serializer[F, AvroDynamicKey])
+      case None => Resource.pure(Serializer.asNull[F, AvroDynamicKey])
     }
   }
 }
