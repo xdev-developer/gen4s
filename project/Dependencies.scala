@@ -22,7 +22,7 @@ object Dependencies {
     val Ride              = "1.2.0"
 
     val scalaTest      = "3.2.19"
-    val testContainers = "0.41.8"
+    val testContainers = "0.43.0"
 
     val betterMonadicFor = "0.3.1"
     val kindProjector    = "0.13.2"
