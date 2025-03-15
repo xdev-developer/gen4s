@@ -113,6 +113,31 @@ class KafkaOutputStreamTest
         }
       }
     }
+
+    it("Send tombstone records to kafka topic") {
+      val kvTemplate = SourceTemplate("""{ "key": "my-key", "value": { "timestamp": ${ts} } }""")
+      withContainers { kafka =>
+        val streams = OutputStreamExecutor.make[IO]()
+        val builder = TemplateBuilder.make(
+          NonEmptyList.one(kvTemplate),
+          List(TimestampGenerator(Variable("ts")))
+        )
+
+        val output =
+          KafkaOutput(
+            Topic("test-topic-kv"),
+            BootstrapServers(kafka.bootstrapServers),
+            decodeInputAsKeyValue = true,
+            writeTombstoneRecord = true
+          )
+
+        val n = NumberOfSamplesToGenerate(10)
+
+        (for {
+          _ <- streams.write(n, GeneratorStream.stream[IO](n, builder), output)
+        } yield true).assertNoException
+      }
+    }
   }
 
 }

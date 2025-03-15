@@ -16,11 +16,9 @@ object AvroCodec {
   def keyCodec(recordSchema: Schema): Aux[Avro.Record, AvroDynamicKey] = {
     val converter = new JsonAvroConverter()
 
-    def encoder(p: AvroDynamicKey): Either[AvroError, Avro.Record] = {
+    def encoder(key: AvroDynamicKey): Either[AvroError, Avro.Record] = {
       Either
-        .catchNonFatal(
-          converter.convertToGenericDataRecord(Option(p).getOrElse(AvroDynamicKey.empty).bytes, recordSchema)
-        )
+        .catchNonFatal(converter.convertToGenericDataRecord(key.bytes, recordSchema))
         .leftMap(ex => AvroError.apply(s"Avro key encoder error: ${ex.getMessage}"))
     }
 

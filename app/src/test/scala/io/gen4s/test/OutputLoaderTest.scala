@@ -48,6 +48,7 @@ class OutputLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
           }
           batch-size = 1000
           decode-input-as-key-value = true
+          write-tombstone-record = true
 
           producer-config {
             compression-type = gzip
@@ -67,6 +68,7 @@ class OutputLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
             headers = Map("key" -> "value"),
             batchSize = PosInt.unsafeFrom(1000),
             decodeInputAsKeyValue = true,
+            writeTombstoneRecord = true,
             producerConfig = Some(KafkaProducerConfig(KafkaProducerConfig.CompressionTypes.gzip, 15L, 1024, 512L, 1))
           )
         }

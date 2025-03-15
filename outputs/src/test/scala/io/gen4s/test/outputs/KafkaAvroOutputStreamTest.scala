@@ -284,6 +284,39 @@ class KafkaAvroOutputStreamTest
 
     }
 
+    it("Send AVRO tombstone record to kafka topic") {
+      val template = SourceTemplate(s""" {
+                                       |   "key": "key_$${id}",
+                                       |   "value": $personTemplate
+                                       |}""".stripMargin)
+
+      val streams = OutputStreamExecutor.make[IO]()
+
+      val builder = TemplateBuilder.make(
+        NonEmptyList.one(template),
+        List(
+          StringPatternGenerator(Variable("name"), NonEmptyString.unsafeFrom("username_###")),
+          IntNumberGenerator(Variable("age"), min = 1.some, max = 50.some),
+          IntNumberGenerator(Variable("id"), min = 1.some, max = 50.some)
+        )
+      )
+
+      val output = mkOutput(
+        kafkaServers,
+        getSchemaRegistryAddress
+      ).copy(decodeInputAsKeyValue = true, writeTombstoneRecord = true)
+
+      val client = CachedSchemaRegistryClient(output.avroConfig.schemaRegistryUrl, 100)
+
+      SchemaLoader.loadSchemaFromFile(java.io.File("./outputs/src/test/resources/person-value.avsc")).foreach { schema =>
+        client.register("person-value", new AvroSchema(schema))
+      }
+
+      (for {
+        _ <- streams.write(n, GeneratorStream.stream[IO](n, builder), output)
+      } yield true).unsafeRunSync()
+    }
+
     it("Fail with unknown schema (auto schema register enabled)") {
       val template = SourceTemplate(s""" {
                                        |   "key": {"id": $${id}, "orgId": 2},

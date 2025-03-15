@@ -33,6 +33,13 @@ trait KafkaOutputBase {
   val headers: Map[String, String]
   val batchSize: PosInt
   val decodeInputAsKeyValue: Boolean
+  val writeTombstoneRecord: Boolean
+
+  /**
+   * Indicates whether the output should write a tombstone record.
+   * @return flag indicating whether to write a tombstone record.
+   */
+  def isTombstoneOutput: Boolean = writeTombstoneRecord & decodeInputAsKeyValue
 }
 
 /**
@@ -41,6 +48,7 @@ trait KafkaOutputBase {
  * @param topic                 the topic to which the data will be published.
  * @param bootstrapServers      the bootstrap servers for the Kafka cluster.
  * @param decodeInputAsKeyValue whether to decode the input as key-value pairs.
+ * @param writeTombstoneRecord  flag indicating whether to write a tombstone record.
  * @param headers               the headers to be included in the Kafka message.
  * @param batchSize             the batch size for publishing messages.
  * @param producerConfig        the configuration for the Kafka producer.
@@ -49,6 +57,7 @@ final case class KafkaOutput(
   topic: Topic,
   bootstrapServers: BootstrapServers,
   decodeInputAsKeyValue: Boolean = false,
+  writeTombstoneRecord: Boolean = false,
   headers: Map[String, String] = Map.empty,
   batchSize: PosInt = PosInt.unsafeFrom(1000),
   producerConfig: Option[KafkaProducerConfig] = None)
@@ -84,6 +93,7 @@ final case class AvroConfig(
  * @param bootstrapServers      the bootstrap servers for the Kafka cluster.
  * @param avroConfig            the configuration for Avro serialization.
  * @param decodeInputAsKeyValue whether to decode the input as key-value pairs.
+ * @param writeTombstoneRecord  flag indicating whether to write a tombstone record.
  * @param headers               the headers to be included in the Kafka message.
  * @param batchSize             the batch size for publishing messages.
  * @param producerConfig        the configuration for the Kafka producer.
@@ -93,6 +103,7 @@ final case class KafkaAvroOutput(
   bootstrapServers: BootstrapServers,
   avroConfig: AvroConfig,
   decodeInputAsKeyValue: Boolean = false,
+  writeTombstoneRecord: Boolean = false,
   headers: Map[String, String] = Map.empty,
   batchSize: PosInt = PosInt.unsafeFrom(1000),
   producerConfig: Option[KafkaProducerConfig] = None)
@@ -107,7 +118,8 @@ final case class KafkaAvroOutput(
    */
   def kafkaProducerConfig: KafkaProducerConfig = producerConfig.getOrElse(KafkaProducerConfig.default)
 
-  override def description(): String = s"Kafka avro output: topic: $topic, bootstrap-servers: $bootstrapServers"
+  override def description(): String =
+    s"Kafka avro output: topic: $topic, bootstrap-servers: $bootstrapServers, tombstone: $isTombstoneOutput"
 }
 
 /**
@@ -143,6 +155,7 @@ final case class ProtobufConfig(
  * @param bootstrapServers      the bootstrap servers for the Kafka cluster.
  * @param protoConfig           the configuration for Protobuf serialization.
  * @param decodeInputAsKeyValue whether to decode the input as key-value pairs.
+ * @param writeTombstoneRecord  flag indicating whether to write a tombstone record.
  * @param headers               the headers to be included in the Kafka message.
  * @param batchSize             the batch size for publishing messages.
  * @param producerConfig        the configuration for the Kafka producer.
@@ -152,6 +165,7 @@ final case class KafkaProtobufOutput(
   bootstrapServers: BootstrapServers,
   protoConfig: ProtobufConfig,
   decodeInputAsKeyValue: Boolean = false,
+  writeTombstoneRecord: Boolean = false,
   headers: Map[String, String] = Map.empty,
   batchSize: PosInt = PosInt.unsafeFrom(1000),
   producerConfig: Option[KafkaProducerConfig] = None)

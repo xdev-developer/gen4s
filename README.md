@@ -68,6 +68,9 @@ Run data generation stream.
 
 Command: scenario
 Run scenario
+
+Command: runbook
+Alias for scenario
   --help                   prints usage info
 ```
 
@@ -251,6 +254,7 @@ output {
         }
 
         decode-input-as-key-value = true
+        write-tombstone-record = false
         
         producer-config {
           compression-type = gzip
@@ -278,6 +282,8 @@ output {
 - **key-schema** - path to key schema, Optional. 
 - **value-schema** - path to value schema, Optional. 
 - **auto-register-schemas** - register schemas in schema-registry.
+- **write-tombstone-record** - write tombstone record, default false.
+    This tells kafka to delete old records with the same key and keep only the most recent one in a topic partition.
 
 How schema resolver works:
 

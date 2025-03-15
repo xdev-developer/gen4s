@@ -19,7 +19,7 @@ import fs2.kafka.vulcan.{AvroSettings, SchemaRegistryClient}
 import vulcan.Avro
 import vulcan.Codec.Aux
 
-class KafkaAvroOutputProcessor[F[_]: Async: Logger]
+class KafkaAvroOutputProcessor[F[_]: {Async, Logger}]
     extends OutputProcessor[F, KafkaAvroOutput]
     with KafkaOutputProcessorBase {
 
@@ -46,9 +46,8 @@ class KafkaAvroOutputProcessor[F[_]: Async: Logger]
           makeKeySerializer(keySchema, avroSettings)
 
         // Value serializer
-        given Aux[Avro.Record, AvroDynamicValue] = AvroCodec.valueCodec(valueSchema)
         given Resource[F, ValueSerializer[F, AvroDynamicValue]] =
-          avroSerializer[AvroDynamicValue].forValue(avroSettings)
+          makeValueSerializer(valueSchema, avroSettings, writeTombstoneRecord = output.isTombstoneOutput)
 
         val producerSettings =
           mkProducerSettingsResource[F, AvroDynamicKey, AvroDynamicValue](
@@ -77,11 +76,11 @@ class KafkaAvroOutputProcessor[F[_]: Async: Logger]
     if (output.decodeInputAsKeyValue) {
       output.avroConfig.keySchema match {
         case Some(file) =>
-          Logger[F].info(s"Loading key-schema from file ${file.getAbsolutePath}") *>
+          Logger[F].info(s"Loading '${output.topic}-key' from file ${file.getAbsolutePath}") *>
             Async[F].fromEither(SchemaLoader.loadSchemaFromFile(file)).map(_.some)
 
         case None =>
-          Logger[F].info(s"Looking for key-schema in schema-registry") *>
+          Logger[F].info(s"Loading '${output.topic}-key' schema from schema-registry") *>
             Async[F]
               .fromEither(SchemaLoader.loadLatestSchemaFromRegistry(output.topic, client, "key"))
               .map(_.some)
@@ -93,11 +92,11 @@ class KafkaAvroOutputProcessor[F[_]: Async: Logger]
   private def loadValueSchema(output: KafkaAvroOutput, client: SchemaRegistryClient): F[Schema] = {
     output.avroConfig.valueSchema match {
       case Some(file) =>
-        Logger[F].info(s"Loading value-schema from file ${file.getAbsolutePath}") *>
+        Logger[F].info(s"Loading '${output.topic}-value' schema from file ${file.getAbsolutePath}") *>
           Async[F].fromEither(SchemaLoader.loadSchemaFromFile(file))
 
       case None =>
-        Logger[F].info(s"Loading value-schema from registry") *>
+        Logger[F].info(s"Loading '${output.topic}-value' schema from registry") *>
           Async[F].fromEither(SchemaLoader.loadLatestSchemaFromRegistry(output.topic, client, "value"))
     }
   }
@@ -112,7 +111,26 @@ class KafkaAvroOutputProcessor[F[_]: Async: Logger]
           .avroSerializer[AvroDynamicKey]
           .forKey[F](avroSettings)
 
-      case None => Resource.pure(Serializer.asNull[F, AvroDynamicKey])
+      case None =>
+        given Serializer[F, AvroDynamicKey] = Serializer
+          .instance[F, AvroDynamicKey] { (_, _, key) =>
+            Applicative[F].pure(key.bytes)
+          }
+
+        Resource.pure(Serializer[F, AvroDynamicKey])
     }
+  }
+
+  private def makeValueSerializer(
+    schema: Schema,
+    avroSettings: AvroSettings[F],
+    writeTombstoneRecord: Boolean = false): Resource[F, ValueSerializer[F, AvroDynamicValue]] = {
+    if writeTombstoneRecord then Resource.pure(Serializer.asNull[F, AvroDynamicValue])
+    else
+      given Aux[Avro.Record, AvroDynamicValue] = AvroCodec.valueCodec(schema)
+
+      fs2.kafka.vulcan
+        .avroSerializer[AvroDynamicValue]
+        .forValue[F](avroSettings)
   }
 }
