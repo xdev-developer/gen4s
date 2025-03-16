@@ -209,6 +209,7 @@ output {
         }
 
         decode-input-as-key-value = true
+        write-tombstone-record = false
         
         producer-config {
           compression-type = none # snappy, gzip, lz4
@@ -223,6 +224,9 @@ output {
 }
 ```
 
+- **write-tombstone-record** - write tombstone record, default false.
+  This tells kafka to delete old records with the same key and keep only the most recent one in a topic partition.
+  
 - **decode-input-as-key-value**: true/false -  decode input template as key/value json.
 
   key will be produced as 'kafka message key' and value as 'kafka message value'.
@@ -312,6 +316,7 @@ output {
         }
 
         decode-input-as-key-value = true
+        write-tombstone-record = false
 
         proto-config {
           schema-registry-url = "http://localhost:8081"
@@ -333,6 +338,8 @@ output {
 
 - **value-descriptor** - path to protobuf descriptor and message type. 
 - **auto-register-schemas** - register schemas in schema-registry.
+- **write-tombstone-record** - write tombstone record, default false.
+  This tells kafka to delete old records with the same key and keep only the most recent one in a topic partition.
 
 #### Create protobuf descriptor from proto file
 

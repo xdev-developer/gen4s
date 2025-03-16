@@ -5,14 +5,17 @@ import java.io.File
 import io.gen4s.core.generators.Variable
 
 import pureconfig.*
+import pureconfig.generic.*
+import pureconfig.generic.semiauto.deriveReader
+
+object InputConfig {
+  given ConfigReader[InputConfig] = deriveReader[InputConfig]
+}
 
 final case class InputConfig(
   schema: File,
   template: File,
   csvRecords: Option[File] = None,
-  globalVariables: Option[Set[Variable]] =
-    None, // Wrap into option until pureconfig limitation of defaults will be fixed.
+  globalVariables: Set[Variable] = Set.empty[Variable],
   decodeNewLineAsTemplate: Boolean = false
-) derives ConfigReader {
-  val globalVars: Set[Variable] = globalVariables.getOrElse(Set.empty[Variable])
-}
+)

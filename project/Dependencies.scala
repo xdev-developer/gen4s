@@ -93,11 +93,12 @@ object Dependencies {
   )
 
   val Pureconfig: Seq[ModuleID] = List(
-    "com.github.pureconfig" %% "pureconfig-core"        % V.pureConfig,
-    "com.github.pureconfig" %% "pureconfig-cats-effect" % V.pureConfig,
-    "com.github.pureconfig" %% "pureconfig-enumeratum"  % V.pureConfig,
-    "com.github.pureconfig" %% "pureconfig-cats"        % V.pureConfig,
-    "eu.timepit"            %% "refined-pureconfig"     % V.refined
+    "com.github.pureconfig" %% "pureconfig-core"           % V.pureConfig,
+    "com.github.pureconfig" %% "pureconfig-cats-effect"    % V.pureConfig,
+    "com.github.pureconfig" %% "pureconfig-enumeratum"     % V.pureConfig,
+    "com.github.pureconfig" %% "pureconfig-cats"           % V.pureConfig,
+    "com.github.pureconfig" %% "pureconfig-generic-scala3" % V.pureConfig,
+    "eu.timepit"            %% "refined-pureconfig"        % V.refined
   )
 
   val Scopt: Seq[ModuleID] = List("com.github.scopt" %% "scopt" % "4.1.0")
