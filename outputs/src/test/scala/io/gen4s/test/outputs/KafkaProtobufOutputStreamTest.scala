@@ -132,5 +132,41 @@ class KafkaProtobufOutputStreamTest
 
       list should not be empty
     }
+
+    it("Send tombstone records to kafka topic") {
+      val template =
+        SourceTemplate("""{ "key": ${id}, "value": { "username": "${name}", "age": ${age} } }""")
+
+      val streams = OutputStreamExecutor.make[IO]()
+
+      val builder = TemplateBuilder.make(
+        NonEmptyList.one(template),
+        List(
+          IntNumberGenerator(Variable("id"), max = 50.some),
+          StringPatternGenerator(Variable("name"), NonEmptyString.unsafeFrom("username_###")),
+          IntNumberGenerator(Variable("age"), max = 50.some)
+        )
+      )
+
+      val output =
+        KafkaProtobufOutput(
+          topic = Topic("person"),
+          bootstrapServers = kafka,
+          ProtobufConfig(
+            schemaRegistryUrl = getSchemaRegistryAddress,
+            valueDescriptor = ProtobufDescriptorConfig(
+              java.io.File("./outputs/src/test/resources/person-value.desc"),
+              "Person"
+            ),
+            autoRegisterSchemas = true
+          ),
+          decodeInputAsKeyValue = true,
+          writeTombstoneRecord = true
+        )
+
+      (for {
+        _ <- streams.write(n, GeneratorStream.stream[IO](n, builder), output)
+      } yield true).unsafeRunSync()
+    }
   }
 }

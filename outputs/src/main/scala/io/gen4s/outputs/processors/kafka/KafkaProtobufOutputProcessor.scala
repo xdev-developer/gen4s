@@ -13,8 +13,8 @@ import io.gen4s.outputs.{KafkaProtobufOutput, ProtobufDescriptorConfig}
 import io.gen4s.outputs.processors.OutputProcessor
 import io.gen4s.outputs.protobuf.*
 
+import fs2.kafka.{Serializer, ValueSerializer}
 import fs2.kafka.vulcan.SchemaRegistryClientSettings
-import fs2.kafka.ValueSerializer
 
 class KafkaProtobufOutputProcessor[F[_]: Async: Logger]
     extends OutputProcessor[F, KafkaProtobufOutput]
@@ -37,7 +37,7 @@ class KafkaProtobufOutputProcessor[F[_]: Async: Logger]
           .withAutoRegisterSchemas(protoConfig.autoRegisterSchemas)
 
         given Resource[F, ValueSerializer[F, DynamicMessage]] =
-          protobufSerializer[DynamicMessage].forValue(protoSettings)
+          makeValueSerializer(protoSettings, output.isTombstoneOutput)
 
         val producerSettings =
           mkProducerSettingsResource[F, Option[Key], DynamicMessage](
@@ -58,10 +58,16 @@ class KafkaProtobufOutputProcessor[F[_]: Async: Logger]
           flow,
           output,
           producerSettings,
-          kvFun = (key, v) => produce(key.asByteArray.some, v, descriptor),
-          vFun = v => produce(none[Key], v, descriptor)
+          keyValueMapper = (key, v) => produce(key.asByteArray.some, v, descriptor),
+          valueMapper = v => produce(none[Key], v, descriptor)
         )
       }
+  }
+
+  private def makeValueSerializer(protoSettings: ProtobufSettings[F, DynamicMessage], writeTombstoneRecord: Boolean) = {
+    if (writeTombstoneRecord) {
+      Serializer.resource(Serializer.asNull[F, DynamicMessage])
+    } else protobufSerializer[DynamicMessage].forValue(protoSettings)
   }
 
   private def loadValueDescriptor(cfg: ProtobufDescriptorConfig): F[Descriptor] = {

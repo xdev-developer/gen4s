@@ -17,9 +17,7 @@ class RendererSpec extends AnyWordSpecLike with Matchers:
       val tpl: Seq[Dsl] =
         Seq(Dsl.AnySymbols(2, 3), Dsl.Word(3, 10), Dsl.Number(3, 5), Dsl.HEX(3, 5), Dsl.IPv4, Dsl.IPv6, Dsl.MacAddress)
 
-      tpl.map(t => gen(t))
-
-      succeed
+      tpl.map(t => gen(t)).foreach(_ => succeed)
     }
 
     "generate AnySymbols with fixed length" in {

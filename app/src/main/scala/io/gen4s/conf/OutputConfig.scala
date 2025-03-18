@@ -2,6 +2,7 @@ package io.gen4s.conf
 
 import java.net.URI
 
+import scala.deriving.Mirror
 import scala.util.Try
 
 import cats.implicits.*
@@ -17,6 +18,8 @@ import eu.timepit.refined.types.string.NonEmptyString
 import pureconfig.*
 import pureconfig.error.CannotConvert
 import pureconfig.error.FailureReason
+import pureconfig.generic.*
+import pureconfig.generic.semiauto.deriveReader
 import pureconfig.module.enumeratum.*
 import software.amazon.awssdk.endpoints.Endpoint
 import software.amazon.awssdk.regions.Region
@@ -41,8 +44,11 @@ given ConfigReader[Endpoint] = ConfigReader.fromString { value =>
     .leftMap(e => CannotConvert(value, "Endpoint", e.getMessage))
 }
 
+object OutputConfig {
+  given ConfigReader[OutputConfig] = deriveReader[OutputConfig]
+}
+
 final case class OutputConfig(
   writer: Output,
   transformers: Set[OutputTransformer] = Set.empty[OutputTransformer],
   validators: Set[OutputValidator] = Set.empty[OutputValidator])
-    derives ConfigReader

@@ -37,6 +37,14 @@ class OutputLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
           out.writer shouldBe StdOutput()
         }
 
+    "Load std output with defaults" in
+      load[IO]("""writer: { type: std-output }""".stripMargin)
+        .asserting { out =>
+          out.writer shouldBe StdOutput()
+          out.transformers shouldBe empty
+          out.validators shouldBe empty
+        }
+
     "Load kafka output" in
       load[IO]("""
         writer: {
@@ -48,6 +56,7 @@ class OutputLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
           }
           batch-size = 1000
           decode-input-as-key-value = true
+          write-tombstone-record = true
 
           producer-config {
             compression-type = gzip
@@ -67,7 +76,23 @@ class OutputLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
             headers = Map("key" -> "value"),
             batchSize = PosInt.unsafeFrom(1000),
             decodeInputAsKeyValue = true,
+            writeTombstoneRecord = true,
             producerConfig = Some(KafkaProducerConfig(KafkaProducerConfig.CompressionTypes.gzip, 15L, 1024, 512L, 1))
+          )
+        }
+
+    "Load kafka output with defaults" in
+      load[IO]("""
+            writer: {
+              type = kafka-output
+              topic = test
+              bootstrap-servers = "localhost:9092"
+           }
+           """.stripMargin)
+        .asserting { out =>
+          out.writer shouldBe KafkaOutput(
+            topic = Domain.Topic("test"),
+            bootstrapServers = Domain.BootstrapServers("localhost:9092")
           )
         }
 
@@ -93,6 +118,25 @@ class OutputLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
             method = HttpMethods.Post,
             parallelism = PosInt.unsafeFrom(3),
             headers = Map("key" -> "value"),
+            contentType = HttpContentTypes.ApplicationJson,
+            stopOnError = true
+          )
+        }
+
+    "Load http output with defaults" in
+      load[IO]("""
+            writer: {
+              type: http-output
+              url: "http://example.com"
+              method: POST
+              content-type: "application/json"
+           }
+           """.stripMargin)
+        .asserting { out =>
+          out.writer shouldBe HttpOutput(
+            url = "http://example.com",
+            method = HttpMethods.Post,
+            parallelism = PosInt.unsafeFrom(1),
             contentType = HttpContentTypes.ApplicationJson,
             stopOnError = true
           )

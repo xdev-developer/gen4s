@@ -10,7 +10,7 @@ import io.gen4s.core.Domain
 import io.gen4s.outputs.processors.OutputProcessor
 import io.gen4s.outputs.KafkaOutput
 
-import fs2.kafka.Headers
+import fs2.kafka.{Headers, Serializer, ValueSerializer}
 
 object KafkaOutputProcessor {
 
@@ -29,6 +29,10 @@ class KafkaOutputProcessor[F[_]: Async] extends OutputProcessor[F, KafkaOutput] 
     n: Domain.NumberOfSamplesToGenerate,
     flow: fs2.Stream[F, Template],
     output: KafkaOutput): F[Unit] = {
+
+    given ValueSerializer[F, Value] =
+      makeValueSerializer(writeTombstoneRecord = output.isTombstoneOutput)
+
     val producerSettings =
       mkProducerSettings[F, Option[Key], Value](output.bootstrapServers, output.kafkaProducerConfig)
 
@@ -43,8 +47,14 @@ class KafkaOutputProcessor[F[_]: Async] extends OutputProcessor[F, KafkaOutput] 
       flow,
       output,
       producerSettings,
-      kvFun = (key, v) => produce(key.asByteArray.some, v.asByteArray),
-      vFun = v => produce(none[Key], v.asByteArray)
+      keyValueMapper = (key, v) => produce(key.asByteArray.some, v.asByteArray),
+      valueMapper = v => produce(none[Key], v.asByteArray)
     )
+  }
+
+  private def makeValueSerializer(writeTombstoneRecord: Boolean) = {
+    if (writeTombstoneRecord) {
+      Serializer.asNull[F, Value]
+    } else Serializer.identity[F]
   }
 }

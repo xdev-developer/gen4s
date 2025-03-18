@@ -28,7 +28,7 @@ trait StageExecutor[F[_]] {
 
 object StageExecutor {
 
-  def make[F[_]: Async: EffConsole: Files: Logger](name: String, args: Args, conf: StageConfig): F[StageExecutor[F]] =
+  def make[F[_]: {Async, EffConsole, Files, Logger}](name: String, args: Args, conf: StageConfig): F[StageExecutor[F]] =
     Async[F].delay {
       new StageExecutor[F] {
 
@@ -92,7 +92,7 @@ object StageExecutor {
                                    TemplateBuilder.make(
                                      sources,
                                      schema.generators,
-                                     conf.input.globalVars,
+                                     conf.input.globalVariables,
                                      args.userInput.map(_.fields).getOrElse(Map.empty[Variable, GeneratedValue]),
                                      conf.output.transformers
                                    )
@@ -101,7 +101,7 @@ object StageExecutor {
                                      sources,
                                      NonEmptyList.fromListUnsafe(recordsStream),
                                      schema.generators,
-                                     conf.input.globalVars,
+                                     conf.input.globalVariables,
                                      args.userInput.map(_.fields).getOrElse(Map.empty[Variable, GeneratedValue]),
                                      conf.output.transformers
                                    )

@@ -39,7 +39,7 @@ object App extends IOApp {
       case None => IO(ExitCode.Error)
     }
 
-  private def program[F[_]: Async: Console: Files](args: Args) =
+  private def program[F[_]: {Async, Console, Files}](args: Args) =
     for {
       logger         <- Slf4jLogger.create[F]
       _              <- logger.info(greenOut("Running data generation stream"))
@@ -51,7 +51,7 @@ object App extends IOApp {
       _              <- Async[F].whenA(args.mode === ExecMode.RunScenario)(runScenario(args, envVarsProfile))
     } yield ExitCode.Success
 
-  private def runStage[F[_]: Async: Console: Files: Logger](args: Args, envVarsProfile: EnvProfileConfig) = {
+  private def runStage[F[_]: {Async, Console, Files, Logger}](args: Args, envVarsProfile: EnvProfileConfig) = {
     for {
       conf <- StageConfigLoader.fromFile[F](args.configFile).withEnvProfile(envVarsProfile)
       executor <- StageExecutor.make[F](
@@ -64,7 +64,7 @@ object App extends IOApp {
     } yield ()
   }
 
-  private def runScenario[F[_]: Async: Console: Files](args: Args, envVarsProfile: EnvProfileConfig) = {
+  private def runScenario[F[_]: {Async, Console, Files}](args: Args, envVarsProfile: EnvProfileConfig) = {
     for {
       conf     <- ScenarioConfigLoader.fromFile[F](args.configFile).withEnvProfile(envVarsProfile)
       executor <- ScenarioExecutor.make[F](args, conf, envVarsProfile)
@@ -72,7 +72,7 @@ object App extends IOApp {
     } yield ()
   }
 
-  private def loadEnvVarsProfile[F[_]: Sync: Logger](in: Option[java.io.File]): F[EnvProfileConfig] = in match {
+  private def loadEnvVarsProfile[F[_]: {Sync, Logger}](in: Option[java.io.File]): F[EnvProfileConfig] = in match {
     case Some(f) =>
       val loader = EnvironmentVariablesProfileLoader.make[F]()
       for {

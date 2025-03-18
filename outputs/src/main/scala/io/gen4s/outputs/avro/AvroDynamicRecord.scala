@@ -3,9 +3,10 @@ package io.gen4s.outputs.avro
 opaque type AvroDynamicKey   = Array[Byte]
 opaque type AvroDynamicValue = Array[Byte]
 
+@SuppressWarnings(Array("org.wartremover.warts.Null"))
 object AvroDynamicKey {
   def apply(bytes: Array[Byte]): AvroDynamicKey = bytes
-  def empty: AvroDynamicKey                     = Array.emptyByteArray
+  def none: AvroDynamicKey                      = null
 
   extension (p: AvroDynamicKey) {
     def bytes: Array[Byte] = p

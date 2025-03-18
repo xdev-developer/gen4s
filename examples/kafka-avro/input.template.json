@@ -1,8 +1,5 @@
 {
-  "key": { "id":  ${id}, "orgId": 1},
-  "value": {
-    "username": "${name}",
-    "age": ${age}
-  }
+  "username": "${name}",
+  "age": ${age}
 }
 
