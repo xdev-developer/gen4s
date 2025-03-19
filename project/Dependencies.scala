@@ -10,6 +10,7 @@ object Dependencies {
     val catsEffect        = "3.5.7"
     val catsRetry         = "3.1.0"
     val circe             = "0.14.9"
+    val circeRefined      = "0.14.9"
     val fs2               = "3.11.0"
     val fs2Kafka          = "3.5.1"
     val log4cats          = "2.7.0"
@@ -74,9 +75,10 @@ object Dependencies {
     "com.github.kolotaev" %% "ride" % V.Ride
   )
 
-  val CirceCore    = circe("core")
-  val CirceParser  = circe("parser")
-  val CirceRefined = circe("refined")
+  val CirceCore   = circe("core")
+  val CirceParser = circe("parser")
+
+  val CirceRefined: ModuleID = "io.circe" %% s"circe-refined" % V.circeRefined
 
   val Enumeratum: Seq[ModuleID] = List(
     "com.beachape" %% "enumeratum"       % "1.7.5",
