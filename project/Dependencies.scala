@@ -9,10 +9,10 @@ object Dependencies {
     val cats              = "2.13.0"
     val catsEffect        = "3.5.7"
     val catsRetry         = "3.1.0"
-    val circe             = "0.14.9"
-    val circeRefined      = "0.14.9"
+    val circe             = "0.14.12"
+    val circeRefined      = "0.15.1"
     val fs2               = "3.11.0"
-    val fs2Kafka          = "3.5.1"
+    val fs2Kafka          = "3.6.0"
     val log4cats          = "2.7.0"
     val pureConfig        = "0.17.8"
     val sttp              = "3.10.3"
@@ -27,7 +27,7 @@ object Dependencies {
 
     val betterMonadicFor = "0.3.1"
     val kindProjector    = "0.13.2"
-    val logback          = "1.5.17"
+    val logback          = "1.5.18"
   }
 
   val Cats: Seq[ModuleID] = List(
@@ -137,7 +137,7 @@ object Dependencies {
   )
 
   val ProtoConverter: Seq[ModuleID] = List(
-    "io.confluent"        % "kafka-protobuf-serializer" % "7.7.0",
+    "io.confluent"        % "kafka-protobuf-serializer" % "7.9.0",
     "com.google.protobuf" % "protobuf-java-util"        % "3.25.6"
   )
 
