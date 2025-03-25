@@ -23,13 +23,9 @@ Features:
 
 -  **Command Line Execution**: Gen4s can be executed directly from the command line, providing a simple and efficient way to generate data.
 
--  **Environment Variables Profile Loading**: Gen4s allows loading environment variables from a file and applying them, which can be useful for managing different runtime environments.
-
 -  **Support for Multiple Output Formats**: Gen4s supports various output formats including stdout, Kafka, Avro, Protobuf, file system, and HTTP.
 
 -  **Schema Definition and Data Generators**: Gen4s provides a variety of data generators for different data types and structures, including static values, timestamps, numbers, strings, UUIDs, IP addresses, and more.
-
--  **Scenario Configuration**: Gen4s allows for the configuration of multiple stages in a scenario, with configurable delays between stages and the number of samples to generate.
 
 ## Installation
 
