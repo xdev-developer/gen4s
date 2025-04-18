@@ -12,7 +12,7 @@ object Dependencies {
     val circe             = "0.14.12"
     val circeRefined      = "0.15.1"
     val fs2               = "3.12.0"
-    val fs2Kafka          = "3.6.0"
+    val fs2Kafka          = "3.7.0"
     val log4cats          = "2.7.0"
     val pureConfig        = "0.17.8"
     val sttp              = "3.10.3"
