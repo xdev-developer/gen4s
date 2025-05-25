@@ -82,7 +82,7 @@ object Dependencies {
 
   val Enumeratum: Seq[ModuleID] = List(
     "com.beachape" %% "enumeratum"       % "1.7.6",
-    "com.beachape" %% "enumeratum-circe" % "1.7.5"
+    "com.beachape" %% "enumeratum-circe" % "1.9.0"
   )
 
   val Log4cats: Seq[ModuleID] = List(
