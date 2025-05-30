@@ -36,7 +36,7 @@ package object codec {
 
   given Decoder[Generator] = (cursor: HCursor) =>
     for {
-      t <- cursor.get[Generators](Type)
+      t      <- cursor.get[Generators](Type)
       result <- t match {
                   case Generators.TimeStamp => cursor.as[TimestampGenerator]
                   case Generators.Date      => cursor.as[DatetimeGenerator]

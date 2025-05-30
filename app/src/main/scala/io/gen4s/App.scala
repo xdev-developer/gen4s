@@ -53,7 +53,7 @@ object App extends IOApp {
 
   private def runStage[F[_]: {Async, Console, Files, Logger}](args: Args, envVarsProfile: EnvProfileConfig) = {
     for {
-      conf <- StageConfigLoader.fromFile[F](args.configFile).withEnvProfile(envVarsProfile)
+      conf     <- StageConfigLoader.fromFile[F](args.configFile).withEnvProfile(envVarsProfile)
       executor <- StageExecutor.make[F](
                     s"Stage [${conf.output.writer.description()}]",
                     args,

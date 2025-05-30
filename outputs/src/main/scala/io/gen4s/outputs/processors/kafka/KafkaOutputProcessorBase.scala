@@ -72,7 +72,7 @@ trait KafkaOutputProcessorBase {
             if (output.decodeInputAsKeyValue) {
               value.render().asKeyValue match {
                 case Right((key, v)) => keyValueMapper(key, v)
-                case Left(ex) =>
+                case Left(ex)        =>
                   Async[F].raiseError(ParsingFailure(s"Template key/value parsing failure: ${ex.message}", ex))
               }
 
