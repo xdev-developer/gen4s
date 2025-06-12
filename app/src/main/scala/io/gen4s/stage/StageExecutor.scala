@@ -57,7 +57,7 @@ object StageExecutor {
 
         private def validate(builder: TemplateBuilder, validators: Set[OutputValidator]): F[Unit] = {
           val templates = builder.build().map(_.render())
-          val errors = (validators + OutputValidator.OldStyleVars)
+          val errors    = (validators + OutputValidator.OldStyleVars)
             .flatMap {
               case OutputValidator.MissingVars  => templates.map(OutputValidator.MissingVars.validate)
               case OutputValidator.JSON         => templates.map(OutputValidator.JSON.validate)
@@ -75,10 +75,10 @@ object StageExecutor {
 
         private def generatorFlow(args: Args, conf: StageConfig): F[fs2.Stream[F, Template]] = {
           for {
-            logger <- Slf4jLogger.create[F]
-            _      <- logger.info(s"Reading schema from file ${conf.input.schema.getAbsolutePath}")
-            schema <- SchemaReader.make[F]().read(conf.input.schema)
-            _      <- logger.info(s"Reading template from file ${conf.input.template.getAbsolutePath}")
+            logger  <- Slf4jLogger.create[F]
+            _       <- logger.info(s"Reading schema from file ${conf.input.schema.getAbsolutePath}")
+            schema  <- SchemaReader.make[F]().read(conf.input.schema)
+            _       <- logger.info(s"Reading template from file ${conf.input.template.getAbsolutePath}")
             sources <- TemplateReader
                          .make[F]()
                          .read(conf.input.template, decodeNewLineAsTemplate = conf.input.decodeNewLineAsTemplate)
