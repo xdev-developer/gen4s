@@ -12,8 +12,8 @@ object Dependencies {
     val circe             = "0.14.13"
     val circeRefined      = "0.15.1"
     val fs2               = "3.12.0"
-    val fs2Kafka          = "3.7.0"
-    val log4cats          = "2.7.0"
+    val fs2Kafka          = "3.8.0"
+    val log4cats          = "2.7.1"
     val pureConfig        = "0.17.9"
     val sttp              = "3.11.0"
     var refined           = "0.11.3"
@@ -81,8 +81,8 @@ object Dependencies {
   val CirceRefined: ModuleID = "io.circe" %% s"circe-refined" % V.circeRefined
 
   val Enumeratum: Seq[ModuleID] = List(
-    "com.beachape" %% "enumeratum"       % "1.7.6",
     "com.beachape" %% "enumeratum-circe" % "1.9.0"
+    "com.beachape" %% "enumeratum"       % "1.9.0",
   )
 
   val Log4cats: Seq[ModuleID] = List(
@@ -138,7 +138,7 @@ object Dependencies {
 
   val ProtoConverter: Seq[ModuleID] = List(
     "io.confluent"        % "kafka-protobuf-serializer" % "7.9.1",
-    "com.google.protobuf" % "protobuf-java-util"        % "3.25.7"
+    "com.google.protobuf" % "protobuf-java-util"        % "3.25.8"
   )
 
   val ScalaTest: Seq[ModuleID]      = List("org.scalatest" %% "scalatest" % V.scalaTest % Test)

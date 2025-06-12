@@ -143,7 +143,7 @@ lazy val root = project
   .in(file("."))
   .aggregate(core, generators, outputs, benchmarks, app)
   .settings(
-    name := "gen4s",
+    name           := "gen4s",
     releaseProcess := Seq[ReleaseStep](
       checkSnapshotDependencies, // : ReleaseStep
       inquireVersions,           // : ReleaseStep
