@@ -47,7 +47,7 @@ class KafkaOutputProcessor[F[_]: Async] extends OutputProcessor[F, KafkaOutput] 
       flow,
       output,
       producerSettings,
-      keyValueMapper = (key, v) => produce(key.asByteArray.some, v.asByteArray),
+      keyValueMapper = (key, v) => produce(key.some, v.asByteArray),
       valueMapper = v => produce(none[Key], v.asByteArray)
     )
   }

@@ -39,7 +39,28 @@ object RenderedTemplate extends Newtype[String] {
 
     def asPrettyString: String = asJson.toOption.map(_.spaces2).getOrElse(asString)
 
-    def asKeyValue: Either[ParsingFailure, (RenderedTemplate, RenderedTemplate)] = {
+    def asKeyValue: Either[ParsingFailure, (Array[Byte], RenderedTemplate)] = {
+
+      def serializeKey(key: Json): Array[Byte] = {
+        key.fold[Array[Byte]](
+          jsonNull = Array.empty[Byte],
+          jsonBoolean = b => Array((if (b) 1 else 0).toByte),
+          jsonNumber = n =>
+            n.toInt.match {
+              case Some(data) =>
+                Array(
+                  (data >>> 24).byteValue,
+                  (data >>> 16).byteValue,
+                  (data >>> 8).byteValue,
+                  data.byteValue
+                )
+              case None => Array.empty[Byte]
+            },
+          jsonString = s => s.getBytes(StandardCharsets.UTF_8),
+          jsonArray = a => RenderedTemplate(TextTemplate.stripQuotes(key.noSpaces)).asByteArray,
+          jsonObject = o => RenderedTemplate(TextTemplate.stripQuotes(key.noSpaces)).asByteArray
+        )
+      }
 
       def extractField(key: String, obj: Json): Either[ParsingFailure, Json] = {
         obj.hcursor
@@ -47,13 +68,12 @@ object RenderedTemplate extends Newtype[String] {
           .as[Json]
           .leftMap(ex => ParsingFailure(s"Unable extract $key from $obj", ex))
       }
-
       for {
         json  <- asJson
         key   <- extractField("key", json)
         value <- extractField("value", json)
       } yield (
-        RenderedTemplate(TextTemplate.stripQuotes(key.noSpaces)),
+        serializeKey(key),
         RenderedTemplate(TextTemplate.stripQuotes(value.noSpaces))
       )
     }

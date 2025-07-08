@@ -55,7 +55,7 @@ class KafkaOutputStreamTest
 
         (for {
           _ <- streams.write(n, GeneratorStream.stream[IO](n, builder), output)
-          r <- consumeAllAsMessages[IO](output.topic, output.bootstrapServers, count = n.value.toLong)
+          r <- consumeAllAsMessages[IO, String](output.topic, output.bootstrapServers, count = n.value.toLong)
         } yield r).asserting { list =>
           list should not be empty
           list.size shouldBe n.value
@@ -78,7 +78,7 @@ class KafkaOutputStreamTest
 
         (for {
           _ <- streams.write(n, GeneratorStream.stream[IO](n, builder), output)
-          r <- consumeAllAsMessages[IO](output.topic, output.bootstrapServers, count = n.value.toLong)
+          r <- consumeAllAsMessages[IO, String](output.topic, output.bootstrapServers, count = n.value.toLong)
         } yield r).asserting { list =>
           list should not be empty
           list.size shouldBe n.value
@@ -104,7 +104,7 @@ class KafkaOutputStreamTest
 
         (for {
           _ <- streams.write(n, GeneratorStream.stream[IO](n, builder), output)
-          r <- consumeAllAsMessages[IO](output.topic, output.bootstrapServers, count = n.value.toLong)
+          r <- consumeAllAsMessages[IO, String](output.topic, output.bootstrapServers, count = n.value.toLong)
         } yield r).asserting { list =>
           list should not be empty
           list.headOption.flatMap(_.key).value shouldBe "my-key"

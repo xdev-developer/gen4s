@@ -240,7 +240,7 @@ class KafkaAvroOutputStreamTest
       value.username should include("username_")
     }
 
-    it("Send AVRO key/value records to kafka topic (simple key)") {
+    it("Send AVRO key/value records to kafka topic (string key)") {
       val template = SourceTemplate(s""" {
                                        |   "key": "key_$${id}",
                                        |   "value": $personTemplate
@@ -270,7 +270,7 @@ class KafkaAvroOutputStreamTest
 
       val list = (for {
         _ <- streams.write(n, GeneratorStream.stream[IO](n, builder), output)
-        r <- consumeAllAsMessages[IO](
+        r <- consumeAllAsMessages[IO, String](
                output.topic,
                kafkaServers,
                count = n.value.toLong
@@ -281,7 +281,49 @@ class KafkaAvroOutputStreamTest
       list should not be empty
       val record = list.headOption.value
       record.key.value should include("key_")
+    }
 
+    it("Send AVRO key/value records to kafka topic (int key)") {
+      val template = SourceTemplate(s""" {
+                                       |   "key": $${id},
+                                       |   "value": $personTemplate
+                                       |}""".stripMargin)
+
+      val streams = OutputStreamExecutor.make[IO]()
+
+      val builder = TemplateBuilder.make(
+        NonEmptyList.one(template),
+        List(
+          StringPatternGenerator(Variable("name"), NonEmptyString.unsafeFrom("username_###")),
+          IntNumberGenerator(Variable("age"), min = 1.some, max = 50.some),
+          IntNumberGenerator(Variable("id"), min = 1.some, max = 50.some)
+        )
+      )
+
+      val output = mkOutput(
+        kafkaServers,
+        getSchemaRegistryAddress
+      ).copy(decodeInputAsKeyValue = true)
+
+      val client = CachedSchemaRegistryClient(output.avroConfig.schemaRegistryUrl, 100)
+
+      SchemaLoader.loadSchemaFromFile(java.io.File("./outputs/src/test/resources/person-value.avsc")).foreach { schema =>
+        client.register("person-value", new AvroSchema(schema))
+      }
+
+      val list = (for {
+        _ <- streams.write(n, GeneratorStream.stream[IO](n, builder), output)
+        r <- consumeAllAsMessages[IO, Int](
+               output.topic,
+               kafkaServers,
+               count = n.value.toLong
+             )
+      } yield r).unsafeRunSync()
+
+      list.foreach(p => info(s"$p"))
+      list should not be empty
+      val record = list.headOption.value
+      record.key.value shouldBe a[Int]
     }
 
     it("Send AVRO tombstone record to kafka topic") {
