@@ -15,16 +15,14 @@ import _root_.vulcan.Codec
 import fs2.kafka.*
 import fs2.kafka.vulcan.CachedSchemaRegistryClient
 
-final case class Message(key: Option[String], value: String, headers: Option[Headers] = None)
+final case class Message[K](key: Option[K], value: String, headers: Option[Headers] = None)
 
 trait KafkaConsumers {
 
-  def consumeAllAsMessages[F[_]: Async](
-    topic: Topic,
-    bootstrapServer: BootstrapServers,
-    count: Long = 100L): F[List[Message]] = {
+  def consumeAllAsMessages[F[_]: Async, K](topic: Topic, bootstrapServer: BootstrapServers, count: Long = 100L)(implicit
+    k: KeyDeserializer[F, Option[K]]): F[List[Message[K]]] = {
     val consumerSettings = ConsumerSettings(
-      keyDeserializer = Deserializer[F, Option[String]],
+      keyDeserializer = k,
       valueDeserializer = Deserializer[F, String]
     ).withAutoOffsetReset(AutoOffsetReset.Earliest)
       .withBootstrapServers(bootstrapServer.value)

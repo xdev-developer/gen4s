@@ -58,7 +58,7 @@ trait KafkaOutputProcessorBase {
     flow: fs2.Stream[F, Template],
     output: KafkaOutputBase,
     producerSettings: ProducerSettings[F, K, V],
-    keyValueMapper: (RenderedTemplate, RenderedTemplate) => F[ProducerRecord[K, V]],
+    keyValueMapper: (Array[Byte], RenderedTemplate) => F[ProducerRecord[K, V]],
     valueMapper: RenderedTemplate => F[ProducerRecord[K, V]]
   ): F[Unit] = {
 

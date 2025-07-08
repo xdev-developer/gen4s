@@ -66,7 +66,7 @@ class KafkaAvroOutputProcessor[F[_]: {Async, Logger}]
           flow,
           output,
           producerSettings,
-          keyValueMapper = (key, v) => produce(AvroDynamicKey(key.asByteArray), AvroDynamicValue(v.asByteArray)),
+          keyValueMapper = (key, v) => produce(AvroDynamicKey(key), AvroDynamicValue(v.asByteArray)),
           valueMapper = v => produce(AvroDynamicKey.none, AvroDynamicValue(v.asByteArray))
         )
       }

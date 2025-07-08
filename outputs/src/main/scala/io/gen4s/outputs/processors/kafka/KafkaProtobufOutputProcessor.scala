@@ -58,7 +58,7 @@ class KafkaProtobufOutputProcessor[F[_]: Async: Logger]
           flow,
           output,
           producerSettings,
-          keyValueMapper = (key, v) => produce(key.asByteArray.some, v, descriptor),
+          keyValueMapper = (key, v) => produce(key.some, v, descriptor),
           valueMapper = v => produce(none[Key], v, descriptor)
         )
       }
