@@ -64,6 +64,10 @@ class OutputLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
             linger-ms = 15
             max-batch-size-bytes = 1024
             max-request-size-bytes = 512
+
+            additional-properties {
+              "security.protocol" = "SASL_SSL"
+            }
           }
        }
        transformers = []
@@ -77,7 +81,16 @@ class OutputLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
             batchSize = PosInt.unsafeFrom(1000),
             decodeInputAsKeyValue = true,
             writeTombstoneRecord = true,
-            producerConfig = Some(KafkaProducerConfig(KafkaProducerConfig.CompressionTypes.gzip, 15L, 1024, 512L, 1))
+            producerConfig = Some(
+              KafkaProducerConfig(
+                KafkaProducerConfig.CompressionTypes.gzip,
+                15L,
+                1024,
+                512L,
+                1,
+                Map("security.protocol" -> "SASL_SSL")
+              )
+            )
           )
         }
 

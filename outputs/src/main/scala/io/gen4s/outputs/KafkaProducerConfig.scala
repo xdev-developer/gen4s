@@ -18,7 +18,8 @@ object KafkaProducerConfig {
       lingerMs = 100,
       maxBatchSizeBytes = 16384 * 4,
       maxRequestSizeBytes = 1048576L,
-      inFlightRequests = 5
+      inFlightRequests = 5,
+      additionalProperties = Map.empty[String, String]
     )
 }
 
@@ -27,4 +28,5 @@ final case class KafkaProducerConfig(
   lingerMs: Long,
   maxBatchSizeBytes: Int,
   maxRequestSizeBytes: Long,
-  inFlightRequests: Int)
+  inFlightRequests: Int,
+  additionalProperties: Map[String, String])

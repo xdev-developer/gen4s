@@ -50,7 +50,7 @@ trait KafkaOutputProcessorBase {
         (ProducerConfig.LINGER_MS_CONFIG, conf.lingerMs.toString),
         (ProducerConfig.MAX_REQUEST_SIZE_CONFIG, conf.maxRequestSizeBytes.toString)
       )
-
+      .withProperties(conf.additionalProperties.toList*)
   }
 
   protected def runStream[F[_]: Async, K, V](
