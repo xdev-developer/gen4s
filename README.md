@@ -213,6 +213,10 @@ output {
           linger-ms = 15
           max-batch-size-bytes = 1024
           max-request-size-bytes = 512
+
+          additional-properties {
+            "key" = "value"
+          }
         }
     }
     transformers = ["json-minify"] 
