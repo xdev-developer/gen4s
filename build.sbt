@@ -13,7 +13,7 @@ ThisBuild / scalacOptions += "-Wunused:all"
 ThisBuild / scalacOptions ++= Seq("-Xmax-inlines", "50")
 ThisBuild / scalacOptions ++= Seq("-Wconf:msg=unused value of type org.scalatest.Assertion:s")
 
-ThisBuild / resolvers ++= Resolver.sonatypeOssRepos("snapshots")
+ThisBuild / resolvers += Resolver.sonatypeCentralSnapshots
 ThisBuild / resolvers += "confluent" at "https://packages.confluent.io/maven/"
 ThisBuild / resolvers += "jitpack" at "https://jitpack.io"
 
