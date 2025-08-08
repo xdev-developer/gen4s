@@ -108,7 +108,8 @@ object StageExecutor {
                                  }
                                }
             _ <- validate(templateBuilder, conf.output.validators)
-          } yield GeneratorStream.stream[F](args.numberOfSamplesToGenerate, templateBuilder)
+          } yield GeneratorStream
+            .stream[F](args.numberOfSamplesToGenerate, templateBuilder, args.pickRandomTemplateFromList)
         }
       }
     }
