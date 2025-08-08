@@ -11,14 +11,24 @@ object GeneratorStream {
 
   def stream[F[_]: Applicative](
     n: NumberOfSamplesToGenerate,
-    templateBuilder: TemplateBuilder): fs2.Stream[F, Template] = {
+    templateBuilder: TemplateBuilder,
+    pickRandomTemplateFromList: Boolean = false): fs2.Stream[F, Template] = {
+    val templates     = templateBuilder.build()
+    val templatesSize = templates.size
 
-    val templates = templateBuilder.build()
+    def pickTemplate(index: Int): Option[Template] = {
+      if (pickRandomTemplateFromList) {
+        templates.lift(Random.nextInt(templatesSize))
+      } else {
+        templates.lift(index % templatesSize)
+      }
+    }
+
     fs2.Stream
       .range(0, n.value)
-      .flatMap { _ =>
+      .flatMap { idx =>
         fs2.Stream
-          .emit[F, Option[Template]](templates.lift(Random.nextInt(templates.size)))
+          .emit[F, Option[Template]](pickTemplate(idx))
           .unNone
       }
   }

@@ -15,5 +15,6 @@ final case class Args(
   profileFile: Option[File] = None,
   prettyPreview: Boolean = false,
   stageDelay: Option[FiniteDuration] = None,
-  userInput: Option[InputRecord] = None
+  userInput: Option[InputRecord] = None,
+  pickRandomTemplateFromList: Boolean = false
 )
