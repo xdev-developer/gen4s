@@ -438,6 +438,49 @@ stages: [
 ]
 ```
 
+### Input Records & Variable Overrides
+
+Input Records allow you to override template variables at runtime. This is useful when you need to:
+- Test specific scenarios with known values
+- Override generated data with fixed values
+- Share the same configuration across different environments
+
+#### Command Line Override
+
+You can override variables using the `-i` or `--input-records` flag:
+
+```shell
+./bin/gen4s run -i user-id=12345,timestamp=1632150400000 -c ./config.conf
+```
+
+#### In Scenarios
+
+Variables can be overridden in scenario configurations:
+
+```properties
+stages: [
+    {
+        name: "Test with overrides",
+        samples: 3,
+        config-file: "./config.conf",
+        overrides {
+            user-id: "12345",
+            timestamp: "1632150400000"
+        }
+    }
+]
+```
+
+#### Precedence Order
+
+Variable values are resolved in the following order:
+1. Command line overrides (`-i` flag)
+2. Scenario overrides (in scenario config)
+3. Generated values (from schema definition)
+
+This means command line overrides take precedence over scenario overrides, which take precedence over generated values.
+
+
 ## Schema definition and data generators
 
 ### Static value generator
@@ -594,20 +637,3 @@ Where
 **len** - list size to generate.
 
 **generator** - element generator.
-
-
-
-## Template syntax
-
-- \* - generates any symbol
-  - \*{2} - generates random symbols with 2 symbols size
-  - \*{2, 5} - generates random symbols with random size between 2 and 5
-- %w - generates random english word
-  - %w{4} - generates random english word with fixed length. Max available length is 31
-  - %w{2, 6} - generates random english word with random length between 2 and 6
-- %n{2} - returns defined number
-- %n{4, 10} - returns random number between 4 and 10
-- \#{4} - returns random HEX number with provided length (4)
-- \#{4, 8} - returns random HEX number of random length between 4 and 8
-- %ip4, %ip6, %mac - generates random values for IP v4, IP v6 and mac address respectively
-- other values are considered as text tokens
