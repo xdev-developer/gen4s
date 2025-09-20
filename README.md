@@ -13,8 +13,8 @@ Gen4s is a powerful data generation tool designed for developers and QA engineer
   - [Manual](#manual)
 - [Running](#running)
   - [Running with profile](#running-with-profile)
-  - [Running with value override](#running-with-value-override)
   - [Running scenario](#running-scenario)
+  - [Running with value override](#running-with-value-override)
 - [Building from source](#building-from-source)
 - [Testing](#testing)
 - [Configuration](#configuration)
@@ -133,16 +133,16 @@ ORG_ID=12345
 ./bin/gen4s run -c ./examples/playground/config.conf -s 5 -p ./profiles/dev.profile
 ```
 
-### Running with value override
-
-```shell
-./bin/gen4s run -i test-string=hello,test-int=12345 -c ./examples/playground/config.conf
-```
-
 ### Running scenario
 
 ```shell
 ./bin/gen4s scenario -c ./examples/scenario/scenario.conf -p ./profiles/dev.profile
+```
+
+### Running with value override
+
+```shell
+./bin/gen4s run -i test-string=hello,test-int=12345 -c ./examples/playground/config.conf
 ```
 
 ## Building from source
