@@ -5,7 +5,48 @@
 
 Gen4s is a powerful data generation tool designed for developers and QA engineers. 
 
-Features:
+## Table of Contents
+
+- [Features](#features)
+- [Installation](#installation)
+  - [Using Homebrew](#using-homebrew)
+  - [Manual](#manual)
+- [Running](#running)
+  - [Running with profile](#running-with-profile)
+  - [Running with value override](#running-with-value-override)
+  - [Running scenario](#running-scenario)
+- [Building from source](#building-from-source)
+- [Testing](#testing)
+- [Configuration](#configuration)
+  - [Input](#input)
+  - [Output](#output)
+    - [Stdout output](#stdout-output)
+    - [Kafka output](#kafka-output)
+    - [Kafka AVRO output](#kafka-avro-output)
+    - [Kafka Protobuf output](#kafka-protobuf-output)
+    - [File System output](#file-system-output)
+    - [Http output](#http-output)
+    - [AWS S3 Output](#aws-s3-output)
+  - [Transformers](#transformers)
+  - [Scenario configuration](#scenario-configuration)
+  - [Input Records & Variable Overrides](#input-records--variable-overrides)
+- [Schema definition and data generators](#schema-definition-and-data-generators)
+  - [Static value generator](#static-value-generator)
+  - [Timestamp generator](#timestamp-generator)
+  - [Int number generator](#int-number-generator)
+  - [Double number generator](#double-number-generator)
+  - [Boolean generator](#boolean-generator)
+  - [String generator](#string-generator)
+  - [String pattern generator](#string-pattern-generator)
+  - [Java UUID field generator](#java-uuid-field-generator)
+  - [GUID field generator](#guid-field-generator)
+  - [Ip address generator](#ip-address-generator)
+  - [Enumeration generator](#enumeration-generator)
+  - [Env var generator](#env-var-generator)
+  - [DateTime generator](#datetime-generator)
+  - [List generator](#list-generator)
+
+## Features:
 
 - **Data Generation**: Gen4s allows users to generate up-to-date data and publish it to their systems. This is particularly useful for testing and development purposes.
 
