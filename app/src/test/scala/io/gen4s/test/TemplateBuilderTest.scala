@@ -5,7 +5,6 @@ import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers
 
 import cats.data.NonEmptyList
-import cats.implicits.*
 import io.gen4s.core.generators.{GeneratedValue, Variable}
 import io.gen4s.core.templating.*
 import io.gen4s.core.InputRecord

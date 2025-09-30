@@ -20,8 +20,7 @@ trait KafkaOutputProcessorBase {
   protected type Key   = Array[Byte]
   protected type Value = Array[Byte]
 
-  protected def mkProducerSettings[F[_]: Async, K, V](bootstrapServers: BootstrapServers, conf: KafkaProducerConfig)(
-    using
+  protected def mkProducerSettings[F[_], K, V](bootstrapServers: BootstrapServers, conf: KafkaProducerConfig)(using
     keySerializer: KeySerializer[F, K],
     valueSerializer: ValueSerializer[F, V]): ProducerSettings[F, K, V] = {
     given keySerializerR: Resource[F, KeySerializer[F, K]]     = Resource.pure(keySerializer)
@@ -30,16 +29,12 @@ trait KafkaOutputProcessorBase {
     mkProducerSettingsResource(bootstrapServers, conf)
   }
 
-  protected def mkProducerSettingsResource[F[_]: Async, K, V](
-    bootstrapServers: BootstrapServers,
-    conf: KafkaProducerConfig)(using
+  protected def mkProducerSettingsResource[F[_], K, V](bootstrapServers: BootstrapServers, conf: KafkaProducerConfig)(
+    using
     keySerializer: Resource[F, KeySerializer[F, K]],
     valueSerializer: Resource[F, ValueSerializer[F, V]]): ProducerSettings[F, K, V] = {
     fs2.kafka
-      .ProducerSettings(
-        keySerializer = keySerializer,
-        valueSerializer = valueSerializer
-      )
+      .ProducerSettings[F, K, V](using keySerializer, valueSerializer)
       .withBootstrapServers(bootstrapServers.value)
       .withClientId("gen4s")
       .withAcks(Acks.All)
@@ -91,7 +86,7 @@ trait KafkaOutputProcessorBase {
   private def progressInfo[F[_]: Sync, V](n: Domain.NumberOfSamplesToGenerate): fs2.Pipe[F, Chunk[V], Chunk[V]] =
     if (n.value >= 10_000) progressBar(n) else passThrough()
 
-  private def passThrough[F[_]: Sync, V](): fs2.Pipe[F, Chunk[V], Chunk[V]] = src => src
+  private def passThrough[F[_], V](): fs2.Pipe[F, Chunk[V], Chunk[V]] = src => src
 
   private def progressBar[F[_]: Sync, V](n: Domain.NumberOfSamplesToGenerate): fs2.Pipe[F, Chunk[V], Chunk[V]] =
     src =>

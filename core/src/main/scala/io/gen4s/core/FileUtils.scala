@@ -10,11 +10,11 @@ import cats.effect.kernel.Sync
 object FileUtils {
 
   def readFile[F[_]: Sync](in: File): Resource[F, String] = {
-    Resource.fromAutoCloseable(Sync[F].blocking(Source.fromFile(in)(Codec.UTF8))).map(_.mkString)
+    Resource.fromAutoCloseable(Sync[F].blocking(Source.fromFile(in)(using Codec.UTF8))).map(_.mkString)
   }
 
   def readLines[F[_]: Sync](in: File): Resource[F, Iterator[String]] = {
-    Resource.fromAutoCloseable(Sync[F].blocking(Source.fromFile(in)(Codec.UTF8))).map(_.getLines())
+    Resource.fromAutoCloseable(Sync[F].blocking(Source.fromFile(in)(using Codec.UTF8))).map(_.getLines())
   }
 
 }

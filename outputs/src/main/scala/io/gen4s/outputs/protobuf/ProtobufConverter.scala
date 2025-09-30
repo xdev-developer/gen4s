@@ -6,8 +6,6 @@ import com.google.protobuf.util.JsonFormat
 import com.google.protobuf.Descriptors.Descriptor
 import com.google.protobuf.DynamicMessage
 
-import scala.jdk.CollectionConverters.*
-
 import cats.effect.kernel.{Resource, Sync}
 import io.confluent.kafka.schemaregistry.protobuf.dynamic.DynamicSchema
 import io.gen4s.core.templating.RenderedTemplate

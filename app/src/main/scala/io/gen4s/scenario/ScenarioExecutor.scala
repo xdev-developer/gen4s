@@ -9,8 +9,6 @@ import io.gen4s.cli.{Args, StageConfigLoader}
 import io.gen4s.conf.{EnvProfileConfig, ScenarioConfig, StageInput}
 import io.gen4s.stage.StageExecutor
 
-import scala.concurrent.duration.FiniteDuration
-
 import fs2.io.file.Files
 
 trait ScenarioExecutor[F[_]] {
@@ -20,7 +18,6 @@ trait ScenarioExecutor[F[_]] {
 object ScenarioExecutor {
 
   def make[F[_]: Async: EffConsole: Files: Logger](
-    args: Args,
     conf: ScenarioConfig,
     envProfileConfig: EnvProfileConfig): F[ScenarioExecutor[F]] = Async[F].delay {
     new ScenarioExecutor[F]() {
