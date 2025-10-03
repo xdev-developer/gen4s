@@ -2,14 +2,13 @@ package io.gen4s.core.streams
 
 import scala.util.Random
 
-import cats.Applicative
 import io.gen4s.core.templating.Template
 import io.gen4s.core.templating.TemplateBuilder
 import io.gen4s.core.Domain.NumberOfSamplesToGenerate
 
 object GeneratorStream {
 
-  def stream[F[_]: Applicative](
+  def stream[F[_]](
     n: NumberOfSamplesToGenerate,
     templateBuilder: TemplateBuilder,
     pickRandomTemplateFromList: Boolean = false): fs2.Stream[F, Template] = {

@@ -57,8 +57,8 @@ object RenderedTemplate extends Newtype[String] {
               case None => Array.empty[Byte]
             },
           jsonString = s => s.getBytes(StandardCharsets.UTF_8),
-          jsonArray = a => RenderedTemplate(TextTemplate.stripQuotes(key.noSpaces)).asByteArray,
-          jsonObject = o => RenderedTemplate(TextTemplate.stripQuotes(key.noSpaces)).asByteArray
+          jsonArray = _ => RenderedTemplate(TextTemplate.stripQuotes(key.noSpaces)).asByteArray,
+          jsonObject = _ => RenderedTemplate(TextTemplate.stripQuotes(key.noSpaces)).asByteArray
         )
       }
 

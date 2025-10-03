@@ -66,7 +66,7 @@ class KafkaProtobufOutputProcessor[F[_]: Async: Logger]
 
   private def makeValueSerializer(protoSettings: ProtobufSettings[F, DynamicMessage], writeTombstoneRecord: Boolean) = {
     if (writeTombstoneRecord) {
-      Serializer.resource(Serializer.asNull[F, DynamicMessage])
+      Serializer.resource(using Serializer.asNull[F, DynamicMessage])
     } else protobufSerializer[DynamicMessage].forValue(protoSettings)
   }
 

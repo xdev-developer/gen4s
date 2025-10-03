@@ -13,8 +13,6 @@ import io.gen4s.outputs.KafkaProducerConfig
 import io.gen4s.outputs.Output
 
 import eu.timepit.refined.pureconfig.*
-import eu.timepit.refined.types.numeric.PosInt
-import eu.timepit.refined.types.string.NonEmptyString
 import pureconfig.*
 import pureconfig.error.CannotConvert
 import pureconfig.error.FailureReason

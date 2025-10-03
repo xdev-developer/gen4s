@@ -5,7 +5,48 @@
 
 Gen4s is a powerful data generation tool designed for developers and QA engineers. 
 
-Features:
+## Table of Contents
+
+- [Features](#features)
+- [Installation](#installation)
+  - [Using Homebrew](#using-homebrew)
+  - [Manual](#manual)
+- [Running](#running)
+  - [Running with profile](#running-with-profile)
+  - [Running scenario](#running-scenario)
+  - [Running with value override](#running-with-value-override)
+- [Building from source](#building-from-source)
+- [Testing](#testing)
+- [Configuration](#configuration)
+  - [Input](#input)
+  - [Output](#output)
+    - [Stdout output](#stdout-output)
+    - [Kafka output](#kafka-output)
+    - [Kafka AVRO output](#kafka-avro-output)
+    - [Kafka Protobuf output](#kafka-protobuf-output)
+    - [File System output](#file-system-output)
+    - [Http output](#http-output)
+    - [AWS S3 Output](#aws-s3-output)
+  - [Transformers](#transformers)
+  - [Scenario configuration](#scenario-configuration)
+  - [Input Records & Variable Overrides](#input-records--variable-overrides)
+- [Schema definition and data generators](#schema-definition-and-data-generators)
+  - [Static value generator](#static-value-generator)
+  - [Timestamp generator](#timestamp-generator)
+  - [Int number generator](#int-number-generator)
+  - [Double number generator](#double-number-generator)
+  - [Boolean generator](#boolean-generator)
+  - [String generator](#string-generator)
+  - [String pattern generator](#string-pattern-generator)
+  - [Java UUID field generator](#java-uuid-field-generator)
+  - [GUID field generator](#guid-field-generator)
+  - [Ip address generator](#ip-address-generator)
+  - [Enumeration generator](#enumeration-generator)
+  - [Env var generator](#env-var-generator)
+  - [DateTime generator](#datetime-generator)
+  - [List generator](#list-generator)
+
+## Features:
 
 - **Data Generation**: Gen4s allows users to generate up-to-date data and publish it to their systems. This is particularly useful for testing and development purposes.
 
@@ -92,16 +133,16 @@ ORG_ID=12345
 ./bin/gen4s run -c ./examples/playground/config.conf -s 5 -p ./profiles/dev.profile
 ```
 
-### Running with value override
-
-```shell
-./bin/gen4s run -i test-string=hello,test-int=12345 -c ./examples/playground/config.conf
-```
-
 ### Running scenario
 
 ```shell
 ./bin/gen4s scenario -c ./examples/scenario/scenario.conf -p ./profiles/dev.profile
+```
+
+### Running with value override
+
+```shell
+./bin/gen4s run -i test-string=hello,test-int=12345 -c ./examples/playground/config.conf
 ```
 
 ## Building from source
@@ -438,6 +479,49 @@ stages: [
 ]
 ```
 
+### Input Records & Variable Overrides
+
+Input Records allow you to override template variables at runtime. This is useful when you need to:
+- Test specific scenarios with known values
+- Override generated data with fixed values
+- Share the same configuration across different environments
+
+#### Command Line Override
+
+You can override variables using the `-i` or `--input-records` flag:
+
+```shell
+./bin/gen4s run -i user-id=12345,timestamp=1632150400000 -c ./config.conf
+```
+
+#### In Scenarios
+
+Variables can be overridden in scenario configurations:
+
+```properties
+stages: [
+    {
+        name: "Test with overrides",
+        samples: 3,
+        config-file: "./config.conf",
+        overrides {
+            user-id: "12345",
+            timestamp: "1632150400000"
+        }
+    }
+]
+```
+
+#### Precedence Order
+
+Variable values are resolved in the following order:
+1. Command line overrides (`-i` flag)
+2. Scenario overrides (in scenario config)
+3. Generated values (from schema definition)
+
+This means command line overrides take precedence over scenario overrides, which take precedence over generated values.
+
+
 ## Schema definition and data generators
 
 ### Static value generator
@@ -594,20 +678,3 @@ Where
 **len** - list size to generate.
 
 **generator** - element generator.
-
-
-
-## Template syntax
-
-- \* - generates any symbol
-  - \*{2} - generates random symbols with 2 symbols size
-  - \*{2, 5} - generates random symbols with random size between 2 and 5
-- %w - generates random english word
-  - %w{4} - generates random english word with fixed length. Max available length is 31
-  - %w{2, 6} - generates random english word with random length between 2 and 6
-- %n{2} - returns defined number
-- %n{4, 10} - returns random number between 4 and 10
-- \#{4} - returns random HEX number with provided length (4)
-- \#{4, 8} - returns random HEX number of random length between 4 and 8
-- %ip4, %ip6, %mac - generates random values for IP v4, IP v6 and mac address respectively
-- other values are considered as text tokens
