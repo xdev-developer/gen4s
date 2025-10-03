@@ -48,7 +48,7 @@ class FileSystemOutputTest extends AsyncFunSpec with AsyncIOSpec with Matchers {
   }
 
   private def readFile(in: File): String = {
-    val bufferedSource = Source.fromFile(in)(StandardCharsets.UTF_8)
+    val bufferedSource = Source.fromFile(in)(using StandardCharsets.UTF_8)
     try bufferedSource.mkString
     finally bufferedSource.close()
   }

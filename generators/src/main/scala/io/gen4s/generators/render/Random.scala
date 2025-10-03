@@ -21,11 +21,10 @@ private[generators] object RandomAnySymbols extends Random[String]:
 private[generators] object RandomWord extends Random[String]:
 
   private val words = scala.io.Source
-    .fromResource("words_alpha.txt")(Codec.UTF8)
+    .fromResource("words_alpha.txt")(using Codec.UTF8)
     .getLines
     .toVector
     .groupBy(_.length)
-    .toMap
 
   // the longest word in the dictionary
   private val maxWordLength = 31

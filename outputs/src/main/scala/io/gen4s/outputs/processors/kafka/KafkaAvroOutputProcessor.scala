@@ -124,7 +124,7 @@ class KafkaAvroOutputProcessor[F[_]: {Async, Logger}]
   private def makeValueSerializer(
     schema: Schema,
     avroSettings: AvroSettings[F],
-    writeTombstoneRecord: Boolean = false): Resource[F, ValueSerializer[F, AvroDynamicValue]] = {
+    writeTombstoneRecord: Boolean): Resource[F, ValueSerializer[F, AvroDynamicValue]] = {
     if writeTombstoneRecord then Resource.pure(Serializer.asNull[F, AvroDynamicValue])
     else
       given Aux[Avro.Record, AvroDynamicValue] = AvroCodec.valueCodec(schema)

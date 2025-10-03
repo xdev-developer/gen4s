@@ -10,7 +10,6 @@ import com.typesafe.config.ConfigFactory
 import cats.data.NonEmptyList
 import cats.effect.{IO, Sync}
 import cats.effect.testing.scalatest.AsyncIOSpec
-import io.gen4s.cli.Args
 import io.gen4s.conf.{EnvProfileConfig, ScenarioConfig, StageInput}
 import io.gen4s.core.Domain.NumberOfSamplesToGenerate
 import io.gen4s.scenario.ScenarioExecutor
@@ -27,7 +26,6 @@ class ScenarioExecutorTest extends AsyncFunSpec with AsyncIOSpec with Matchers {
 
     it("Run scenario generation stream") {
       val executor = ScenarioExecutor.make[IO](
-        args = Args(numberOfSamplesToGenerate = numSamples),
         envProfileConfig = EnvProfileConfig(ConfigFactory.empty()),
         conf = ScenarioConfig(
           NonEmptyList.one(

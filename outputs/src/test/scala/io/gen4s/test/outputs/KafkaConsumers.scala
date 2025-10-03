@@ -101,14 +101,14 @@ trait KafkaConsumers {
 
     val avroSettings = AvroSettings(SchemaRegistryClientSettings[F](registryUrl))
 
-    implicit val keyDeserializer: Resource[F, KeyDeserializer[F, K]] =
+    given keyDeserializer: Resource[F, KeyDeserializer[F, K]] =
       avroDeserializer[K].forKey(avroSettings)
 
-    implicit val entityDeserializer: Resource[F, ValueDeserializer[F, V]] = avroDeserializer[V].forValue(avroSettings)
+    given entityDeserializer: Resource[F, ValueDeserializer[F, V]] = avroDeserializer[V].forValue(avroSettings)
 
-    val consumerSettings = ConsumerSettings(
-      keyDeserializer = keyDeserializer,
-      valueDeserializer = entityDeserializer
+    val consumerSettings = ConsumerSettings(using
+      keyDeserializer,
+      entityDeserializer
     ).withAutoOffsetReset(AutoOffsetReset.Earliest)
       .withBootstrapServers(bootstrapServer.value)
       .withGroupId(String.valueOf(UUID.randomUUID()))
