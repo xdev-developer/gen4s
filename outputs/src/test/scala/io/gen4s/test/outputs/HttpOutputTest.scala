@@ -31,7 +31,7 @@ class HttpOutputTest extends AsyncFunSpec with AsyncIOSpec with Matchers {
       )
 
       val output = HttpOutput(
-        "https://postman-echo.com/post",
+        "https://httpbingo.org/post",
         HttpMethods.Post
       )
 
@@ -49,7 +49,7 @@ class HttpOutputTest extends AsyncFunSpec with AsyncIOSpec with Matchers {
       )
 
       val output = HttpOutput(
-        "https://postman-echo.com/put",
+        "https://httpbingo.org/put",
         HttpMethods.Put
       )
 
