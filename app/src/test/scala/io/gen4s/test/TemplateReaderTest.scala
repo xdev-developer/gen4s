@@ -5,8 +5,8 @@ import java.io.File
 import org.scalatest.funspec.AsyncFunSpec
 import org.scalatest.matchers.should.Matchers
 
-import cats.effect.testing.scalatest.AsyncIOSpec
 import cats.effect.IO
+import cats.effect.testing.scalatest.AsyncIOSpec
 import io.gen4s.TemplateReader
 
 class TemplateReaderTest extends AsyncFunSpec with AsyncIOSpec with Matchers {

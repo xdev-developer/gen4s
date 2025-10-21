@@ -2,9 +2,9 @@ package io.gen4s.core.streams
 
 import scala.util.Random
 
+import io.gen4s.core.Domain.NumberOfSamplesToGenerate
 import io.gen4s.core.templating.Template
 import io.gen4s.core.templating.TemplateBuilder
-import io.gen4s.core.Domain.NumberOfSamplesToGenerate
 
 object GeneratorStream {
 

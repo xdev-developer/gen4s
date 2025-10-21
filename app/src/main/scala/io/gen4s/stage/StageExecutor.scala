@@ -1,23 +1,23 @@
 package io.gen4s.stage
 
-import org.typelevel.log4cats.slf4j.Slf4jLogger
 import org.typelevel.log4cats.Logger
+import org.typelevel.log4cats.slf4j.Slf4jLogger
 
+import cats.Applicative
 import cats.data.NonEmptyList
 import cats.effect.kernel.Async
 import cats.effect.std.Console as EffConsole
 import cats.implicits.*
-import cats.Applicative
-import io.gen4s.{greenOut, RecordsReader, TemplateReader, TemplateValidationError}
 import io.gen4s.cli.Args
 import io.gen4s.conf.StageConfig
+import io.gen4s.core.InputRecord
 import io.gen4s.core.generators.{GeneratedValue, Variable}
 import io.gen4s.core.streams.GeneratorStream
-import io.gen4s.core.templating.{OutputValidator, Template}
 import io.gen4s.core.templating.TemplateBuilder
-import io.gen4s.core.InputRecord
+import io.gen4s.core.templating.{OutputValidator, Template}
 import io.gen4s.generators.SchemaReader
 import io.gen4s.outputs.OutputStreamExecutor
+import io.gen4s.{RecordsReader, TemplateReader, TemplateValidationError, greenOut}
 
 import fs2.io.file.Files
 

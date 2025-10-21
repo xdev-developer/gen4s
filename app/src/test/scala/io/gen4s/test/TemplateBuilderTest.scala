@@ -1,13 +1,13 @@
 package io.gen4s.test
 
-import org.scalatest.{EitherValues, OptionValues}
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers
+import org.scalatest.{EitherValues, OptionValues}
 
 import cats.data.NonEmptyList
+import io.gen4s.core.InputRecord
 import io.gen4s.core.generators.{GeneratedValue, Variable}
 import io.gen4s.core.templating.*
-import io.gen4s.core.InputRecord
 import io.gen4s.generators.impl.TimestampGenerator
 
 class TemplateBuilderTest extends AnyFunSpec with Matchers with EitherValues with OptionValues {

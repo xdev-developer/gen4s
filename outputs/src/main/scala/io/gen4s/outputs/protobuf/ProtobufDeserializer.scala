@@ -2,8 +2,8 @@ package io.gen4s.outputs.protobuf
 
 import com.google.protobuf.Message
 
-import cats.effect.kernel.Resource
 import cats.effect.Sync
+import cats.effect.kernel.Resource
 
 import fs2.kafka.{Deserializer, KeyDeserializer, ValueDeserializer}
 

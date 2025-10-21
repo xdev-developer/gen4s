@@ -5,8 +5,8 @@ import org.typelevel.log4cats.Logger
 import cats.effect.kernel.Async
 import cats.effect.std.Console as EffConsole
 import cats.implicits.*
-import io.gen4s.core.templating.Template
 import io.gen4s.core.Domain.NumberOfSamplesToGenerate
+import io.gen4s.core.templating.Template
 import io.gen4s.outputs.processors.*
 import io.gen4s.outputs.processors.aws.S3OutputProcessor
 import io.gen4s.outputs.processors.kafka.*

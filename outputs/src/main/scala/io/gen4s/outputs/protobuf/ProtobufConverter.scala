@@ -2,9 +2,9 @@ package io.gen4s.outputs.protobuf
 
 import java.io.FileInputStream
 
-import com.google.protobuf.util.JsonFormat
 import com.google.protobuf.Descriptors.Descriptor
 import com.google.protobuf.DynamicMessage
+import com.google.protobuf.util.JsonFormat
 
 import cats.effect.kernel.{Resource, Sync}
 import io.confluent.kafka.schemaregistry.protobuf.dynamic.DynamicSchema

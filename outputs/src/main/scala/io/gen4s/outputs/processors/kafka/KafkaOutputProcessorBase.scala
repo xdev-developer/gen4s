@@ -2,17 +2,17 @@ package io.gen4s.outputs.processors.kafka
 
 import org.apache.kafka.clients.producer.ProducerConfig
 
-import cats.effect.kernel.{Async, Sync}
 import cats.effect.Resource
+import cats.effect.kernel.{Async, Sync}
 import cats.implicits.*
 import io.circe.ParsingFailure
-import io.gen4s.core.templating.{RenderedTemplate, Template}
 import io.gen4s.core.Domain
 import io.gen4s.core.Domain.{BootstrapServers, NumberOfSamplesToGenerate}
+import io.gen4s.core.templating.{RenderedTemplate, Template}
 import io.gen4s.outputs.{KafkaOutputBase, KafkaProducerConfig}
 
-import fs2.kafka.{Acks, KeySerializer, ProducerRecord, ProducerSettings, ValueSerializer}
 import fs2.Chunk
+import fs2.kafka.{Acks, KeySerializer, ProducerRecord, ProducerSettings, ValueSerializer}
 import me.tongfei.progressbar.{ProgressBarBuilder, ProgressBarStyle}
 
 trait KafkaOutputProcessorBase {

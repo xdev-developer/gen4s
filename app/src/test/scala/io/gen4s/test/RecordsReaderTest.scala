@@ -2,15 +2,15 @@ package io.gen4s.test
 
 import java.io.File
 
+import org.scalatest.OptionValues
 import org.scalatest.freespec.AsyncFreeSpec
 import org.scalatest.matchers.should.Matchers
-import org.scalatest.OptionValues
 
-import cats.effect.testing.scalatest.AsyncIOSpec
 import cats.effect.IO
+import cats.effect.testing.scalatest.AsyncIOSpec
 import cats.syntax.option.*
-import io.gen4s.core.generators.*
 import io.gen4s.RecordsReader
+import io.gen4s.core.generators.*
 
 class RecordsReaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers with OptionValues {
 

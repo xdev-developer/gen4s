@@ -4,7 +4,7 @@ import io.circe.derivation.ConfiguredCodec
 import io.circe.refined.*
 import io.gen4s.core.generators.*
 import io.gen4s.generators.codec.given
-import io.gen4s.generators.impl.EnvVarGenerator.{allowedVars, ALLOWED_VAR_PREFIX}
+import io.gen4s.generators.impl.EnvVarGenerator.{ALLOWED_VAR_PREFIX, allowedVars}
 
 import eu.timepit.refined.types.string.NonEmptyString
 

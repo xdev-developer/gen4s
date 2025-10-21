@@ -7,8 +7,8 @@ import scala.annotation.nowarn
 import cats.implicits.*
 
 import tech.allegro.schema.json2avro.converter.JsonAvroConverter
-import vulcan.{Avro, AvroError, Codec}
 import vulcan.Codec.Aux
+import vulcan.{Avro, AvroError, Codec}
 
 object AvroCodec {
 

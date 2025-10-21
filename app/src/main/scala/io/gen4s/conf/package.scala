@@ -2,8 +2,8 @@ package io.gen4s
 
 import com.typesafe.config.{Config, ConfigFactory}
 
-import io.gen4s.core.generators.Variable
 import io.gen4s.core.Domain.NumberOfSamplesToGenerate
+import io.gen4s.core.generators.Variable
 
 import pureconfig.ConfigReader
 

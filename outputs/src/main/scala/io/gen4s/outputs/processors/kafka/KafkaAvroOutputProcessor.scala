@@ -3,19 +3,19 @@ package io.gen4s.outputs.processors.kafka
 import org.apache.avro.Schema
 import org.typelevel.log4cats.Logger
 
+import cats.Applicative
 import cats.effect.kernel.{Async, Resource}
 import cats.implicits.*
-import cats.Applicative
 import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient
-import io.gen4s.core.templating.{RenderedTemplate, Template}
 import io.gen4s.core.Domain
 import io.gen4s.core.Domain.Topic
+import io.gen4s.core.templating.{RenderedTemplate, Template}
+import io.gen4s.outputs.KafkaAvroOutput
 import io.gen4s.outputs.avro.{AvroCodec, AvroDynamicKey, AvroDynamicValue, SchemaLoader}
 import io.gen4s.outputs.processors.OutputProcessor
-import io.gen4s.outputs.KafkaAvroOutput
 
-import fs2.kafka.{KeySerializer, Serializer, ValueSerializer}
 import fs2.kafka.vulcan.{AvroSettings, SchemaRegistryClient}
+import fs2.kafka.{KeySerializer, Serializer, ValueSerializer}
 import vulcan.Avro
 import vulcan.Codec.Aux
 

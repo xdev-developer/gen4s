@@ -2,31 +2,31 @@ package io.gen4s.test.outputs
 
 import java.net.URI
 
+import org.scalatest.OptionValues
 import org.scalatest.funspec.AsyncFunSpec
 import org.scalatest.matchers.should.Matchers
-import org.scalatest.OptionValues
 import org.testcontainers.containers.localstack.LocalStackContainer as JavaLocalStackContainer
-import org.typelevel.log4cats.slf4j.Slf4jLogger
 import org.typelevel.log4cats.Logger
+import org.typelevel.log4cats.slf4j.Slf4jLogger
 
-import com.dimafeng.testcontainers.scalatest.TestContainersForAll
 import com.dimafeng.testcontainers.LocalStackV2Container
+import com.dimafeng.testcontainers.scalatest.TestContainersForAll
 
 import cats.data.NonEmptyList
-import cats.effect.{IO, Sync}
 import cats.effect.testing.scalatest.AsyncIOSpec
+import cats.effect.{IO, Sync}
+import io.gen4s.core.Domain.NumberOfSamplesToGenerate
 import io.gen4s.core.generators.Variable
 import io.gen4s.core.streams.GeneratorStream
 import io.gen4s.core.templating.{SourceTemplate, TemplateBuilder}
-import io.gen4s.core.Domain.NumberOfSamplesToGenerate
 import io.gen4s.generators.impl.TimestampGenerator
 import io.gen4s.outputs.{OutputStreamExecutor, S3Output}
 import io.laserdisc.pure.s3.tagless.{Interpreter as S3Interpreter, S3AsyncClientOp}
 
 import eu.timepit.refined.types.string.NonEmptyString
 import software.amazon.awssdk.endpoints.Endpoint
-import software.amazon.awssdk.services.s3.model.{CreateBucketRequest, ListObjectsRequest}
 import software.amazon.awssdk.services.s3.S3AsyncClient
+import software.amazon.awssdk.services.s3.model.{CreateBucketRequest, ListObjectsRequest}
 
 class AWSOutputStreamTest
     extends AsyncFunSpec
@@ -53,7 +53,6 @@ class AWSOutputStreamTest
 
     it("Send records to AWS S3 bucket") {
       withContainers { localStack =>
-
         val credentials = localStack.staticCredentialsProvider.resolveCredentials()
 
         System.setProperty("aws.accessKeyId", credentials.accessKeyId())

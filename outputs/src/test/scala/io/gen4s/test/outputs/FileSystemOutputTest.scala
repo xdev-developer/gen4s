@@ -5,18 +5,18 @@ import java.nio.charset.StandardCharsets
 
 import org.scalatest.funspec.AsyncFunSpec
 import org.scalatest.matchers.should.Matchers
-import org.typelevel.log4cats.slf4j.Slf4jLogger
 import org.typelevel.log4cats.Logger
+import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 import scala.io.Source
 
 import cats.data.NonEmptyList
-import cats.effect.{IO, Sync}
 import cats.effect.testing.scalatest.AsyncIOSpec
+import cats.effect.{IO, Sync}
+import io.gen4s.core.Domain.NumberOfSamplesToGenerate
 import io.gen4s.core.generators.Variable
 import io.gen4s.core.streams.GeneratorStream
 import io.gen4s.core.templating.{SourceTemplate, TemplateBuilder}
-import io.gen4s.core.Domain.NumberOfSamplesToGenerate
 import io.gen4s.generators.impl.TimestampGenerator
 import io.gen4s.outputs.{FsOutput, OutputStreamExecutor}
 

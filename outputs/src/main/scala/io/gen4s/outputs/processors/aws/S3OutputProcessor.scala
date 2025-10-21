@@ -5,15 +5,15 @@ import java.util.UUID
 import org.typelevel.log4cats.Logger
 
 import cats.effect.kernel.Async
-import io.gen4s.core.templating.Template
 import io.gen4s.core.Domain
-import io.gen4s.outputs.processors.OutputProcessor
+import io.gen4s.core.templating.Template
 import io.gen4s.outputs.S3Output
+import io.gen4s.outputs.processors.OutputProcessor
 import io.laserdisc.pure.s3.tagless.{Interpreter as S3Interpreter, S3AsyncClientOp}
 
 import eu.timepit.refined.types.string.NonEmptyString
-import fs2.aws.s3.models.Models.{BucketName, FileKey}
 import fs2.aws.s3.S3
+import fs2.aws.s3.models.Models.{BucketName, FileKey}
 import software.amazon.awssdk.services.s3.S3AsyncClient
 
 class S3OutputProcessor[F[_]: Async: Logger] extends OutputProcessor[F, S3Output] {

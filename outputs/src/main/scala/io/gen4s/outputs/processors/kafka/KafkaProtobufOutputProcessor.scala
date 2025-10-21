@@ -7,14 +7,14 @@ import com.google.protobuf.DynamicMessage
 
 import cats.effect.kernel.{Async, Resource}
 import cats.implicits.*
-import io.gen4s.core.templating.{RenderedTemplate, Template}
 import io.gen4s.core.Domain
-import io.gen4s.outputs.{KafkaProtobufOutput, ProtobufDescriptorConfig}
+import io.gen4s.core.templating.{RenderedTemplate, Template}
 import io.gen4s.outputs.processors.OutputProcessor
 import io.gen4s.outputs.protobuf.*
+import io.gen4s.outputs.{KafkaProtobufOutput, ProtobufDescriptorConfig}
 
-import fs2.kafka.{Serializer, ValueSerializer}
 import fs2.kafka.vulcan.SchemaRegistryClientSettings
+import fs2.kafka.{Serializer, ValueSerializer}
 
 class KafkaProtobufOutputProcessor[F[_]: Async: Logger]
     extends OutputProcessor[F, KafkaProtobufOutput]
@@ -29,7 +29,6 @@ class KafkaProtobufOutputProcessor[F[_]: Async: Logger]
 
     loadValueDescriptor(protoConfig.valueDescriptor)
       .flatMap { descriptor =>
-
         val registryClientSettings = SchemaRegistryClientSettings[F](protoConfig.schemaRegistryUrl)
           .withMaxCacheSize(protoConfig.registryClientMaxCacheSize)
 

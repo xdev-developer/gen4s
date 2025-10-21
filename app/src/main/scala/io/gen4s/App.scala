@@ -1,7 +1,7 @@
 package io.gen4s
 
-import org.typelevel.log4cats.{Logger, SelfAwareStructuredLogger}
 import org.typelevel.log4cats.slf4j.Slf4jLogger
+import org.typelevel.log4cats.{Logger, SelfAwareStructuredLogger}
 
 import cats.effect.*
 import cats.effect.std.Console

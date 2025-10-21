@@ -2,13 +2,13 @@ package io.gen4s.outputs.processors.kafka
 
 import java.nio.charset.StandardCharsets
 
+import cats.Applicative
 import cats.effect.kernel.Async
 import cats.implicits.*
-import cats.Applicative
-import io.gen4s.core.templating.Template
 import io.gen4s.core.Domain
-import io.gen4s.outputs.processors.OutputProcessor
+import io.gen4s.core.templating.Template
 import io.gen4s.outputs.KafkaOutput
+import io.gen4s.outputs.processors.OutputProcessor
 
 import fs2.kafka.{Headers, Serializer, ValueSerializer}
 

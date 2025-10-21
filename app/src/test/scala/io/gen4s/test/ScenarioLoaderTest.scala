@@ -2,13 +2,13 @@ package io.gen4s.test
 
 import java.util.concurrent.TimeUnit
 
+import org.scalatest.OptionValues
 import org.scalatest.freespec.AsyncFreeSpec
 import org.scalatest.matchers.should.Matchers
-import org.scalatest.OptionValues
 
+import cats.effect.IO
 import cats.effect.kernel.Sync
 import cats.effect.testing.scalatest.AsyncIOSpec
-import cats.effect.IO
 import io.gen4s.conf.*
 
 import scala.concurrent.duration.FiniteDuration

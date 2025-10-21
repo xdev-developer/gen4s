@@ -1,8 +1,8 @@
 package io.gen4s.outputs.processors
 
 import cats.effect.kernel.Sync
-import io.gen4s.core.templating.Template
 import io.gen4s.core.Domain
+import io.gen4s.core.templating.Template
 import io.gen4s.outputs.FsOutput
 
 import fs2.io.file.{Files, Path}

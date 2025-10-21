@@ -4,8 +4,8 @@ import java.io.File
 
 import com.typesafe.config.*
 
-import cats.{MonadThrow, Show}
 import cats.syntax.all.*
+import cats.{MonadThrow, Show}
 import io.gen4s.conf.*
 
 import pureconfig.ConfigSource

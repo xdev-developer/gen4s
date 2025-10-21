@@ -1,9 +1,9 @@
 package io.gen4s.outputs.processors
 
-import cats.effect.kernel.Async
 import cats.Applicative
-import io.gen4s.core.templating.Template
+import cats.effect.kernel.Async
 import io.gen4s.core.Domain
+import io.gen4s.core.templating.Template
 import io.gen4s.outputs.{HttpMethods, HttpOutput}
 
 import sttp.client3.asynchttpclient.cats.AsyncHttpClientCatsBackend

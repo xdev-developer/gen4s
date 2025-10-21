@@ -2,8 +2,8 @@ package io.gen4s
 package generators
 package impl
 
-import java.time.temporal.ChronoUnit
 import java.time.Instant
+import java.time.temporal.ChronoUnit
 import java.util.concurrent.TimeUnit
 
 import io.circe.derivation.ConfiguredCodec

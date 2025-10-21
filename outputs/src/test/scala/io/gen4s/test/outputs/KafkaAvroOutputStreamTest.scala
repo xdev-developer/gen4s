@@ -4,29 +4,29 @@ import java.io.File
 import java.time.Instant
 
 import org.apache.avro.SchemaParseException
+import org.scalatest.OptionValues
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers
-import org.scalatest.OptionValues
-import org.typelevel.log4cats.slf4j.Slf4jLogger
 import org.typelevel.log4cats.Logger
+import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 import com.dimafeng.testcontainers.{ForEachTestContainer, MultipleContainers}
 
-import cats.data.NonEmptyList
-import cats.effect.{IO, Sync}
-import cats.effect.unsafe.implicits.global
-import cats.implicits.*
 import cats.Show
+import cats.data.NonEmptyList
+import cats.effect.unsafe.implicits.global
+import cats.effect.{IO, Sync}
+import cats.implicits.*
 import io.confluent.kafka.schemaregistry.avro.AvroSchema
-import io.confluent.kafka.schemaregistry.client.rest.exceptions.RestClientException
 import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient
+import io.confluent.kafka.schemaregistry.client.rest.exceptions.RestClientException
+import io.gen4s.core.Domain.*
 import io.gen4s.core.generators.Variable
 import io.gen4s.core.streams.GeneratorStream
 import io.gen4s.core.templating.{SourceTemplate, TemplateBuilder}
-import io.gen4s.core.Domain.*
 import io.gen4s.generators.impl.{IntNumberGenerator, StringPatternGenerator}
-import io.gen4s.outputs.{AvroConfig, KafkaAvroOutput, OutputStreamExecutor}
 import io.gen4s.outputs.avro.SchemaLoader
+import io.gen4s.outputs.{AvroConfig, KafkaAvroOutput, OutputStreamExecutor}
 
 import eu.timepit.refined.types.string.NonEmptyString
 import vulcan.{AvroException, Codec}

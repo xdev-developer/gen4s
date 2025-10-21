@@ -1,16 +1,16 @@
 package io.gen4s.generators.test
 
+import org.scalatest.EitherValues
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers
-import org.scalatest.EitherValues
 
 import cats.data.NonEmptyList
-import io.circe.{Decoder, Json}
 import io.circe.parser.*
+import io.circe.{Decoder, Json}
 import io.gen4s.core.generators.{Generator, Variable}
+import io.gen4s.generators.Generators
 import io.gen4s.generators.codec.given
 import io.gen4s.generators.impl.*
-import io.gen4s.generators.Generators
 
 import eu.timepit.refined.types.string.NonEmptyString
 

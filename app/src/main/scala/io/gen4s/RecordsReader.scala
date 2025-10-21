@@ -3,8 +3,8 @@ package io.gen4s
 import java.io.File
 
 import cats.effect.kernel.{Resource, Sync}
-import io.gen4s.core.generators.{GeneratedValue, Variable}
 import io.gen4s.core.InputRecord
+import io.gen4s.core.generators.{GeneratedValue, Variable}
 
 /**
  * A trait that defines the method for reading records from a file.

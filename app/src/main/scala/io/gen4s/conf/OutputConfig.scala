@@ -6,9 +6,9 @@ import scala.deriving.Mirror
 import scala.util.Try
 
 import cats.implicits.*
-import io.gen4s.core.templating.{OutputTransformer, OutputValidator}
 import io.gen4s.core.Domain.BootstrapServers
 import io.gen4s.core.Domain.Topic
+import io.gen4s.core.templating.{OutputTransformer, OutputValidator}
 import io.gen4s.outputs.KafkaProducerConfig
 import io.gen4s.outputs.Output
 

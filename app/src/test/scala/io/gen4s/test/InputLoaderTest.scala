@@ -3,9 +3,9 @@ package io.gen4s.test
 import org.scalatest.freespec.AsyncFreeSpec
 import org.scalatest.matchers.should.Matchers
 
+import cats.effect.IO
 import cats.effect.kernel.Sync
 import cats.effect.testing.scalatest.AsyncIOSpec
-import cats.effect.IO
 import io.gen4s.conf.*
 
 class InputLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {

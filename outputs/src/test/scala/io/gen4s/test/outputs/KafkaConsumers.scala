@@ -7,7 +7,7 @@ import scala.reflect.ClassTag
 import cats.effect.kernel.{Async, Resource}
 import io.confluent.kafka.schemaregistry.protobuf.ProtobufSchemaProvider
 import io.gen4s.core.Domain.*
-import io.gen4s.outputs.protobuf.{protobufDeserializer, ProtobufSettings}
+import io.gen4s.outputs.protobuf.{ProtobufSettings, protobufDeserializer}
 
 import scala.concurrent.duration.*
 

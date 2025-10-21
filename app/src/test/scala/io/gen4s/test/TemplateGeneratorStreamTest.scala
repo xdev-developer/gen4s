@@ -1,16 +1,16 @@
 package io.gen4s.test
 
+import org.scalatest.OptionValues
 import org.scalatest.funspec.AsyncFunSpec
 import org.scalatest.matchers.should.Matchers
-import org.scalatest.OptionValues
 
 import cats.data.NonEmptyList
-import cats.effect.testing.scalatest.AsyncIOSpec
 import cats.effect.IO
+import cats.effect.testing.scalatest.AsyncIOSpec
+import io.gen4s.core.Domain.NumberOfSamplesToGenerate
 import io.gen4s.core.generators.Variable
 import io.gen4s.core.streams.GeneratorStream
 import io.gen4s.core.templating.*
-import io.gen4s.core.Domain.NumberOfSamplesToGenerate
 import io.gen4s.generators.impl.{StringPatternGenerator, TimestampGenerator}
 
 import eu.timepit.refined.types.string.NonEmptyString

@@ -2,9 +2,9 @@ package io.gen4s.conf
 
 import java.io.File
 
-import io.gen4s.core.generators.{GeneratedValue, Variable}
 import io.gen4s.core.Domain.NumberOfSamplesToGenerate
 import io.gen4s.core.InputRecord
+import io.gen4s.core.generators.{GeneratedValue, Variable}
 
 import scala.concurrent.duration.FiniteDuration
 

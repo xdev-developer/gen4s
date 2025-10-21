@@ -2,9 +2,9 @@ package io.gen4s
 package generators
 package impl
 
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
-import java.time.ZonedDateTime
 
 import io.circe.derivation.ConfiguredCodec
 import io.gen4s.core.generators.*

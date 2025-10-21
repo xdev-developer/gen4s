@@ -1,11 +1,11 @@
 package io.gen4s.test
 
+import org.scalatest.OptionValues
 import org.scalatest.freespec.AsyncFreeSpec
 import org.scalatest.matchers.should.Matchers
-import org.scalatest.OptionValues
 
-import cats.effect.{ExitCode, IO}
 import cats.effect.testing.scalatest.AsyncIOSpec
+import cats.effect.{ExitCode, IO}
 import io.gen4s.App
 
 class AppTest extends AsyncFreeSpec with AsyncIOSpec with Matchers with OptionValues {

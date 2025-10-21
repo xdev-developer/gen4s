@@ -1,22 +1,22 @@
 package io.gen4s.test.outputs
 
+import org.scalatest.OptionValues
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers
-import org.scalatest.OptionValues
-import org.typelevel.log4cats.slf4j.Slf4jLogger
 import org.typelevel.log4cats.Logger
+import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 import com.dimafeng.testcontainers.{ForEachTestContainer, MultipleContainers}
 
 import cats.data.NonEmptyList
-import cats.effect.{IO, Sync}
 import cats.effect.unsafe.implicits.global
+import cats.effect.{IO, Sync}
 import cats.implicits.*
 import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient
+import io.gen4s.core.Domain.*
 import io.gen4s.core.generators.Variable
 import io.gen4s.core.streams.GeneratorStream
 import io.gen4s.core.templating.{SourceTemplate, TemplateBuilder}
-import io.gen4s.core.Domain.*
 import io.gen4s.generators.impl.{IntNumberGenerator, StringPatternGenerator}
 import io.gen4s.outputs.{KafkaProtobufOutput, OutputStreamExecutor, ProtobufConfig, ProtobufDescriptorConfig}
 import io.gen4s.proto.PersonValue

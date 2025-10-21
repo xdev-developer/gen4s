@@ -7,9 +7,9 @@ import scala.annotation.nowarn
 import cats.implicits.*
 import io.gen4s.app.build.info.BuildInfo
 import io.gen4s.conf.ExecMode
-import io.gen4s.core.generators.{GeneratedValue, Variable}
 import io.gen4s.core.Domain.*
 import io.gen4s.core.InputRecord
+import io.gen4s.core.generators.{GeneratedValue, Variable}
 
 // $COVERAGE-OFF$
 @nowarn

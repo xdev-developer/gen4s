@@ -2,12 +2,12 @@ package io.gen4s.test
 
 import java.io.File
 
+import org.scalatest.OptionValues
 import org.scalatest.freespec.AsyncFreeSpec
 import org.scalatest.matchers.should.Matchers
-import org.scalatest.OptionValues
 
-import cats.effect.testing.scalatest.AsyncIOSpec
 import cats.effect.IO
+import cats.effect.testing.scalatest.AsyncIOSpec
 import io.gen4s.cli.EnvironmentVariablesProfileLoader
 
 class EnvProfileLoaderTest extends AsyncFreeSpec with AsyncIOSpec with Matchers with OptionValues {

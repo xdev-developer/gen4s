@@ -2,12 +2,12 @@ package io.gen4s
 
 import java.io.File
 
+import cats.FunctorFilter
 import cats.data.NonEmptyList
 import cats.effect.kernel.Sync
 import cats.implicits.*
-import cats.FunctorFilter
-import io.gen4s.core.templating.SourceTemplate
 import io.gen4s.core.FileUtils
+import io.gen4s.core.templating.SourceTemplate
 
 trait TemplateReader[F[_]] {
   def read(file: File, decodeNewLineAsTemplate: Boolean): F[NonEmptyList[SourceTemplate]]

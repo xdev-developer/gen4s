@@ -1,7 +1,7 @@
 package io.gen4s.outputs.processors
 
-import io.gen4s.core.templating.Template
 import io.gen4s.core.Domain.NumberOfSamplesToGenerate
+import io.gen4s.core.templating.Template
 
 trait OutputProcessor[F[_], O] {
 

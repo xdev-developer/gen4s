@@ -2,14 +2,14 @@ package io.gen4s.test
 
 import org.scalatest.funspec.AsyncFunSpec
 import org.scalatest.matchers.should.Matchers
-import org.typelevel.log4cats.slf4j.Slf4jLogger
 import org.typelevel.log4cats.SelfAwareStructuredLogger
+import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 import com.typesafe.config.ConfigFactory
 
 import cats.data.NonEmptyList
-import cats.effect.{IO, Sync}
 import cats.effect.testing.scalatest.AsyncIOSpec
+import cats.effect.{IO, Sync}
 import io.gen4s.conf.{EnvProfileConfig, ScenarioConfig, StageInput}
 import io.gen4s.core.Domain.NumberOfSamplesToGenerate
 import io.gen4s.scenario.ScenarioExecutor
