@@ -80,7 +80,7 @@ object Dependencies {
   val CirceRefined: ModuleID = "io.circe" %% s"circe-refined" % V.circeRefined
 
   val Enumeratum: Seq[ModuleID] = List(
-    "com.beachape" %% "enumeratum-circe" % "1.9.0",
+    "com.beachape" %% "enumeratum-circe" % "1.9.1",
     "com.beachape" %% "enumeratum"       % "1.9.1"
   )
 
@@ -136,7 +136,7 @@ object Dependencies {
   )
 
   val ProtoConverter: Seq[ModuleID] = List(
-    "io.confluent"        % "kafka-protobuf-serializer" % "7.9.2",
+    "io.confluent"        % "kafka-protobuf-serializer" % "7.9.5",
     "com.google.protobuf" % "protobuf-java-util"        % "3.25.8"
   )
 
