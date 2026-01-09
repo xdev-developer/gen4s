@@ -67,7 +67,7 @@ object Dependencies {
   )
 
   val Fs2S3: Seq[ModuleID] = List(
-    "io.laserdisc" %% "fs2-aws-s3" % "6.2.0"
+    "io.laserdisc" %% "fs2-aws-s3" % "6.4.0"
   )
 
   val Ride: Seq[ModuleID] = List(
