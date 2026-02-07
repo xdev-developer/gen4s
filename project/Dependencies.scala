@@ -80,8 +80,8 @@ object Dependencies {
   val CirceRefined: ModuleID = "io.circe" %% s"circe-refined" % V.circeRefined
 
   val Enumeratum: Seq[ModuleID] = List(
-    "com.beachape" %% "enumeratum-circe" % "1.9.1",
-    "com.beachape" %% "enumeratum"       % "1.9.1"
+    "com.beachape" %% "enumeratum-circe" % "1.9.4",
+    "com.beachape" %% "enumeratum"       % "1.9.4"
   )
 
   val Log4cats: Seq[ModuleID] = List(
