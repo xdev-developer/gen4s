@@ -22,7 +22,7 @@ object Dependencies {
     val monocle           = "3.3.0"
     val Ride              = "1.2.0"
 
-    val scalaTest      = "3.2.19"
+    val scalaTest      = "3.2.20"
     val testContainers = "0.43.6"
 
     val betterMonadicFor = "0.3.1"
