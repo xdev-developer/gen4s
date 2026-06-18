@@ -12,7 +12,7 @@ object Dependencies {
     val circe             = "0.14.15"
     val circeRefined      = "0.15.1"
     val fs2               = "3.13.0"
-    val fs2Kafka          = "3.9.1"
+    val fs2Kafka          = "4.0.0"
     val log4cats          = "2.7.1"
     val pureConfig        = "0.17.9"
     val sttp              = "3.11.0"
@@ -62,8 +62,8 @@ object Dependencies {
   )
 
   val Fs2Kafka: Seq[ModuleID] = List(
-    "com.github.fd4s" %% "fs2-kafka"        % V.fs2Kafka,
-    "com.github.fd4s" %% "fs2-kafka-vulcan" % V.fs2Kafka
+    "org.typelevel" %% "fs2-kafka"        % V.fs2Kafka,
+    "org.typelevel" %% "fs2-kafka-vulcan" % V.fs2Kafka
   )
 
   val Fs2S3: Seq[ModuleID] = List(
