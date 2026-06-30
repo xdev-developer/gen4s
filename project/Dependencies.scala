@@ -16,7 +16,7 @@ object Dependencies {
     val log4cats          = "2.7.1"
     val pureConfig        = "0.17.9"
     val sttp              = "3.11.0"
-    var refined           = "0.11.3"
+    var refined           = "0.11.4"
     val parserCombinators = "2.4.0"
     val csv               = "2.0.0"
     val monocle           = "3.3.0"
