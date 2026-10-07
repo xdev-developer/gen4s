@@ -102,7 +102,7 @@ object Dependencies {
     "eu.timepit"            %% "refined-pureconfig"        % V.refined
   )
 
-  val Scopt: Seq[ModuleID] = List("com.github.scopt" %% "scopt" % "4.1.0")
+  val Scopt: Seq[ModuleID] = List("com.github.scopt" %% "scopt" % "4.2.0")
 
   val FS2Throttler: Seq[ModuleID] = List(
     "dev.kovstas" %% "fs2-throttler" % "1.0.13"
